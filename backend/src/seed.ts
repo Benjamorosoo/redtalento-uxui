@@ -26,6 +26,7 @@ import { Skill, SkillCategory, ValidationStatus } from './skills/entities/skill.
 import { PortfolioEvidence, EvidenceType } from './students/entities/portfolio-evidence.entity'
 import { Opportunity, OpportunityType } from './opportunities/entities/opportunity.entity'
 import { Application, ApplicationStatus } from './applications/entities/application.entity'
+import { Notification } from './notifications/entities/notification.entity'
 
 // ─────────────────────────────────────────────────────────────────────────────
 // DB connection (reads same env vars as app)
@@ -45,6 +46,7 @@ const AppDataSource = new DataSource({
   entities: [
     User, StudentProfile, CompanyProfile, SchoolProfile,
     Skill, PortfolioEvidence, Opportunity, Application,
+    Notification,
   ],
   synchronize: true,
   logging: false,
