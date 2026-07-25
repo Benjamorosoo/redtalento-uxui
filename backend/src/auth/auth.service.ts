@@ -87,13 +87,10 @@ export class AuthService {
   // ── Helpers ────────────────────────────────────────────────────────────────
   private async createProfile(user: User, dto: RegisterDto) {
     if (user.role === UserRole.STUDENT) {
-      if (!dto.firstName || !dto.lastName) {
-        throw new BadRequestException('Nombre y apellido requeridos para estudiantes')
-      }
       const profile = this.studentsRepo.create({
         userId: user.id,
-        firstName: dto.firstName,
-        lastName: dto.lastName,
+        firstName: dto.firstName ?? '',
+        lastName: dto.lastName ?? '',
         specialty: dto.specialty ?? '',
         year: dto.year ?? 1,
         readinessScore: 0,
