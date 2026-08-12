@@ -1,7 +1,8 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { CeibboLogoMark } from '@/components/ui/CeibboLogoMark'
 
-export const metadata: Metadata = { title: 'Red Talento TP — Construye tu identidad profesional' }
+export const metadata: Metadata = { title: 'Ceibbo — Construye tu identidad profesional' }
 
 const stats = [
   { value: '50k+', label: 'Talentos activos' },
@@ -38,7 +39,10 @@ export default function LandingPage() {
       {/* ── Navigation ─────────────────────────────────────────────────── */}
       <nav className="fixed top-0 w-full z-50 glass-nav border-b border-outline-variant/10">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <span className="text-2xl font-black text-primary tracking-tighter font-headline">Red Talento</span>
+          <div className="flex items-center gap-2.5">
+            <CeibboLogoMark className="w-9 h-9" />
+            <span className="text-2xl font-black text-primary tracking-tighter font-headline">Ceibbo</span>
+          </div>
 
           <div className="hidden md:flex items-center gap-8 text-sm font-semibold text-on-surface-variant">
             {['Talento', 'Empresas', 'Colegios', 'Nosotros'].map((item) => (
@@ -130,7 +134,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── What is Red Talento ─────────────────────────────────────────── */}
+      {/* ── What is Ceibbo ─────────────────────────────────────────── */}
       <section id="nosotros" className="py-32 bg-surface-container-low">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
@@ -142,7 +146,7 @@ export default function LandingPage() {
                 Una red profesional para talento técnico
               </h2>
               <p className="text-lg text-on-surface-variant leading-relaxed mb-10">
-                Red Talento no es solo un portal de empleo; es un ecosistema diseñado para visibilizar la maestría técnica. Democratizamos el acceso a las mejores empresas permitiendo que tu trabajo hable por ti.
+                Ceibbo no es solo un portal de empleo; es un ecosistema diseñado para visibilizar la maestría técnica. Democratizamos el acceso a las mejores empresas permitiendo que tu trabajo hable por ti.
               </p>
               <div className="grid grid-cols-2 gap-8">
                 {stats.slice(0, 2).map(({ value, label }) => (
@@ -263,10 +267,10 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <span className="text-2xl font-black text-inverse-on-surface tracking-tighter font-headline">
-              Red Talento
+              Ceibbo
             </span>
             <p className="text-sm text-inverse-on-surface/40">
-              © {new Date().getFullYear()} Red Talento TP. Todos los derechos reservados.
+              © {new Date().getFullYear()} Ceibbo. Todos los derechos reservados.
             </p>
           </div>
         </div>

@@ -245,7 +245,7 @@ function EmployabilityView() {
   return (
     <div className="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(320px,1fr)]">
       <section className="space-y-6">
-        <div className="rounded-xl bg-gradient-to-br from-[#173064] to-[#0056d2] p-6 text-white shadow-editorial sm:p-8">
+        <div className="rounded-xl editorial-gradient p-6 text-white shadow-editorial sm:p-8">
           <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="text-xs font-black uppercase tracking-[0.18em] text-white/70">Indice 2024</p>

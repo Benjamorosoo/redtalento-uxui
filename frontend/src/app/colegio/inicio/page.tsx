@@ -59,7 +59,7 @@ export default function ColegioInicioPage() {
               <p className="text-on-surface-variant text-sm mt-0.5 mb-4">
                 {school?.description ?? 'Institución Educativa Técnico Profesional'}
               </p>
-              <p className="text-xs font-semibold text-outline uppercase tracking-widest">RED TALENTO</p>
+              <p className="text-xs font-semibold text-outline uppercase tracking-widest">CEIBBO</p>
 
               <div className="space-y-3 pt-5 mt-5 border-t border-outline-variant/15">
                 <div className="flex justify-between items-center text-sm">

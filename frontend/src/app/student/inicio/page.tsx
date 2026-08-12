@@ -191,7 +191,7 @@ export default function StudentInicioPage() {
           </div>
 
           <p className="text-[10px] text-outline text-center px-2 leading-relaxed">
-            Red Talento TP · Privacidad · Términos · Ayuda
+            Ceibbo · Privacidad · Términos · Ayuda
           </p>
         </aside>
       </div>

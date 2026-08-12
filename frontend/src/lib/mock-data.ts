@@ -221,7 +221,7 @@ export const mockPublications: Publication[] = [
     authorType: 'COLEGIO',
     authorName: 'Instituto Técnico Metropolitano',
     authorAvatar: '/logos/colegio.svg',
-    content: '🎉 Feria de Empleabilidad 2024 — Más de 30 empresas del sector tecnológico estarán presentes. Inscríbete antes del 10 de abril y prepara tu perfil en Red Talento.',
+    content: '🎉 Feria de Empleabilidad 2024 — Más de 30 empresas del sector tecnológico estarán presentes. Inscríbete antes del 10 de abril y prepara tu perfil en Ceibbo.',
     isStory: false,
     likes: 87,
     comments: 14,

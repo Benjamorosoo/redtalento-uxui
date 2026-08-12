@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { usePathname, useSearchParams } from 'next/navigation'
 import { cn, mediaUrl } from '@/lib/utils'
 import { Avatar } from '@/components/ui/Avatar'
+import { CeibboLogoMark } from '@/components/ui/CeibboLogoMark'
 import { useAuthStore } from '@/store/auth.store'
 import { api } from '@/lib/api-client'
 import { useState, useEffect, useRef, Suspense } from 'react'
@@ -187,11 +188,9 @@ export function StudentNav() {
         {/* Left: Logo + Search */}
         <div className="flex items-center gap-4 shrink-0">
           <Link href="/student/inicio" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-xl editorial-gradient flex items-center justify-center text-white shadow-editorial">
-              <span className="font-headline font-bold text-lg leading-none">RT</span>
-            </div>
-            <span className="text-xl font-black bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary-fixed tracking-tight font-headline hidden sm:block">
-              Red Talento
+            <CeibboLogoMark className="w-11 h-11" />
+            <span className="text-xl font-black bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary tracking-tight font-headline hidden sm:block">
+              Ceibbo
             </span>
           </Link>
           <Suspense fallback={

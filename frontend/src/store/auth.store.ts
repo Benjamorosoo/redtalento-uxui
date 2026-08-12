@@ -145,7 +145,7 @@ export const useAuthStore = create<AuthState>()(
       setUser: (user: AuthUser) => set({ user }),
     }),
     {
-      name: 'red-talento-auth',
+      name: 'ceibbo-auth',
       partialize: (state) => ({
         user:            state.user,
         tokens:          state.tokens,

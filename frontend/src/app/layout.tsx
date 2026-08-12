@@ -2,13 +2,14 @@ import type { Metadata } from 'next'
 import Script from 'next/script'
 import '@/styles/globals.css'
 import { RootNavWrapper } from '@/components/layout/RootNavWrapper'
+import { CeibboDecor } from '@/components/ui/CeibboDecor'
 
 const GA_TRACKING_ID = 'G-WBQYX05G9J'
 
 export const metadata: Metadata = {
   title: {
-    default: 'Red Talento TP',
-    template: '%s | Red Talento TP',
+    default: 'Ceibbo',
+    template: '%s | Ceibbo',
   },
   description: 'La red profesional para talento técnico. Conecta estudiantes, colegios y empresas.',
   keywords: ['talento técnico', 'pasantías', 'prácticas', 'colegio técnico profesional', 'empleabilidad'],
@@ -22,7 +23,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="es" className="scroll-smooth">
       <head>
         <link
-          href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,700&family=Inter:wght@400;500;600&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,600&family=Inter:wght@400;500;600&display=swap"
           rel="stylesheet"
         />
         <link
@@ -43,6 +44,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             gtag('config', '${GA_TRACKING_ID}');
           `}
         </Script>
+        <CeibboDecor />
         <RootNavWrapper />
         {children}
       </body>

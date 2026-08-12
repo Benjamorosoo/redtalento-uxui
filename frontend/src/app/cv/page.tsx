@@ -328,7 +328,7 @@ export default function CVPage() {
 
           {/* Footer */}
           <div className="border-t border-gray-100 px-10 py-3 print:px-8 flex items-center justify-between">
-            <span className="text-[10px] text-gray-400">Generado desde Red Talento</span>
+            <span className="text-[10px] text-gray-400">Generado desde Ceibbo</span>
             <span className="text-[10px] text-gray-400">
               {new Date().toLocaleDateString('es-CL', { year: 'numeric', month: 'long', day: 'numeric' })}
             </span>

@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { Avatar } from '@/components/ui/Avatar'
+import { CeibboLogoMark } from '@/components/ui/CeibboLogoMark'
 import { api } from '@/lib/api-client'
 import { scoreBgColor, mediaUrl } from '@/lib/utils'
 import type { StudentProfile } from '@/types'
@@ -139,10 +140,8 @@ export default function ObservarPage() {
       {/* ── Topbar ───────────────────────────────────────────────────────────── */}
       <div className="bg-surface border-b border-outline-variant/30 px-5 h-20 md:px-8 flex items-center justify-between flex-wrap gap-2 sticky top-0 z-10 glass-nav">
         <Link href="/public/landing" className="flex items-center gap-3 group">
-          <div className="w-10 h-10 rounded-xl editorial-gradient flex items-center justify-center text-white shadow-sm">
-            <span className="font-headline font-bold text-base leading-none">RT</span>
-          </div>
-          <span className="text-xl font-bold text-primary tracking-tight font-headline">Red Talento</span>
+          <CeibboLogoMark className="w-10 h-10" />
+          <span className="text-xl font-bold text-primary tracking-tight font-headline">Ceibbo</span>
         </Link>
         <div className="flex items-center gap-4">
           <Link href="/auth/login" className="text-sm font-medium text-on-surface-variant hover:text-primary transition-colors">

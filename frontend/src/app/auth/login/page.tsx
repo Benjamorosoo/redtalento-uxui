@@ -8,6 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { Input, PasswordInput } from '@/components/ui/Input'
 import { Button } from '@/components/ui/Button'
+import { CeibboLogoMark } from '@/components/ui/CeibboLogoMark'
 import { useAuthStore } from '@/store/auth.store'
 import { cn } from '@/lib/utils'
 
@@ -101,8 +102,9 @@ export default function LoginPage() {
         <div className="absolute -bottom-32 -left-32 w-96 h-96 rounded-full bg-on-primary/5" />
         <div className="absolute top-1/3 -right-20 w-64 h-64 rounded-full bg-on-primary/5" />
 
-        <Link href="/public/landing" className="text-3xl font-black text-on-primary tracking-tighter font-headline">
-          Red Talento
+        <Link href="/public/landing" className="flex items-center gap-3">
+          <CeibboLogoMark className="w-11 h-11" />
+          <span className="text-3xl font-black text-on-primary tracking-tighter font-headline">Ceibbo</span>
         </Link>
 
         <div>
@@ -125,7 +127,7 @@ export default function LoginPage() {
           </div>
         </div>
 
-        <p className="text-on-primary/40 text-xs">© {new Date().getFullYear()} Red Talento TP</p>
+        <p className="text-on-primary/40 text-xs">© {new Date().getFullYear()} Ceibbo</p>
       </div>
 
       {/* ── Panel derecho ──────────────────────────────────────────── */}
@@ -133,7 +135,7 @@ export default function LoginPage() {
         <div className="w-full max-w-md">
 
           <Link href="/public/landing" className="lg:hidden block text-2xl font-black text-primary tracking-tighter font-headline mb-8">
-            Red Talento
+            Ceibbo
           </Link>
 
           {/* ── PASO 1: Seleccionar rol ────────────────────────────── */}
