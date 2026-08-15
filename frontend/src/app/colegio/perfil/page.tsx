@@ -2,13 +2,15 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/Button'
 import { api } from '@/lib/api-client'
 import { useAuthStore } from '@/store/auth.store'
 import type { SchoolProfile, StudentProfile } from '@/types'
 
 export default function ColegioPerfilPage() {
-  const { isAuthenticated } = useAuthStore()
+  const { isAuthenticated, logout } = useAuthStore()
+  const router = useRouter()
   const [school, setSchool]         = useState<SchoolProfile | null>(null)
   const [students, setStudents]     = useState<StudentProfile[]>([])
   const [totalStudents, setTotal]   = useState(0)
@@ -73,6 +75,14 @@ export default function ColegioPerfilPage() {
               <Link href="/colegio/perfil/editar">
                 <Button icon="edit" size="sm">Editar perfil</Button>
               </Link>
+              <Button
+                variant="danger"
+                icon="logout"
+                size="sm"
+                onClick={() => { logout(); router.push('/auth/login') }}
+              >
+                Cerrar sesión
+              </Button>
             </div>
           </div>
 

@@ -158,9 +158,11 @@ const navItems = [
 export function ColegioNav() {
   const pathname             = usePathname()
   const router               = useRouter()
-  const { isAuthenticated }  = useAuthStore()
+  const { isAuthenticated, logout } = useAuthStore()
   const [schoolName, setSchoolName] = useState('Institución')
   const [schoolLogo, setSchoolLogo] = useState<string | undefined>(undefined)
+  const [menuOpen, setMenuOpen] = useState(false)
+  const menuRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (!isAuthenticated) return
@@ -171,6 +173,22 @@ export function ColegioNav() {
       })
       .catch(() => {})
   }, [isAuthenticated])
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setMenuOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [])
+
+  const handleLogout = () => {
+    setMenuOpen(false)
+    logout()
+    router.push('/auth/login')
+  }
 
   return (
     <>
@@ -218,21 +236,52 @@ export function ColegioNav() {
 
           <div className="h-8 w-px bg-outline-variant/30 hidden sm:block" />
 
-          <Link href="/colegio/perfil" className="flex items-center gap-2.5 p-1 pr-3 rounded-full border border-outline-variant/20 hover:border-primary/30 hover:bg-surface-container-low transition-colors group">
-            <Avatar
-              src={schoolLogo ? mediaUrl(schoolLogo) : undefined}
-              name={schoolName}
-              size="sm"
-              shape="circle"
-              className="ring-2 ring-transparent group-hover:ring-primary/40 shrink-0"
-            />
-            <div className="hidden md:flex flex-col min-w-0">
-              <span className="text-xs font-bold text-on-surface leading-tight truncate max-w-[120px]">
-                {schoolName}
+          <div ref={menuRef} className="relative">
+            <button
+              type="button"
+              onClick={() => setMenuOpen(o => !o)}
+              className="flex items-center gap-2.5 p-1 pr-3 rounded-full border border-outline-variant/20 hover:border-primary/30 hover:bg-surface-container-low transition-colors group"
+            >
+              <Avatar
+                src={schoolLogo ? mediaUrl(schoolLogo) : undefined}
+                name={schoolName}
+                size="sm"
+                shape="circle"
+                className="ring-2 ring-transparent group-hover:ring-primary/40 shrink-0"
+              />
+              <div className="hidden md:flex flex-col min-w-0">
+                <span className="text-xs font-bold text-on-surface leading-tight truncate max-w-[120px]">
+                  {schoolName}
+                </span>
+                <span className="text-[10px] text-on-surface-variant font-medium">Institución</span>
+              </div>
+              <span className={cn('material-symbols-outlined text-[18px] text-on-surface-variant transition-transform hidden md:block', menuOpen && 'rotate-180')}>
+                expand_more
               </span>
-              <span className="text-[10px] text-on-surface-variant font-medium">Institución</span>
-            </div>
-          </Link>
+            </button>
+
+            {menuOpen && (
+              <div className="absolute top-full right-0 mt-2 w-56 bg-surface border border-outline-variant/20 rounded-xl shadow-elevated z-50 py-1.5 animate-fade-in">
+                <Link
+                  href="/colegio/perfil"
+                  onClick={() => setMenuOpen(false)}
+                  className="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-on-surface hover:bg-surface-container transition-colors"
+                >
+                  <span className="material-symbols-outlined text-[20px] text-on-surface-variant">account_balance</span>
+                  Ver perfil
+                </Link>
+                <div className="h-px bg-outline-variant/20 my-1.5" />
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-semibold text-error hover:bg-error/10 transition-colors text-left"
+                >
+                  <span className="material-symbols-outlined text-[20px]">logout</span>
+                  Cerrar sesión
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </header>
