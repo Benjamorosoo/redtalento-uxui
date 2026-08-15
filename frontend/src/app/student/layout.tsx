@@ -7,12 +7,15 @@ import { useAuthStore } from '@/store/auth.store'
 export default function StudentLayout({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAuthStore()
   const router = useRouter()
-  const [hydrated, setHydrated] = useState(useAuthStore.persist.hasHydrated())
+  const [hydrated, setHydrated] = useState(false)
 
+  // Never touch useAuthStore.persist during render — it must only run in the
+  // browser after mount, otherwise Next's build-time static prerendering
+  // (which also executes this component in Node) crashes.
   useEffect(() => {
-    if (!hydrated) setHydrated(useAuthStore.persist.hasHydrated())
-    return useAuthStore.persist.onFinishHydration(() => setHydrated(true))
-  }, [hydrated])
+    setHydrated(useAuthStore.persist?.hasHydrated?.() ?? true)
+    return useAuthStore.persist?.onFinishHydration?.(() => setHydrated(true))
+  }, [])
 
   useEffect(() => {
     if (hydrated && !isAuthenticated) router.replace('/auth/login')
