@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { ReadinessScore } from '@/components/ui/ReadinessScore'
 import { SkillPill } from '@/components/ui/SkillPill'
 import { Button } from '@/components/ui/Button'
@@ -41,7 +42,8 @@ function getTrafficLight(score: number) {
 }
 
 export default function StudentPerfilPage() {
-  const { isAuthenticated, user } = useAuthStore()
+  const { isAuthenticated, user, logout } = useAuthStore()
+  const router = useRouter()
   const [student,      setStudent]      = useState<StudentProfile | null>(null)
   const [publications, setPublications] = useState<Publication[]>([])
   const [highlights,   setHighlights]   = useState<Publication[]>([])
@@ -186,6 +188,14 @@ export default function StudentPerfilPage() {
               <Link href="/student/perfil/editar">
                 <Button icon="edit" size="sm">Editar perfil</Button>
               </Link>
+              <Button
+                variant="danger"
+                icon="logout"
+                size="sm"
+                onClick={() => { logout(); router.push('/auth/login') }}
+              >
+                Cerrar sesión
+              </Button>
             </div>
           </div>
 
