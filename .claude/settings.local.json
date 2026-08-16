@@ -23,7 +23,8 @@
       "Bash(npx tsc:*)",
       "Bash(npx next:*)",
       "Bash(node test-db-connection.js)",
-      "Bash(xargs grep -ln \"ACEPTADO\\\\|role\\\\b\")"
+      "Bash(xargs grep -ln \"ACEPTADO\\\\|role\\\\b\")",
+      "Bash(git show *)"
     ]
   }
 }

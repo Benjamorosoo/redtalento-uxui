@@ -18,7 +18,6 @@ interface DashboardStats {
   avgScore: number
   studentsWithValidations: number
   studentsWithApplications: number
-  inactiveStudents: number
 }
 
 interface PendingSkillEntry {
@@ -87,62 +86,6 @@ export default function ColegioDashboardPage() {
             <Button variant="secondary" icon="upload">Importar datos</Button>
           </Link>
         </div>
-      </div>
-
-      {/* Alertas operativas */}
-      <div id="alertas" className="scroll-mt-28">
-        <AlertsBanner
-          pendingValidations={stats?.pendingValidations ?? 0}
-          inactiveStudents={stats?.inactiveStudents ?? 0}
-        />
-      </div>
-
-      {/* Índice de empleabilidad destacado + acceso a egresados */}
-      <div id="indice" className="scroll-mt-28 grid grid-cols-1 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] gap-6 mb-8">
-        <div className="rounded-2xl editorial-gradient p-6 sm:p-8 shadow-editorial text-on-primary">
-          <p className="text-xs font-black uppercase tracking-[0.18em] text-on-primary/70 mb-2">
-            Índice de empleabilidad
-          </p>
-          <div className="flex items-end gap-2">
-            <span className="font-headline text-6xl font-black leading-none">{stats?.avgScore ?? 0}</span>
-            <span className="pb-2 text-2xl font-black">%</span>
-          </div>
-          <p className="mt-3 max-w-md text-sm leading-relaxed text-on-primary/80">
-            Score promedio de preparación de tus estudiantes en la plataforma.
-          </p>
-
-          <div className="mt-6 grid grid-cols-3 gap-4 pt-6 border-t border-on-primary/15">
-            {[
-              { value: stats?.totalStudents ?? 0,           label: 'Estudiantes' },
-              { value: stats?.studentsWithValidations ?? 0, label: 'Con validaciones' },
-              { value: stats?.studentsWithApplications ?? 0, label: 'Con postulaciones' },
-            ].map(({ value, label }) => (
-              <div key={label}>
-                <p className="font-headline text-2xl font-black leading-none">{value}</p>
-                <p className="mt-1 text-[11px] font-semibold text-on-primary/70">{label}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <Link
-          href="/colegio/estudiantes?tab=egresados"
-          className="card p-6 sm:p-8 flex flex-col justify-between hover:shadow-elevated hover:-translate-y-0.5 transition-all"
-        >
-          <div>
-            <div className="w-11 h-11 rounded-xl flex items-center justify-center mb-4" style={{ backgroundColor: '#26C6DA1A', color: '#26C6DA' }}>
-              <span className="material-symbols-outlined icon-filled text-[22px]">school</span>
-            </div>
-            <h3 className="font-headline font-bold text-lg text-on-surface">Seguimiento egresados</h3>
-            <p className="text-sm text-on-surface-variant mt-1.5">
-              Estado laboral posterior al egreso, reportado por encuesta.
-            </p>
-          </div>
-          <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-bold text-primary">
-            Ver seguimiento
-            <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
-          </span>
-        </Link>
       </div>
 
       {/* View Switcher */}
@@ -284,75 +227,5 @@ export default function ColegioDashboardPage() {
         </div>
       )}
     </main>
-  )
-}
-
-function AlertsBanner({
-  pendingValidations,
-  inactiveStudents,
-}: {
-  pendingValidations: number
-  inactiveStudents: number
-}) {
-  const hasAlerts = pendingValidations > 0 || inactiveStudents > 0
-
-  if (!hasAlerts) {
-    return (
-      <div className="mb-8 flex items-center gap-3 rounded-xl border border-outline-variant/20 bg-surface-container-low px-5 py-4">
-        <span className="material-symbols-outlined icon-filled text-green-600 text-[22px]">task_alt</span>
-        <p className="text-sm font-semibold text-on-surface">
-          Todo al día — no hay alertas pendientes por revisar.
-        </p>
-      </div>
-    )
-  }
-
-  return (
-    <div className="mb-8 rounded-xl border border-outline-variant/20 bg-surface-container-lowest shadow-editorial overflow-hidden">
-      <div className="flex items-center gap-2 px-5 py-3 border-b border-outline-variant/15">
-        <span className="material-symbols-outlined icon-filled text-primary text-[20px]">notifications_active</span>
-        <h2 className="font-headline font-bold text-sm text-on-surface">Alertas</h2>
-      </div>
-
-      <div className="divide-y divide-outline-variant/10">
-        {pendingValidations > 0 && (
-          <div className="flex items-center gap-4 px-5 py-4">
-            <div className="w-10 h-10 rounded-lg bg-primary-fixed flex items-center justify-center shrink-0">
-              <span className="material-symbols-outlined text-primary text-[20px]">verified_off</span>
-            </div>
-            <div className="flex-1 min-w-0">
-              <span className="inline-flex text-[11px] font-black uppercase tracking-wide text-primary bg-primary-fixed border border-primary/15 rounded-full px-2.5 py-0.5">
-                Urgente
-              </span>
-              <p className="mt-1.5 text-sm font-bold text-on-surface">
-                {pendingValidations} {pendingValidations === 1 ? 'habilidad requiere' : 'habilidades requieren'} validación
-              </p>
-            </div>
-            <Link href="/colegio/validaciones">
-              <Button variant="outline" size="sm">Validar</Button>
-            </Link>
-          </div>
-        )}
-
-        {inactiveStudents > 0 && (
-          <div className="flex items-center gap-4 px-5 py-4">
-            <div className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0" style={{ backgroundColor: '#26C6DA1A', color: '#26C6DA' }}>
-              <span className="material-symbols-outlined text-[20px]">person_off</span>
-            </div>
-            <div className="flex-1 min-w-0">
-              <span className="inline-flex text-[11px] font-black uppercase tracking-wide rounded-full px-2.5 py-0.5" style={{ backgroundColor: '#26C6DA1A', color: '#1B8A9C', border: '1px solid #26C6DA33' }}>
-                Perfil inactivo
-              </span>
-              <p className="mt-1.5 text-sm font-bold text-on-surface">
-                {inactiveStudents} {inactiveStudents === 1 ? 'estudiante lleva' : 'estudiantes llevan'} más de 14 días sin actividad
-              </p>
-            </div>
-            <Link href="/colegio/estudiantes">
-              <Button variant="outline" size="sm">Ver lista</Button>
-            </Link>
-          </div>
-        )}
-      </div>
-    </div>
   )
 }

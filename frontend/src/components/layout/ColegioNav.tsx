@@ -147,14 +147,14 @@ function NavBell({ href }: { href: string }) {
 }
 
 const navItems = [
-  { href: '/colegio/inicio',                    icon: 'home',                 label: 'Inicio' },
-  { href: '/colegio/dashboard',                 icon: 'dashboard',            label: 'Dashboard' },
-  { href: '/colegio/dashboard#alertas',         icon: 'notifications_active', label: 'Alertas' },
-  { href: '/colegio/dashboard#indice',          icon: 'monitoring',           label: 'Índice de empleabilidad' },
-  { href: '/colegio/estudiantes',               icon: 'group',                label: 'Estudiantes' },
-  { href: '/colegio/estudiantes?tab=egresados', icon: 'school',               label: 'Egresados' },
-  { href: '/colegio/validaciones',              icon: 'verified',             label: 'Validaciones' },
-  { href: '/colegio/mensajes',                  icon: 'mail',                 label: 'Mensajes' },
+  { href: '/colegio/inicio',                icon: 'home',                 label: 'Inicio' },
+  { href: '/colegio/dashboard',             icon: 'dashboard',            label: 'Dashboard' },
+  { href: '/colegio/alertas',               icon: 'notifications_active', label: 'Alertas' },
+  { href: '/colegio/indice-empleabilidad',  icon: 'monitoring',           label: 'Índice de empleabilidad' },
+  { href: '/colegio/estudiantes',           icon: 'group',                label: 'Estudiantes' },
+  { href: '/colegio/egresados',             icon: 'school',               label: 'Egresados' },
+  { href: '/colegio/validaciones',          icon: 'verified',             label: 'Validaciones' },
+  { href: '/colegio/mensajes',              icon: 'mail',                 label: 'Mensajes' },
 ]
 
 export function ColegioNav() {

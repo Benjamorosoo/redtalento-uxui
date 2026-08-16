@@ -95,7 +95,7 @@ export default function ColegioInicioPage() {
                 </div>
                 <span className="text-sm font-semibold">Validar estudiantes</span>
               </Link>
-              <Link href="/colegio/estudiantes?tab=egresados"
+              <Link href="/colegio/egresados"
                 className="flex items-center gap-3 p-3 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors group">
                 <div className="w-8 h-8 rounded-lg bg-surface-container-high flex items-center justify-center group-hover:bg-primary-fixed/80 transition-all">
                   <span className="material-symbols-outlined text-[18px] text-on-surface-variant">school</span>
