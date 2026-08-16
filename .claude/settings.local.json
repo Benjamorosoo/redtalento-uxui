@@ -24,7 +24,13 @@
       "Bash(npx next:*)",
       "Bash(node test-db-connection.js)",
       "Bash(xargs grep -ln \"ACEPTADO\\\\|role\\\\b\")",
-      "Bash(git show *)"
+      "Bash(git show *)",
+      "Bash(tasklist)",
+      "Bash(node -pe \"JSON.parse\\(require\\('fs'\\).readFileSync\\(0,'utf8'\\)\\).map\\(s=>\\({id:s.id,userId:s.userId,name:s.firstName+' '+s.lastName,updatedAt:s.updatedAt,skills:s.skills.map\\(sk=>sk.name+':'+sk.validationStatus\\)}\\)\\)\")",
+      "Bash(git rev-list *)",
+      "Bash(node \"C:\\\\Users\\\\bravo\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-bravo-OneDrive-Escritorio-Proyectos-Uxui-\\\\68a99ae8-b210-422b-8236-6a3f7493f339\\\\scratchpad\\\\backdate-students.js\")",
+      "Bash(node scratch-backdate.js)",
+      "Bash(rm -f scratch-backdate.js)"
     ]
   }
 }

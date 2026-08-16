@@ -40,6 +40,7 @@ function MetricCard({ value, label, icon }: { value: string; label: string; icon
 
 export default function EgresadosPage() {
   const [sending, setSending] = useState(false)
+  const [confirming, setConfirming] = useState(false)
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null)
 
   const sendSurvey = async () => {
@@ -56,6 +57,7 @@ export default function EgresadosPage() {
       setToast({ message: 'No se pudo enviar la encuesta. Intenta de nuevo.', type: 'error' })
     } finally {
       setSending(false)
+      setConfirming(false)
     }
   }
 
@@ -77,8 +79,8 @@ export default function EgresadosPage() {
               <h3 className="font-headline text-lg font-bold text-on-surface">Seguimiento de egresados</h3>
               <p className="text-sm text-on-surface-variant">Estado laboral reportado por encuesta corta.</p>
             </div>
-            <Button variant="secondary" icon="send" onClick={sendSurvey} disabled={sending}>
-              {sending ? 'Enviando...' : 'Enviar encuesta'}
+            <Button variant="secondary" icon="send" onClick={() => setConfirming(true)}>
+              Enviar encuesta
             </Button>
           </div>
 
@@ -141,6 +143,53 @@ export default function EgresadosPage() {
           </section>
         </aside>
       </div>
+
+      {confirming && (
+        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => !sending && setConfirming(false)} />
+
+          <div className="relative w-full max-w-md rounded-2xl bg-surface shadow-2xl animate-slide-up overflow-hidden">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-outline-variant/15">
+              <h2 className="font-headline font-bold text-on-surface text-lg">Enviar encuesta</h2>
+              <button
+                onClick={() => !sending && setConfirming(false)}
+                className="p-2 rounded-full text-on-surface-variant hover:bg-surface-container-high transition-colors"
+              >
+                <span className="material-symbols-outlined text-[20px]">close</span>
+              </button>
+            </div>
+
+            <div className="p-6">
+              <p className="text-sm text-on-surface-variant mb-4">
+                Se enviará esta encuesta, como notificación, a todos los estudiantes marcados como egresados:
+              </p>
+              <div className="space-y-2.5">
+                {surveyQuestions.map((question, index) => (
+                  <div key={question} className="flex items-center gap-3 rounded-lg border border-outline-variant/15 bg-surface-container-low p-3">
+                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-primary text-[11px] font-black text-on-primary">
+                      {index + 1}
+                    </span>
+                    <span className="text-sm font-semibold text-on-surface">{question}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-outline-variant/15 bg-surface-container-low">
+              <button
+                onClick={() => setConfirming(false)}
+                disabled={sending}
+                className="px-4 py-2 rounded-lg text-sm font-bold text-on-surface-variant hover:bg-surface-container-high transition-colors disabled:opacity-50"
+              >
+                Cancelar
+              </button>
+              <Button onClick={sendSurvey} disabled={sending} icon="send">
+                {sending ? 'Enviando...' : 'Confirmar y enviar'}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {toast && <Toast message={toast.message} type={toast.type} onDismiss={() => setToast(null)} />}
     </main>
