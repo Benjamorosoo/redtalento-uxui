@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, ConflictException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Repository, In } from 'typeorm'
+import { Repository, In, LessThan } from 'typeorm'
 import * as bcrypt from 'bcrypt'
 import { SchoolProfile } from './entities/school-profile.entity'
 import { StudentProfile } from '../students/entities/student-profile.entity'
@@ -157,6 +157,11 @@ export class SchoolsService {
       .where('sp.schoolUserId = :schoolUserId', { schoolUserId })
       .getCount()
 
+    const inactivityThreshold = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000)
+    const inactiveStudents = await this.studentsRepo.count({
+      where: { schoolUserId, updatedAt: LessThan(inactivityThreshold) },
+    })
+
     return {
       totalStudents,
       pendingValidations,
@@ -165,6 +170,7 @@ export class SchoolsService {
       avgScore,
       studentsWithValidations,
       studentsWithApplications,
+      inactiveStudents,
     }
   }
 }

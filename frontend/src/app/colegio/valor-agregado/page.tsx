@@ -1,7 +1,8 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { Suspense, useMemo, useState } from 'react'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/Button'
 import { cn } from '@/lib/utils'
 
@@ -110,7 +111,19 @@ const statusStyles: Record<string, string> = {
 }
 
 export default function ValorAgregadoPage() {
-  const [activeView, setActiveView] = useState<View>('alertas')
+  return (
+    <Suspense fallback={null}>
+      <ValorAgregadoContent />
+    </Suspense>
+  )
+}
+
+function ValorAgregadoContent() {
+  const searchParams = useSearchParams()
+  const requestedView = searchParams.get('view')
+  const initialView: View = tabs.some(t => t.key === requestedView) ? (requestedView as View) : 'alertas'
+
+  const [activeView, setActiveView] = useState<View>(initialView)
   const activeTab = useMemo(() => tabs.find(tab => tab.key === activeView), [activeView])
 
   return (
@@ -122,6 +135,10 @@ export default function ValorAgregadoPage() {
           <p className="text-on-surface-variant max-w-2xl">
             Alertas operativas, evidencia de empleabilidad y seguimiento posterior al egreso para coordinar sin revisar todo manualmente.
           </p>
+          <span className="inline-flex items-center gap-1.5 mt-3 text-[11px] font-bold text-amber-700 bg-amber-50 border border-amber-200 rounded-full px-3 py-1">
+            <span className="material-symbols-outlined text-[14px]">science</span>
+            Vista previa — contenido de ejemplo, aún no conectado a información real
+          </span>
         </div>
         <Link href="/colegio/dashboard">
           <Button variant="secondary" icon="dashboard">Volver al dashboard</Button>
