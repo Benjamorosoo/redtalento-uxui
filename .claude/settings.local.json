@@ -30,7 +30,9 @@
       "Bash(git rev-list *)",
       "Bash(node \"C:\\\\Users\\\\bravo\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-bravo-OneDrive-Escritorio-Proyectos-Uxui-\\\\68a99ae8-b210-422b-8236-6a3f7493f339\\\\scratchpad\\\\backdate-students.js\")",
       "Bash(node scratch-backdate.js)",
-      "Bash(rm -f scratch-backdate.js)"
+      "Bash(rm -f scratch-backdate.js)",
+      "Bash(xargs grep -L \"sm:grid-cols\\\\|md:grid-cols\\\\|lg:grid-cols\")",
+      "Bash(awk -F'[][]' '{gsub\\(\"px\",\"\",$2\\); if\\($2+0>=200\\) print}')"
     ]
   }
 }

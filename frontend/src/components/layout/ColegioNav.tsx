@@ -23,7 +23,7 @@ const roleIcon: Record<string, string> = {
   COLEGIO: 'account_balance',
 }
 
-function GlobalSearchBar({ onSelectUser }: { onSelectUser: (userId: string) => void }) {
+function GlobalSearchBar({ onSelectUser, mobile = false }: { onSelectUser: (userId: string) => void; mobile?: boolean }) {
   const { user } = useAuthStore()
   const wrapperRef = useRef<HTMLDivElement>(null)
   const [searchValue,  setSearchValue]  = useState('')
@@ -65,7 +65,7 @@ function GlobalSearchBar({ onSelectUser }: { onSelectUser: (userId: string) => v
   }
 
   return (
-    <div ref={wrapperRef} className="hidden lg:block relative w-64">
+    <div ref={wrapperRef} className={mobile ? 'relative w-full' : 'hidden lg:block relative w-64'}>
       <div className="flex items-center bg-surface-container-low border border-outline-variant/30 hover:border-primary/40 focus-within:border-primary/60 px-4 py-2 rounded-xl gap-3">
         <span className="material-symbols-outlined text-outline text-[20px]">search</span>
         <input
@@ -165,6 +165,8 @@ export function ColegioNav() {
   const [schoolLogo, setSchoolLogo] = useState<string | undefined>(undefined)
   const [menuOpen, setMenuOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
+  const [mobileNavOpen, setMobileNavOpen] = useState(false)
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false)
 
   useEffect(() => {
     if (!isAuthenticated) return
@@ -186,6 +188,12 @@ export function ColegioNav() {
     return () => document.removeEventListener('mousedown', handler)
   }, [])
 
+  // Close mobile panels on route change
+  useEffect(() => {
+    setMobileNavOpen(false)
+    setMobileSearchOpen(false)
+  }, [pathname])
+
   const handleLogout = () => {
     setMenuOpen(false)
     logout()
@@ -195,7 +203,7 @@ export function ColegioNav() {
   return (
     <>
     <header className="fixed top-0 left-0 right-0 z-50 h-20 glass-nav border-b border-outline-variant/20 shadow-subtle">
-      <div className="max-w-[1440px] mx-auto px-6 lg:px-8 h-full flex items-center justify-between gap-4">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center justify-between gap-2 sm:gap-4">
 
         {/* Left: Logo + Search */}
         <div className="flex items-center gap-4 shrink-0">
@@ -232,8 +240,26 @@ export function ColegioNav() {
           })}
         </nav>
 
-        {/* Right: Bell + Profile */}
-        <div className="flex items-center gap-3 shrink-0">
+        {/* Right: Search icon (mobile) + Hamburger (mobile) + Bell + Profile */}
+        <div className="flex items-center gap-1 sm:gap-3 shrink-0">
+          <button
+            type="button"
+            onClick={() => { setMobileSearchOpen(o => !o); setMobileNavOpen(false) }}
+            className="lg:hidden p-2.5 rounded-full text-on-surface-variant hover:text-primary hover:bg-primary-fixed/30"
+            aria-label="Buscar"
+          >
+            <span className="material-symbols-outlined text-[22px]">search</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => { setMobileNavOpen(o => !o); setMobileSearchOpen(false) }}
+            className="xl:hidden p-2.5 rounded-full text-on-surface-variant hover:text-primary hover:bg-primary-fixed/30"
+            aria-label="Menú"
+          >
+            <span className="material-symbols-outlined text-[22px]">{mobileNavOpen ? 'close' : 'menu'}</span>
+          </button>
+
           <NavBell href="/colegio/notificaciones" />
 
           <div className="h-8 w-px bg-outline-variant/30 hidden sm:block" />
@@ -286,6 +312,40 @@ export function ColegioNav() {
           </div>
         </div>
       </div>
+
+      {/* Mobile search panel */}
+      {mobileSearchOpen && (
+        <div className="lg:hidden absolute left-0 right-0 top-full border-t border-outline-variant/20 bg-surface px-4 py-3 shadow-elevated">
+          <GlobalSearchBar mobile onSelectUser={(uid) => { setMobileSearchOpen(false); router.push('/student/ver/' + uid) }} />
+        </div>
+      )}
+
+      {/* Mobile nav panel */}
+      {mobileNavOpen && (
+        <nav className="xl:hidden absolute left-0 right-0 top-full max-h-[calc(100vh-5rem)] overflow-y-auto border-t border-outline-variant/20 bg-surface px-3 py-2 shadow-elevated">
+          {navItems.map(({ href, icon, label }) => {
+            const active = pathname === href || pathname.startsWith(href + '/')
+            return (
+              <Link
+                key={href}
+                href={href}
+                onClick={() => setMobileNavOpen(false)}
+                className={cn(
+                  'flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-bold transition-colors',
+                  active
+                    ? 'bg-primary text-on-primary'
+                    : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high',
+                )}
+              >
+                <span className={cn('material-symbols-outlined text-[20px]', active && 'icon-filled')}>
+                  {icon}
+                </span>
+                {label}
+              </Link>
+            )
+          })}
+        </nav>
+      )}
     </header>
     </>
   )

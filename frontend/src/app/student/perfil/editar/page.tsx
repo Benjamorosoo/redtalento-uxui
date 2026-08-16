@@ -100,7 +100,7 @@ export default function EditarPerfilStudentPage() {
         {/* Basic Info */}
         <div className="card p-6">
           <h2 className="font-semibold text-on-surface mb-4">Información básica</h2>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wide mb-1.5 block">Nombre</label>
               <input
@@ -147,7 +147,7 @@ export default function EditarPerfilStudentPage() {
         {/* Academic Info */}
         <div className="card p-6">
           <h2 className="font-semibold text-on-surface mb-4">Información académica</h2>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wide mb-1.5 block">Especialidad</label>
               <input
@@ -196,7 +196,7 @@ export default function EditarPerfilStudentPage() {
         {/* Contact Info */}
         <div className="card p-6">
           <h2 className="font-semibold text-on-surface mb-4">Contacto y ubicación</h2>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wide mb-1.5 block">Teléfono</label>
               <input

@@ -102,7 +102,7 @@ export default function EditarPerfilEmpresaPage() {
                 placeholder="¿Qué hace tu empresa? ¿Qué buscan en los candidatos?"
               />
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wide mb-1.5 block">Industria</label>
                 <input
@@ -126,7 +126,7 @@ export default function EditarPerfilEmpresaPage() {
                 </select>
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wide mb-1.5 block">Ubicación</label>
                 <input

@@ -232,7 +232,7 @@ function RegisterPage() {
 
                 {selectedRole === 'STUDENT' && (
                   <>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <Input
                         label="Nombre *"
                         placeholder="Matías"
@@ -246,7 +246,7 @@ function RegisterPage() {
                         {...register('lastName')}
                       />
                     </div>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
                         <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wide mb-1.5 block">
                           Especialidad
