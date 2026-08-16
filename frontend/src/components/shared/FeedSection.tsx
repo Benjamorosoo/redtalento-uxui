@@ -717,12 +717,12 @@ export function FeedSection({
             </button>
           </div>
 
-          <div className="flex items-center gap-2 mt-3 pt-3 border-t border-outline-variant/10">
+          <div className="flex flex-wrap items-center gap-2 mt-3 pt-3 border-t border-outline-variant/10">
             {postActions.map(({ icon, label, action }) => (
               <button
                 key={label}
                 onClick={() => setShowCreateModal(true)}
-                className="flex items-center gap-1.5 px-4 py-2 rounded-md text-xs font-semibold text-on-surface-variant hover:bg-surface-container transition-colors"
+                className="flex items-center gap-1.5 px-3 sm:px-4 py-2 rounded-md text-xs font-semibold text-on-surface-variant hover:bg-surface-container transition-colors"
               >
                 <span className="material-symbols-outlined text-[18px]">{icon}</span>
                 {label}

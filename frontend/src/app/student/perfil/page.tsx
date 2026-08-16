@@ -147,7 +147,7 @@ export default function StudentPerfilPage() {
   const trafficLight    = getTrafficLight(student.readinessScore)
 
   return (
-    <main className="max-w-5xl mx-auto px-6 py-10">
+    <main className="max-w-5xl mx-auto px-4 sm:px-6 py-10">
 
       {/* Traffic Light Banner */}
       <div className={`mb-6 p-5 rounded-2xl border flex flex-col sm:flex-row items-start sm:items-center gap-4 ${trafficLight.bg}`}>
@@ -175,10 +175,10 @@ export default function StudentPerfilPage() {
           fullName={fullName}
         />
 
-        <div className="px-8 pb-8">
+        <div className="px-4 sm:px-8 pb-8">
           <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mt-2 mb-6">
             <div className="h-8 sm:h-12" />
-            <div className="flex items-center gap-3">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3">
               <Button variant="secondary" icon={shareCopied ? 'check' : 'share'} size="sm" onClick={handleShare}>
                 {shareCopied ? '¡Copiado!' : 'Compartir'}
               </Button>
@@ -300,7 +300,7 @@ export default function StudentPerfilPage() {
       </div>
 
       {/* Skills */}
-      <div className="card p-8 mb-6">
+      <div className="card p-5 sm:p-8 mb-6">
         <div className="flex items-center justify-between mb-6">
           <h2 className="font-headline text-xl font-bold text-on-surface">Habilidades técnicas</h2>
           <Link href="/student/habilidades">
@@ -410,7 +410,7 @@ export default function StudentPerfilPage() {
       )}
 
       {/* Highlighted Stories */}
-      <div className="card p-8 mb-6">
+      <div className="card p-5 sm:p-8 mb-6">
         <h2 className="font-headline text-xl font-bold text-on-surface mb-5">Historias destacadas</h2>
         <div className="flex items-start gap-5 overflow-x-auto pb-2 no-scrollbar">
           {/* "Tú" — botón de agregar historia */}
@@ -477,7 +477,7 @@ export default function StudentPerfilPage() {
       )}
 
       {/* Portfolio */}
-      <div className="card p-8 mb-6">
+      <div className="card p-5 sm:p-8 mb-6">
         <div className="flex items-center justify-between mb-6">
           <h2 className="font-headline text-xl font-bold text-on-surface">Portafolio</h2>
           <Link href="/student/portafolio">
@@ -527,7 +527,7 @@ export default function StudentPerfilPage() {
       </div>
 
       {/* My Publications — always visible */}
-      <div className="card p-8 mb-6">
+      <div className="card p-5 sm:p-8 mb-6">
         <h2 className="font-headline text-xl font-bold text-on-surface mb-6">Publicaciones</h2>
         {publications.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-10 rounded-xl border-2 border-dashed border-outline-variant/30">

@@ -36,7 +36,7 @@ export default function StudentInicioPage() {
 
   if (loading) {
     return (
-      <main className="max-w-[1440px] mx-auto px-8 py-10">
+      <main className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
           <aside className="md:col-span-3">
             <div className="card h-64 animate-pulse" />
@@ -61,11 +61,11 @@ export default function StudentInicioPage() {
   const skills    = profile?.skills ?? []
 
   return (
-    <main className="max-w-[1440px] mx-auto px-8 py-10">
+    <main className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
       <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
 
         {/* ── Left Sidebar ────────────────────────────────────────────── */}
-        <aside className="md:col-span-3 space-y-6 sticky top-24">
+        <aside className="md:col-span-3 space-y-6 md:sticky md:top-24">
 
           <div className="card">
             <div className="h-20 editorial-gradient" />
@@ -134,7 +134,7 @@ export default function StudentInicioPage() {
         </section>
 
         {/* ── Right Sidebar ────────────────────────────────────────────── */}
-        <aside className="md:col-span-3 space-y-6 sticky top-24">
+        <aside className="md:col-span-3 space-y-6 md:sticky md:top-24">
 
           <div className="card p-6">
             <div className="flex items-center justify-between mb-5">
