@@ -66,6 +66,10 @@ export class StudentProfile {
   @Column({ nullable: true })
   schoolUserId?: string
 
+  /** Marked by the school once the student has graduated — enables the follow-up survey */
+  @Column({ default: false })
+  isGraduate: boolean
+
   /** Computed score stored for fast queries — recalculated on profile update */
   @Column({ type: 'int', default: 0 })
   readinessScore: number

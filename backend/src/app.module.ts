@@ -16,6 +16,7 @@ import { NotificationsModule } from './notifications/notifications.module'
 import { FollowsModule } from './follows/follows.module'
 import { HealthModule } from './health/health.module'
 import { StatsModule } from './stats/stats.module'
+import { GraduatesModule } from './graduates/graduates.module'
 import databaseConfig from './config/database.config'
 import appConfig from './config/app.config'
 
@@ -105,6 +106,7 @@ import appConfig from './config/app.config'
     FollowsModule,
     HealthModule,
     StatsModule,
+    GraduatesModule,
   ],
 })
 export class AppModule {}

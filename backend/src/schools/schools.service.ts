@@ -158,9 +158,38 @@ export class SchoolsService {
       .getCount()
 
     const inactivityThreshold = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000)
-    const inactiveStudents = await this.studentsRepo.count({
-      where: { schoolUserId, updatedAt: LessThan(inactivityThreshold) },
-    })
+    const inactiveStudentProfiles = studentIds.length > 0
+      ? await this.studentsRepo.find({
+          where: { schoolUserId, updatedAt: LessThan(inactivityThreshold) },
+          select: ['id', 'userId', 'firstName', 'lastName', 'avatar', 'updatedAt'],
+        })
+      : []
+    const inactiveStudents = inactiveStudentProfiles.length
+
+    const dayMs = 24 * 60 * 60 * 1000
+    const inactiveStudentsList = inactiveStudentProfiles.map(s => ({
+      userId: s.userId,
+      firstName: s.firstName,
+      lastName: s.lastName,
+      avatar: s.avatar,
+      daysInactive: Math.floor((Date.now() - new Date(s.updatedAt).getTime()) / dayMs),
+    }))
+
+    const pendingSkillsForList = studentIds.length > 0
+      ? await this.skillsRepo.find({
+          where: { validationStatus: ValidationStatus.PENDIENTE, studentId: In(studentIds) },
+          relations: ['student'],
+          order: { createdAt: 'DESC' },
+        })
+      : []
+    const pendingValidationsList = pendingSkillsForList.map(sk => ({
+      userId: sk.student.userId,
+      firstName: sk.student.firstName,
+      lastName: sk.student.lastName,
+      avatar: sk.student.avatar,
+      skillId: sk.id,
+      skillName: sk.name,
+    }))
 
     return {
       totalStudents,
@@ -171,6 +200,8 @@ export class SchoolsService {
       studentsWithValidations,
       studentsWithApplications,
       inactiveStudents,
+      inactiveStudentsList,
+      pendingValidationsList,
     }
   }
 }

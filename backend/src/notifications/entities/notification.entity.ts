@@ -14,6 +14,7 @@ export enum NotificationType {
   FOLLOW_REQUEST     = 'FOLLOW_REQUEST',
   FOLLOW_ACCEPTED    = 'FOLLOW_ACCEPTED',
   NEW_FOLLOWER       = 'NEW_FOLLOWER',
+  GRADUATE_SURVEY    = 'GRADUATE_SURVEY',
   GENERAL            = 'GENERAL',
 }
 

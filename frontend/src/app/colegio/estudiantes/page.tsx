@@ -36,6 +36,17 @@ function EstudiantesContent() {
     setQuery(searchParams.get('q') ?? '')
   }, [searchParams])
 
+  const toggleGraduate = async (student: StudentProfile) => {
+    const next = !student.isGraduate
+    setStudents(prev => prev.map(s => s.id === student.id ? { ...s, isGraduate: next } : s))
+    try {
+      await api.patch(`/schools/me/students/${student.id}/graduate`, { isGraduate: next })
+    } catch {
+      setStudents(prev => prev.map(s => s.id === student.id ? { ...s, isGraduate: !next } : s))
+      setToast({ message: 'No se pudo actualizar el estado de egresado.', type: 'error' })
+    }
+  }
+
   const fetchStudents = useCallback(async () => {
     setLoading(true)
     try {
@@ -225,6 +236,17 @@ function EstudiantesContent() {
                             className="px-3 py-1 rounded-md bg-primary-fixed text-primary text-xs font-bold hover:bg-primary-container hover:text-on-primary transition-all"
                           >
                             Validar
+                          </button>
+                          <button
+                            onClick={() => toggleGraduate(student)}
+                            title={student.isGraduate ? 'Marcado como egresado' : 'Marcar como egresado'}
+                            className={`px-3 py-1 rounded-md text-xs font-bold transition-all ${
+                              student.isGraduate
+                                ? 'bg-green-50 text-green-700 hover:bg-green-100'
+                                : 'bg-surface-container text-on-surface-variant hover:bg-surface-container-high'
+                            }`}
+                          >
+                            {student.isGraduate ? '✓ Egresado' : 'Egresado'}
                           </button>
                         </div>
                       </td>

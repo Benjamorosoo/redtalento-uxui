@@ -1,7 +1,10 @@
 'use client'
 
+import { useState } from 'react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/Button'
+import { Toast } from '@/components/ui/Toast'
+import { api } from '@/lib/api-client'
 
 const graduates = [
   { name: 'Camila Torres', specialty: 'Programación', status: 'working', label: 'Trabaja en su área', delay: '1 mes', company: 'InnoSoft' },
@@ -36,6 +39,26 @@ function MetricCard({ value, label, icon }: { value: string; label: string; icon
 }
 
 export default function EgresadosPage() {
+  const [sending, setSending] = useState(false)
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null)
+
+  const sendSurvey = async () => {
+    if (sending) return
+    setSending(true)
+    try {
+      const res = await api.post<{ sent: number }>('/schools/me/graduates/survey', {})
+      if (res.sent === 0) {
+        setToast({ message: 'No hay egresados marcados todavía. Márcalos desde Estudiantes.', type: 'info' })
+      } else {
+        setToast({ message: `Encuesta enviada a ${res.sent} ${res.sent === 1 ? 'egresado' : 'egresados'}.`, type: 'success' })
+      }
+    } catch {
+      setToast({ message: 'No se pudo enviar la encuesta. Intenta de nuevo.', type: 'error' })
+    } finally {
+      setSending(false)
+    }
+  }
+
   return (
     <main className="max-w-[1440px] mx-auto px-8 py-10">
       <div className="mb-6">
@@ -54,7 +77,9 @@ export default function EgresadosPage() {
               <h3 className="font-headline text-lg font-bold text-on-surface">Seguimiento de egresados</h3>
               <p className="text-sm text-on-surface-variant">Estado laboral reportado por encuesta corta.</p>
             </div>
-            <Button variant="secondary" icon="send">Enviar encuesta</Button>
+            <Button variant="secondary" icon="send" onClick={sendSurvey} disabled={sending}>
+              {sending ? 'Enviando...' : 'Enviar encuesta'}
+            </Button>
           </div>
 
           <table className="w-full min-w-[720px] border-collapse">
@@ -116,6 +141,8 @@ export default function EgresadosPage() {
           </section>
         </aside>
       </div>
+
+      {toast && <Toast message={toast.message} type={toast.type} onDismiss={() => setToast(null)} />}
     </main>
   )
 }

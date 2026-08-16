@@ -48,6 +48,7 @@ export interface StudentProfile {
   githubUrl?: string
   portfolioUrl?: string
   readinessScore: number  // 0-100
+  isGraduate?: boolean
   schoolUserId?: string
   schoolName?: string    // resolved from schoolUserId
   skills: Skill[]
