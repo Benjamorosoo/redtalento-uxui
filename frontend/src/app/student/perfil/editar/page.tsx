@@ -108,6 +108,7 @@ export default function EditarPerfilStudentPage() {
                 onChange={e => set('firstName', e.target.value)}
                 className="w-full bg-surface-container-low border border-outline-variant/30 focus:border-primary/60 rounded-lg px-3 py-2 text-sm outline-none transition-colors"
                 placeholder="Nombre"
+                maxLength={100}
               />
             </div>
             <div>
@@ -117,29 +118,37 @@ export default function EditarPerfilStudentPage() {
                 onChange={e => set('lastName', e.target.value)}
                 className="w-full bg-surface-container-low border border-outline-variant/30 focus:border-primary/60 rounded-lg px-3 py-2 text-sm outline-none transition-colors"
                 placeholder="Apellido"
+                maxLength={100}
               />
             </div>
           </div>
 
           <div className="mt-4">
-            <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wide mb-1.5 block">Titular / Headline</label>
+            <div className="flex items-center justify-between mb-1.5">
+              <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wide block">Titular / Headline</label>
+              <span className="text-[11px] text-outline tabular-nums">{form.headline.length}/150</span>
+            </div>
             <input
               value={form.headline}
               onChange={e => set('headline', e.target.value)}
               className="w-full bg-surface-container-low border border-outline-variant/30 focus:border-primary/60 rounded-lg px-3 py-2 text-sm outline-none transition-colors"
               placeholder="Ej: Desarrollador Full Stack · Especialidad Informática"
-              maxLength={255}
+              maxLength={150}
             />
           </div>
 
           <div className="mt-4">
-            <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wide mb-1.5 block">Biografía</label>
+            <div className="flex items-center justify-between mb-1.5">
+              <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wide block">Biografía</label>
+              <span className="text-[11px] text-outline tabular-nums">{form.bio.length}/500</span>
+            </div>
             <textarea
               value={form.bio}
               onChange={e => set('bio', e.target.value)}
               rows={3}
               className="w-full bg-surface-container-low border border-outline-variant/30 focus:border-primary/60 rounded-lg px-3 py-2 text-sm outline-none transition-colors resize-none"
               placeholder="Cuéntale a las empresas sobre vos..."
+              maxLength={500}
             />
           </div>
         </div>
@@ -155,6 +164,7 @@ export default function EditarPerfilStudentPage() {
                 onChange={e => set('specialty', e.target.value)}
                 className="w-full bg-surface-container-low border border-outline-variant/30 focus:border-primary/60 rounded-lg px-3 py-2 text-sm outline-none transition-colors"
                 placeholder="Informática, Electrónica..."
+                maxLength={100}
               />
             </div>
             <div>
@@ -200,10 +210,14 @@ export default function EditarPerfilStudentPage() {
             <div>
               <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wide mb-1.5 block">Teléfono</label>
               <input
+                type="tel"
                 value={form.phone}
                 onChange={e => set('phone', e.target.value)}
                 className="w-full bg-surface-container-low border border-outline-variant/30 focus:border-primary/60 rounded-lg px-3 py-2 text-sm outline-none transition-colors"
                 placeholder="+54 11 1234-5678"
+                maxLength={20}
+                pattern="^\+?[0-9\s-]{6,20}$"
+                title="Solo números, espacios, guiones y '+' al inicio"
               />
             </div>
             <div>
@@ -213,6 +227,7 @@ export default function EditarPerfilStudentPage() {
                 onChange={e => set('location', e.target.value)}
                 className="w-full bg-surface-container-low border border-outline-variant/30 focus:border-primary/60 rounded-lg px-3 py-2 text-sm outline-none transition-colors"
                 placeholder="Buenos Aires, Argentina"
+                maxLength={150}
               />
             </div>
           </div>
@@ -232,10 +247,12 @@ export default function EditarPerfilStudentPage() {
                 <div className="flex-1">
                   <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wide mb-1 block">{label}</label>
                   <input
+                    type="url"
                     value={form[field]}
                     onChange={e => set(field, e.target.value)}
                     className="w-full bg-surface-container-low border border-outline-variant/30 focus:border-primary/60 rounded-lg px-3 py-2 text-sm outline-none transition-colors"
                     placeholder={placeholder}
+                    maxLength={300}
                   />
                 </div>
               </div>

@@ -8,6 +8,7 @@ import { UserRole } from '../../users/entities/user.entity'
 export class LoginDto {
   @ApiProperty({ example: 'matias@colegio.cl' })
   @IsEmail({}, { message: 'Email inválido' })
+  @MaxLength(150)
   email: string
 
   @ApiProperty({ example: 'secreto123' })
@@ -19,6 +20,7 @@ export class LoginDto {
 export class RegisterDto {
   @ApiProperty({ example: 'matias@colegio.cl' })
   @IsEmail({}, { message: 'Email inválido' })
+  @MaxLength(150)
   email: string
 
   @ApiProperty({ example: 'secreto123' })
@@ -47,13 +49,14 @@ export class RegisterDto {
   @ApiPropertyOptional({ example: 'Informática' })
   @IsOptional()
   @IsString()
+  @MaxLength(100)
   specialty?: string
 
   @ApiPropertyOptional({ example: 2 })
   @IsOptional()
   @IsInt()
   @Min(1)
-  @Max(7)
+  @Max(4)
   year?: number
 
   // Company fields
@@ -86,6 +89,7 @@ export class RefreshTokenDto {
 export class ForgotPasswordDto {
   @ApiProperty({ example: 'matias@colegio.cl' })
   @IsEmail()
+  @MaxLength(150)
   email: string
 }
 

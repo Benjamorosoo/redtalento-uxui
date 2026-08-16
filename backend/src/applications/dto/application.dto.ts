@@ -1,10 +1,10 @@
-import { IsString, IsOptional, IsEnum } from 'class-validator'
+import { IsString, IsOptional, IsEnum, MaxLength } from 'class-validator'
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 import { ApplicationStatus } from '../entities/application.entity'
 
 export class CreateApplicationDto {
   @ApiProperty()  @IsString() opportunityId: string
-  @ApiPropertyOptional() @IsOptional() @IsString() coverLetter?: string
+  @ApiPropertyOptional() @IsOptional() @IsString() @MaxLength(1000) coverLetter?: string
 }
 
 export class UpdateApplicationStatusDto {
@@ -12,5 +12,5 @@ export class UpdateApplicationStatusDto {
   @IsEnum(ApplicationStatus)
   status: ApplicationStatus
 
-  @ApiPropertyOptional() @IsOptional() @IsString() notes?: string
+  @ApiPropertyOptional() @IsOptional() @IsString() @MaxLength(500) notes?: string
 }

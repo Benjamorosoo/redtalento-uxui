@@ -2,16 +2,19 @@ import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { CompanyProfile } from './entities/company-profile.entity'
-import { IsString, IsOptional } from 'class-validator'
+import { IsString, IsOptional, MaxLength, IsUrl, ValidateIf } from 'class-validator'
 import { ApiPropertyOptional } from '@nestjs/swagger'
 
 export class UpdateCompanyDto {
-  @ApiPropertyOptional() @IsOptional() @IsString() name?: string
-  @ApiPropertyOptional() @IsOptional() @IsString() description?: string
-  @ApiPropertyOptional() @IsOptional() @IsString() industry?: string
-  @ApiPropertyOptional() @IsOptional() @IsString() size?: string
-  @ApiPropertyOptional() @IsOptional() @IsString() location?: string
-  @ApiPropertyOptional() @IsOptional() @IsString() website?: string
+  @ApiPropertyOptional() @IsOptional() @IsString() @MaxLength(200) name?: string
+  @ApiPropertyOptional() @IsOptional() @IsString() @MaxLength(500) description?: string
+  @ApiPropertyOptional() @IsOptional() @IsString() @MaxLength(100) industry?: string
+  @ApiPropertyOptional() @IsOptional() @IsString() @MaxLength(50) size?: string
+  @ApiPropertyOptional() @IsOptional() @IsString() @MaxLength(150) location?: string
+  @ApiPropertyOptional() @IsOptional() @IsString() @MaxLength(300)
+  @ValidateIf((o) => !!o.website)
+  @IsUrl({}, { message: 'Sitio web inválido' })
+  website?: string
   @ApiPropertyOptional() @IsOptional() @IsString() logo?: string
   @ApiPropertyOptional() @IsOptional() @IsString() coverImage?: string
 }

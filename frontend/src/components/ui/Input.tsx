@@ -9,18 +9,30 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   icon?:  string
   iconRight?: string
   variant?: 'underline' | 'filled'
+  /** Show a "n/maxLength" character counter — requires maxLength to be set */
+  showCount?: boolean
 }
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ label, error, hint, icon, iconRight, variant = 'underline', className, id, ...props }, ref) => {
+  ({ label, error, hint, icon, iconRight, variant = 'underline', showCount, maxLength, className, id, value, ...props }, ref) => {
     const inputId = id ?? label?.toLowerCase().replace(/\s+/g, '-')
+    const count = typeof value === 'string' ? value.length : undefined
 
     return (
       <div className="flex flex-col gap-1.5">
-        {label && (
-          <label htmlFor={inputId} className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">
-            {label}
-          </label>
+        {(label || (showCount && maxLength)) && (
+          <div className="flex items-center justify-between gap-2">
+            {label && (
+              <label htmlFor={inputId} className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">
+                {label}
+              </label>
+            )}
+            {showCount && maxLength && (
+              <span className={cn('text-[11px] tabular-nums', count !== undefined && count >= maxLength ? 'text-error' : 'text-outline')}>
+                {count ?? 0}/{maxLength}
+              </span>
+            )}
+          </div>
         )}
         <div className="relative flex items-center">
           {icon && (
@@ -31,6 +43,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           <input
             ref={ref}
             id={inputId}
+            maxLength={maxLength}
+            value={value}
             className={cn(
               'w-full bg-transparent text-on-surface placeholder:text-outline transition-all duration-200 outline-none',
               variant === 'underline'
@@ -64,22 +78,36 @@ interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   label?: string
   error?: string
   hint?:  string
+  /** Show a "n/maxLength" character counter — requires maxLength to be set */
+  showCount?: boolean
 }
 
 export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
-  ({ label, error, hint, className, id, ...props }, ref) => {
+  ({ label, error, hint, showCount, maxLength, className, id, value, ...props }, ref) => {
     const textareaId = id ?? label?.toLowerCase().replace(/\s+/g, '-')
+    const count = typeof value === 'string' ? value.length : undefined
 
     return (
       <div className="flex flex-col gap-1.5">
-        {label && (
-          <label htmlFor={textareaId} className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">
-            {label}
-          </label>
+        {(label || (showCount && maxLength)) && (
+          <div className="flex items-center justify-between gap-2">
+            {label && (
+              <label htmlFor={textareaId} className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">
+                {label}
+              </label>
+            )}
+            {showCount && maxLength && (
+              <span className={cn('text-[11px] tabular-nums', count !== undefined && count >= maxLength ? 'text-error' : 'text-outline')}>
+                {count ?? 0}/{maxLength}
+              </span>
+            )}
+          </div>
         )}
         <textarea
           ref={ref}
           id={textareaId}
+          maxLength={maxLength}
+          value={value}
           className={cn(
             'w-full bg-surface-container-low text-on-surface placeholder:text-outline rounded-lg px-4 py-3 border border-transparent focus:border-primary outline-none transition-all duration-200 resize-none',
             error && 'border-error',

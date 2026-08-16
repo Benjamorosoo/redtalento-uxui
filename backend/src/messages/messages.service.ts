@@ -6,12 +6,12 @@ import { User, UserRole } from '../users/entities/user.entity'
 import { StudentProfile } from '../students/entities/student-profile.entity'
 import { CompanyProfile } from '../companies/entities/company-profile.entity'
 import { SchoolProfile } from '../schools/entities/school-profile.entity'
-import { IsString } from 'class-validator'
+import { IsString, MaxLength } from 'class-validator'
 import { ApiProperty } from '@nestjs/swagger'
 
 export class SendMessageDto {
   @ApiProperty() @IsString() receiverId: string
-  @ApiProperty() @IsString() content: string
+  @ApiProperty() @IsString() @MaxLength(1000) content: string
 }
 
 @Injectable()

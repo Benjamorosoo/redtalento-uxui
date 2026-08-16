@@ -1,4 +1,4 @@
-import { IsArray, IsBoolean, IsOptional, IsString } from 'class-validator'
+import { IsArray, IsBoolean, IsOptional, IsString, MaxLength } from 'class-validator'
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 
 export class SetGraduateStatusDto {
@@ -12,6 +12,7 @@ export class SendGraduateSurveyDto {
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
+  @MaxLength(200, { each: true })
   questions?: string[]
 }
 
@@ -28,5 +29,6 @@ export class SubmitGraduateSurveyDto {
   @ApiPropertyOptional()
   @IsOptional()
   @IsString()
+  @MaxLength(100)
   timeToFindJob?: string
 }

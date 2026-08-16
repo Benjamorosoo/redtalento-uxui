@@ -8,25 +8,28 @@ import { User, UserRole } from '../users/entities/user.entity'
 import { Skill, ValidationStatus } from '../skills/entities/skill.entity'
 import { Opportunity } from '../opportunities/entities/opportunity.entity'
 import { Application } from '../applications/entities/application.entity'
-import { IsString, IsOptional, IsArray, IsInt, Min, Max, IsEmail } from 'class-validator'
+import { IsString, IsOptional, IsArray, IsInt, Min, Max, IsEmail, MaxLength, IsUrl, ValidateIf } from 'class-validator'
 import { ApiPropertyOptional, ApiProperty } from '@nestjs/swagger'
 
 export class UpdateSchoolDto {
-  @ApiPropertyOptional() @IsOptional() @IsString() name?: string
-  @ApiPropertyOptional() @IsOptional() @IsString() description?: string
-  @ApiPropertyOptional() @IsOptional() @IsString() location?: string
-  @ApiPropertyOptional() @IsOptional() @IsString() website?: string
+  @ApiPropertyOptional() @IsOptional() @IsString() @MaxLength(200) name?: string
+  @ApiPropertyOptional() @IsOptional() @IsString() @MaxLength(500) description?: string
+  @ApiPropertyOptional() @IsOptional() @IsString() @MaxLength(150) location?: string
+  @ApiPropertyOptional() @IsOptional() @IsString() @MaxLength(300)
+  @ValidateIf((o) => !!o.website)
+  @IsUrl({}, { message: 'Sitio web inválido' })
+  website?: string
   @ApiPropertyOptional() @IsOptional() @IsString() logo?: string
   @ApiPropertyOptional() @IsOptional() @IsString() coverImage?: string
-  @ApiPropertyOptional() @IsOptional() @IsArray() @IsString({ each: true }) specialties?: string[]
+  @ApiPropertyOptional() @IsOptional() @IsArray() @IsString({ each: true }) @MaxLength(100, { each: true }) specialties?: string[]
 }
 
 export class CreateStudentDto {
-  @ApiProperty()  @IsEmail()   email: string
-  @ApiProperty()  @IsString()  firstName: string
-  @ApiProperty()  @IsString()  lastName: string
-  @ApiPropertyOptional() @IsOptional() @IsString()  specialty?: string
-  @ApiPropertyOptional() @IsOptional() @IsInt() @Min(1) @Max(7) year?: number
+  @ApiProperty()  @IsEmail()   @MaxLength(150) email: string
+  @ApiProperty()  @IsString()  @MaxLength(100) firstName: string
+  @ApiProperty()  @IsString()  @MaxLength(100) lastName: string
+  @ApiPropertyOptional() @IsOptional() @IsString() @MaxLength(100) specialty?: string
+  @ApiPropertyOptional() @IsOptional() @IsInt() @Min(1) @Max(4) year?: number
 }
 
 @Injectable()

@@ -1,9 +1,9 @@
-import { IsString, IsEnum, IsOptional, IsInt, Min, Max } from 'class-validator'
+import { IsString, IsEnum, IsOptional, IsInt, Min, Max, MaxLength } from 'class-validator'
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 import { SkillCategory } from '../entities/skill.entity'
 
 export class CreateSkillDto {
-  @ApiProperty() @IsString() name: string
+  @ApiProperty() @IsString() @MaxLength(100) name: string
   @ApiProperty({ enum: SkillCategory }) @IsEnum(SkillCategory) category: SkillCategory
   @ApiPropertyOptional() @IsOptional() @IsInt() @Min(1) @Max(5) level?: number
 }
@@ -14,5 +14,5 @@ export class ValidateSkillDto {
   @ApiProperty({ enum: ['VALIDADA', 'RECHAZADA'] })
   @IsEnum(['VALIDADA', 'RECHAZADA'])
   status: 'VALIDADA' | 'RECHAZADA'
-  @ApiPropertyOptional() @IsOptional() @IsString() notes?: string
+  @ApiPropertyOptional() @IsOptional() @IsString() @MaxLength(500) notes?: string
 }

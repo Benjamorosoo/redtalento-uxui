@@ -1,30 +1,30 @@
 import {
   IsString, IsEnum, IsOptional, IsBoolean,
-  IsArray, IsDateString, IsInt, Min,
+  IsArray, IsDateString, IsInt, Min, MaxLength,
 } from 'class-validator'
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 import { OpportunityType } from '../entities/opportunity.entity'
 
 export class CreateOpportunityDto {
-  @ApiProperty() @IsString() title: string
-  @ApiProperty() @IsString() description: string
+  @ApiProperty() @IsString() @MaxLength(150) title: string
+  @ApiProperty() @IsString() @MaxLength(2000) description: string
   @ApiProperty({ enum: OpportunityType }) @IsEnum(OpportunityType) type: OpportunityType
-  @ApiProperty() @IsString() location: string
+  @ApiProperty() @IsString() @MaxLength(150) location: string
   @ApiPropertyOptional() @IsOptional() @IsBoolean() isRemote?: boolean
-  @ApiPropertyOptional() @IsOptional() @IsString() salary?: string
-  @ApiPropertyOptional() @IsOptional() @IsArray() @IsString({ each: true }) requirements?: string[]
-  @ApiPropertyOptional() @IsOptional() @IsArray() @IsString({ each: true }) skills?: string[]
-  @ApiPropertyOptional() @IsOptional() @IsString() specialty?: string
+  @ApiPropertyOptional() @IsOptional() @IsString() @MaxLength(50) salary?: string
+  @ApiPropertyOptional() @IsOptional() @IsArray() @IsString({ each: true }) @MaxLength(200, { each: true }) requirements?: string[]
+  @ApiPropertyOptional() @IsOptional() @IsArray() @IsString({ each: true }) @MaxLength(50, { each: true }) skills?: string[]
+  @ApiPropertyOptional() @IsOptional() @IsString() @MaxLength(100) specialty?: string
   @ApiPropertyOptional() @IsOptional() @IsDateString() startDate?: string
   @ApiPropertyOptional() @IsOptional() @IsDateString() endDate?: string
   @ApiPropertyOptional() @IsOptional() @IsDateString() deadline?: string
 }
 
 export class UpdateOpportunityDto {
-  @ApiPropertyOptional() @IsOptional() @IsString() title?: string
-  @ApiPropertyOptional() @IsOptional() @IsString() description?: string
+  @ApiPropertyOptional() @IsOptional() @IsString() @MaxLength(150) title?: string
+  @ApiPropertyOptional() @IsOptional() @IsString() @MaxLength(2000) description?: string
   @ApiPropertyOptional() @IsOptional() @IsBoolean() isActive?: boolean
-  @ApiPropertyOptional() @IsOptional() @IsString() salary?: string
+  @ApiPropertyOptional() @IsOptional() @IsString() @MaxLength(50) salary?: string
   @ApiPropertyOptional() @IsOptional() @IsDateString() deadline?: string
 }
 

@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository, MoreThan, In } from 'typeorm'
-import { IsString, IsOptional, IsBoolean, IsArray, IsInt } from 'class-validator'
+import { IsString, IsOptional, IsBoolean, IsArray, IsInt, MaxLength } from 'class-validator'
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 import { Publication } from './entities/publication.entity'
 import { PublicationLike } from './entities/publication-like.entity'
@@ -9,16 +9,16 @@ import { Comment } from './entities/comment.entity'
 import { FollowsService } from '../follows/follows.service'
 
 export class CreatePublicationDto {
-  @ApiPropertyOptional() @IsOptional() @IsString()  title?: string
-  @ApiProperty()  @IsString()  content: string
+  @ApiPropertyOptional() @IsOptional() @IsString()  @MaxLength(150) title?: string
+  @ApiProperty()  @IsString()  @MaxLength(1000) content: string
   @ApiPropertyOptional() @IsOptional() @IsString()  imageUrl?: string
   @ApiPropertyOptional() @IsOptional() @IsBoolean() isStory?: boolean
   @ApiPropertyOptional() @IsOptional() @IsInt()     storyDuration?: number
-  @ApiPropertyOptional() @IsOptional() @IsArray()   @IsString({ each: true }) tags?: string[]
+  @ApiPropertyOptional() @IsOptional() @IsArray()   @IsString({ each: true }) @MaxLength(30, { each: true }) tags?: string[]
 }
 
 export class CreateCommentDto {
-  @ApiProperty() @IsString() content: string
+  @ApiProperty() @IsString() @MaxLength(500) content: string
 }
 
 @Injectable()
