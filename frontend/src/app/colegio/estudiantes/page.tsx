@@ -5,6 +5,8 @@ import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { Suspense } from 'react'
 import { Avatar } from '@/components/ui/Avatar'
+import { Toast } from '@/components/ui/Toast'
+import { ValidateSkillsModal } from '@/components/shared/ValidateSkillsModal'
 import { api } from '@/lib/api-client'
 import { useAuthStore } from '@/store/auth.store'
 import { scoreBgColor } from '@/lib/utils'
@@ -27,6 +29,8 @@ function EstudiantesContent() {
   const [loading, setLoading]     = useState(true)
   const [query, setQuery]         = useState(searchParams.get('q') ?? '')
   const [quickFilter, setQuickFilter] = useState('all')
+  const [validatingStudent, setValidatingStudent] = useState<StudentProfile | null>(null)
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null)
 
   useEffect(() => {
     setQuery(searchParams.get('q') ?? '')
@@ -216,10 +220,12 @@ function EstudiantesContent() {
                       </td>
                       <td className="px-5 py-4">
                         <div className="flex items-center gap-1.5">
-                          <Link href={`/colegio/validaciones?student=${student.id}`}
-                            className="px-3 py-1 rounded-md bg-primary-fixed text-primary text-xs font-bold hover:bg-primary-container hover:text-on-primary transition-all">
+                          <button
+                            onClick={() => setValidatingStudent(student)}
+                            className="px-3 py-1 rounded-md bg-primary-fixed text-primary text-xs font-bold hover:bg-primary-container hover:text-on-primary transition-all"
+                          >
                             Validar
-                          </Link>
+                          </button>
                         </div>
                       </td>
                     </tr>
@@ -230,6 +236,21 @@ function EstudiantesContent() {
           </div>
         )}
       </div>
+
+      {validatingStudent && (
+        <ValidateSkillsModal
+          student={validatingStudent}
+          onClose={() => setValidatingStudent(null)}
+          onSaved={() => {
+            fetchStudents()
+            setToast({ message: 'Validaciones guardadas correctamente.', type: 'success' })
+          }}
+        />
+      )}
+
+      {toast && (
+        <Toast message={toast.message} type={toast.type} onDismiss={() => setToast(null)} />
+      )}
     </main>
   )
 }
