@@ -151,7 +151,6 @@ const navItems = [
   { href: '/colegio/dashboard',    icon: 'dashboard', label: 'Dashboard' },
   { href: '/colegio/estudiantes',  icon: 'group',     label: 'Estudiantes' },
   { href: '/colegio/validaciones', icon: 'verified',  label: 'Validaciones' },
-  { href: '/colegio/valor-agregado', icon: 'monitoring', label: 'Valor agregado' },
   { href: '/colegio/mensajes',     icon: 'mail',      label: 'Mensajes' },
 ]
 

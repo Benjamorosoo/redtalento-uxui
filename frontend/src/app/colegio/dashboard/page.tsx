@@ -307,14 +307,9 @@ function AlertsBanner({
 
   return (
     <div className="mb-8 rounded-xl border border-outline-variant/20 bg-surface-container-lowest shadow-editorial overflow-hidden">
-      <div className="flex items-center justify-between gap-3 px-5 py-3 border-b border-outline-variant/15">
-        <div className="flex items-center gap-2">
-          <span className="material-symbols-outlined icon-filled text-primary text-[20px]">notifications_active</span>
-          <h2 className="font-headline font-bold text-sm text-on-surface">Alertas</h2>
-        </div>
-        <Link href="/colegio/valor-agregado?view=alertas" className="text-xs font-bold text-primary hover:underline">
-          Ver todas
-        </Link>
+      <div className="flex items-center gap-2 px-5 py-3 border-b border-outline-variant/15">
+        <span className="material-symbols-outlined icon-filled text-primary text-[20px]">notifications_active</span>
+        <h2 className="font-headline font-bold text-sm text-on-surface">Alertas</h2>
       </div>
 
       <div className="divide-y divide-outline-variant/10">
