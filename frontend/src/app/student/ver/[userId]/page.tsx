@@ -64,7 +64,7 @@ export default function VerPerfilPage() {
             .catch(() => {})
         }
 
-        if (p.role === 'STUDENT' && isAuthenticated && user?.id !== userId && (user?.role === 'EMPRESA' || user?.role === 'COLEGIO')) {
+        if (isAuthenticated && user?.id !== userId) {
           api.get<{ participantId: string }[]>('/messages/conversations')
             .then(convs => setHasConversation(convs.some(c => c.participantId === userId)))
             .catch(() => {})
@@ -143,10 +143,12 @@ export default function VerPerfilPage() {
   }
 
   const isStudent = profile.role === 'STUDENT'
-  const canMessage = !isSelf && isAuthenticated && isStudent && (user?.role === 'EMPRESA' || user?.role === 'COLEGIO')
+  const canMessage = !isSelf && isAuthenticated
 
   const handleMessage = () => {
-    const base = user?.role === 'EMPRESA' ? '/empresa/mensajes' : '/colegio/mensajes'
+    const base = user?.role === 'EMPRESA' ? '/empresa/mensajes'
+      : user?.role === 'COLEGIO' ? '/colegio/mensajes'
+      : '/student/mensajes'
     router.push(`${base}?with=${userId}`)
   }
   const fullName  = student ? `${student.firstName} ${student.lastName}` : profile.name
