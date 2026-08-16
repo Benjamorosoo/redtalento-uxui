@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Patch, Param, Body, UseGuards } from '@nestjs/common'
 import { ApiTags, ApiBearerAuth, ApiOperation } from '@nestjs/swagger'
 import { GraduatesService } from './graduates.service'
-import { SetGraduateStatusDto, SubmitGraduateSurveyDto } from './dto/graduate.dto'
+import { SetGraduateStatusDto, SendGraduateSurveyDto, SubmitGraduateSurveyDto } from './dto/graduate.dto'
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard'
 import { RolesGuard } from '../auth/guards/roles.guard'
 import { Roles } from '../auth/decorators/roles.decorator'
@@ -31,8 +31,8 @@ export class GraduatesController {
   @UseGuards(RolesGuard)
   @Roles(UserRole.COLEGIO)
   @ApiOperation({ summary: 'Enviar la encuesta de seguimiento a todos los egresados marcados' })
-  sendSurvey(@CurrentUser() user: any) {
-    return this.graduatesService.sendSurvey(user.id)
+  sendSurvey(@CurrentUser() user: any, @Body() dto: SendGraduateSurveyDto) {
+    return this.graduatesService.sendSurvey(user.id, dto.questions)
   }
 
   @Get('students/me/graduate-survey')

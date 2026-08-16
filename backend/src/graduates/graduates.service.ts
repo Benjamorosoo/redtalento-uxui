@@ -7,6 +7,12 @@ import { NotificationsService } from '../notifications/notifications.service'
 import { NotificationType } from '../notifications/entities/notification.entity'
 import { SubmitGraduateSurveyDto } from './dto/graduate.dto'
 
+const DEFAULT_QUESTIONS = [
+  '¿Estás trabajando?',
+  '¿Trabajas en tu especialidad?',
+  '¿Cuánto tardaste en encontrar trabajo?',
+]
+
 @Injectable()
 export class GraduatesService {
   constructor(
@@ -25,17 +31,20 @@ export class GraduatesService {
   }
 
   /** Sends the follow-up survey as an in-app notification to every student this school marked as graduate. */
-  async sendSurvey(schoolUserId: string): Promise<{ sent: number }> {
+  async sendSurvey(schoolUserId: string, questions?: string[]): Promise<{ sent: number }> {
     const graduates = await this.studentsRepo.find({
       where: { schoolUserId, isGraduate: true },
     })
+
+    const finalQuestions = questions?.filter(q => q.trim()).length ? questions : DEFAULT_QUESTIONS
+    const body = `Tu colegio quiere saber cómo te está yendo tras egresar:\n${finalQuestions.map((q, i) => `${i + 1}. ${q}`).join('\n')}`
 
     for (const student of graduates) {
       await this.notificationsService.create({
         userId: student.userId,
         type: NotificationType.GRADUATE_SURVEY,
         title: 'Encuesta de seguimiento',
-        body: 'Tu colegio quiere saber cómo te está yendo tras egresar. Responde 3 preguntas rápidas.',
+        body,
         link: '/student/encuesta-egresado',
       })
     }

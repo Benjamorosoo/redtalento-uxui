@@ -41,13 +41,23 @@ function MetricCard({ value, label, icon }: { value: string; label: string; icon
 export default function EgresadosPage() {
   const [sending, setSending] = useState(false)
   const [confirming, setConfirming] = useState(false)
+  const [editedQuestions, setEditedQuestions] = useState<string[]>(surveyQuestions)
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null)
+
+  const openConfirm = () => {
+    setEditedQuestions(surveyQuestions)
+    setConfirming(true)
+  }
+
+  const setQuestion = (index: number, value: string) => {
+    setEditedQuestions(prev => prev.map((q, i) => i === index ? value : q))
+  }
 
   const sendSurvey = async () => {
     if (sending) return
     setSending(true)
     try {
-      const res = await api.post<{ sent: number }>('/schools/me/graduates/survey', {})
+      const res = await api.post<{ sent: number }>('/schools/me/graduates/survey', { questions: editedQuestions })
       if (res.sent === 0) {
         setToast({ message: 'No hay egresados marcados todavía. Márcalos desde Estudiantes.', type: 'info' })
       } else {
@@ -79,7 +89,7 @@ export default function EgresadosPage() {
               <h3 className="font-headline text-lg font-bold text-on-surface">Seguimiento de egresados</h3>
               <p className="text-sm text-on-surface-variant">Estado laboral reportado por encuesta corta.</p>
             </div>
-            <Button variant="secondary" icon="send" onClick={() => setConfirming(true)}>
+            <Button variant="secondary" icon="send" onClick={openConfirm}>
               Enviar encuesta
             </Button>
           </div>
@@ -161,15 +171,19 @@ export default function EgresadosPage() {
 
             <div className="p-6">
               <p className="text-sm text-on-surface-variant mb-4">
-                Se enviará esta encuesta, como notificación, a todos los estudiantes marcados como egresados:
+                Editá las preguntas si querés — se enviarán como notificación a todos los estudiantes marcados como egresados:
               </p>
               <div className="space-y-2.5">
-                {surveyQuestions.map((question, index) => (
-                  <div key={question} className="flex items-center gap-3 rounded-lg border border-outline-variant/15 bg-surface-container-low p-3">
+                {editedQuestions.map((question, index) => (
+                  <div key={index} className="flex items-center gap-3 rounded-lg border border-outline-variant/15 bg-surface-container-low p-3 focus-within:border-primary/60 transition-colors">
                     <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-primary text-[11px] font-black text-on-primary">
                       {index + 1}
                     </span>
-                    <span className="text-sm font-semibold text-on-surface">{question}</span>
+                    <input
+                      value={question}
+                      onChange={e => setQuestion(index, e.target.value)}
+                      className="flex-1 min-w-0 bg-transparent text-sm font-semibold text-on-surface outline-none"
+                    />
                   </div>
                 ))}
               </div>
