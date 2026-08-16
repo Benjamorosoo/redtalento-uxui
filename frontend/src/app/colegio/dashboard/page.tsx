@@ -98,27 +98,33 @@ export default function ColegioDashboardPage() {
       {/* Índice de empleabilidad destacado + acceso a egresados */}
       <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] gap-6 mb-8">
         <div className="rounded-2xl editorial-gradient p-6 sm:p-8 shadow-editorial text-on-primary">
-          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6">
-            <div>
-              <p className="text-xs font-black uppercase tracking-[0.18em] text-on-primary/70 mb-2">
-                Índice de empleabilidad
-              </p>
-              <div className="flex items-end gap-2">
-                <span className="font-headline text-6xl font-black leading-none">{stats?.avgScore ?? 0}</span>
-                <span className="pb-2 text-2xl font-black">%</span>
+          <p className="text-xs font-black uppercase tracking-[0.18em] text-on-primary/70 mb-2">
+            Índice de empleabilidad
+          </p>
+          <div className="flex items-end gap-2">
+            <span className="font-headline text-6xl font-black leading-none">{stats?.avgScore ?? 0}</span>
+            <span className="pb-2 text-2xl font-black">%</span>
+          </div>
+          <p className="mt-3 max-w-md text-sm leading-relaxed text-on-primary/80">
+            Score promedio de preparación de tus estudiantes en la plataforma.
+          </p>
+
+          <div className="mt-6 grid grid-cols-3 gap-4 pt-6 border-t border-on-primary/15">
+            {[
+              { value: stats?.totalStudents ?? 0,           label: 'Estudiantes' },
+              { value: stats?.studentsWithValidations ?? 0, label: 'Con validaciones' },
+              { value: stats?.studentsWithApplications ?? 0, label: 'Con postulaciones' },
+            ].map(({ value, label }) => (
+              <div key={label}>
+                <p className="font-headline text-2xl font-black leading-none">{value}</p>
+                <p className="mt-1 text-[11px] font-semibold text-on-primary/70">{label}</p>
               </div>
-              <p className="mt-3 max-w-md text-sm leading-relaxed text-on-primary/80">
-                Score promedio de preparación de tus estudiantes en la plataforma.
-              </p>
-            </div>
-            <Link href="/colegio/valor-agregado?view=indice">
-              <Button variant="secondary" icon="monitoring">Ver detalle completo</Button>
-            </Link>
+            ))}
           </div>
         </div>
 
         <Link
-          href="/colegio/valor-agregado?view=egresados"
+          href="/colegio/estudiantes?tab=egresados"
           className="card p-6 sm:p-8 flex flex-col justify-between hover:shadow-elevated hover:-translate-y-0.5 transition-all"
         >
           <div>

@@ -197,7 +197,7 @@ export function ColegioNav() {
 
         {/* Left: Logo + Search */}
         <div className="flex items-center gap-4 shrink-0">
-          <Link href="/colegio/inicio" className="flex items-center gap-3 group">
+          <Link href="/colegio/inicio" className="flex items-center gap-3 group shrink-0">
             <CeibboLogoMark className="w-11 h-11" />
             <span className="text-xl font-black bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary tracking-tight font-headline hidden sm:block">
               Ceibbo
@@ -207,7 +207,7 @@ export function ColegioNav() {
         </div>
 
         {/* Center: Nav */}
-        <nav className="hidden xl:flex items-center gap-1.5">
+        <nav className="hidden xl:flex items-center gap-1.5 flex-1 min-w-0 overflow-x-auto no-scrollbar">
           {navItems.map(({ href, icon, label }) => {
             const active = pathname === href || pathname.startsWith(href + '/')
             return (
@@ -215,7 +215,7 @@ export function ColegioNav() {
                 key={href}
                 href={href}
                 className={cn(
-                  'relative flex items-center gap-2 px-4 py-2.5 rounded-full text-[13px] font-bold tracking-wide transition-colors duration-150 whitespace-nowrap',
+                  'relative flex items-center gap-2 px-4 py-2.5 rounded-full text-[13px] font-bold tracking-wide transition-colors duration-150 whitespace-nowrap shrink-0',
                   active
                     ? 'bg-primary text-on-primary'
                     : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high',
@@ -224,7 +224,7 @@ export function ColegioNav() {
                 <span className={cn('material-symbols-outlined text-[20px] shrink-0', active && 'icon-filled')}>
                   {icon}
                 </span>
-                {label}
+                <span className="hidden 2xl:inline">{label}</span>
               </Link>
             )
           })}
