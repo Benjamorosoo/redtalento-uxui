@@ -22,7 +22,8 @@
       "Bash(curl:*)",
       "Bash(npx tsc:*)",
       "Bash(npx next:*)",
-      "Bash(node test-db-connection.js)"
+      "Bash(node test-db-connection.js)",
+      "Bash(xargs grep -ln \"ACEPTADO\\\\|role\\\\b\")"
     ]
   }
 }

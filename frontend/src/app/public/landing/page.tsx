@@ -4,12 +4,33 @@ import { CeibboLogoMark } from '@/components/ui/CeibboLogoMark'
 
 export const metadata: Metadata = { title: 'Ceibbo — Construye tu identidad profesional' }
 
-const stats = [
-  { value: '50k+', label: 'Talentos activos' },
-  { value: '1.2k', label: 'Empresas aliadas' },
-  { value: '94%', label: 'Tasa de empleabilidad' },
-  { value: '340+', label: 'Colegios técnicos' },
-]
+interface PublicStats {
+  studentsCount: number
+  companiesCount: number
+  schoolsCount: number
+  employabilityRate: number
+}
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001/api'
+
+async function getPublicStats(): Promise<PublicStats | null> {
+  try {
+    const res = await fetch(`${API_BASE_URL}/stats/public`, { cache: 'no-store' })
+    if (!res.ok) return null
+    return await res.json()
+  } catch {
+    return null
+  }
+}
+
+function buildStats(data: PublicStats | null) {
+  return [
+    { value: data ? `${data.studentsCount}` : '—',        label: 'Talentos activos' },
+    { value: data ? `${data.companiesCount}` : '—',        label: 'Empresas aliadas' },
+    { value: data ? `${data.employabilityRate}%` : '—',    label: 'Tasa de empleabilidad' },
+    { value: data ? `${data.schoolsCount}` : '—',          label: 'Colegios técnicos' },
+  ]
+}
 
 const studentBenefits = [
   { icon: 'person_pin', title: 'Identidad profesional', description: 'Construye un perfil que muestre tus habilidades reales, proyectos y logros desde el colegio.' },
@@ -32,17 +53,19 @@ const schoolBenefits = [
   { icon: 'campaign', title: 'Publicaciones institucionales', description: 'Comparte noticias, eventos y logros del colegio para mantener la comunidad activa.' },
 ]
 
-export default function LandingPage() {
+export default async function LandingPage() {
+  const stats = buildStats(await getPublicStats())
+
   return (
     <div className="min-h-screen bg-surface">
 
       {/* ── Navigation ─────────────────────────────────────────────────── */}
       <nav className="fixed top-0 w-full z-50 glass-nav border-b border-outline-variant/10">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
+          <a href="#" className="flex items-center gap-2.5 cursor-pointer">
             <CeibboLogoMark className="w-9 h-9" />
             <span className="text-2xl font-black text-primary tracking-tighter font-headline">Ceibbo</span>
-          </div>
+          </a>
 
           <div className="hidden md:flex items-center gap-8 text-sm font-semibold text-on-surface-variant">
             {['Talento', 'Empresas', 'Colegios', 'Nosotros'].map((item) => (
