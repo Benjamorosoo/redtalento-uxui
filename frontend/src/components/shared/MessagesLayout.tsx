@@ -1,11 +1,11 @@
 'use client'
 
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { useSearchParams } from 'next/navigation'
+import { useSearchParams, useRouter } from 'next/navigation'
 import { Avatar } from '@/components/ui/Avatar'
 import { api } from '@/lib/api-client'
 import { useAuthStore } from '@/store/auth.store'
-import { timeAgo, cn } from '@/lib/utils'
+import { timeAgo, cn, mediaUrl } from '@/lib/utils'
 import { useSocket } from '@/lib/socket'
 
 interface Conversation {
@@ -33,7 +33,10 @@ export default function MessagesLayout() {
   const { isConnected, messages: socketMessages, sendMessage: socketSendMessage, clearMessages } = useSocket()
 
   const searchParams = useSearchParams()
+  const router = useRouter()
   const withUserId = searchParams.get('with')
+
+  const goToProfile = (userId: string) => router.push(`/student/ver/${userId}`)
 
   const [conversations, setConversations] = useState<Conversation[]>([])
   const [selected, setSelected]           = useState<Conversation | null>(null)
@@ -46,8 +49,39 @@ export default function MessagesLayout() {
   const [newConvUserId, setNewConvUserId] = useState<string | null>(null)
   const [newConvMessage, setNewConvMessage] = useState('')
   const [sendingNew, setSendingNew]       = useState(false)
+  const [myName,   setMyName]   = useState(user?.email?.split('@')[0] ?? 'Yo')
+  const [myAvatar, setMyAvatar] = useState<string | undefined>(undefined)
 
   const bottomRef = useRef<HTMLDivElement>(null)
+
+  // Resolve the current user's real display name/avatar — mirrors the logic
+  // used in StudentNav/EmpresaNav/ColegioNav, since AuthUser.profile is never
+  // actually populated by the auth store.
+  useEffect(() => {
+    if (!isAuthenticated || !user?.role) return
+    if (user.role === 'STUDENT') {
+      api.get<{ firstName: string; lastName: string; avatar?: string }>('/students/me')
+        .then(p => {
+          if (p?.firstName) setMyName(`${p.firstName} ${p.lastName}`.trim())
+          if (p?.avatar) setMyAvatar(p.avatar)
+        })
+        .catch(() => {})
+    } else if (user.role === 'EMPRESA') {
+      api.get<{ name: string; logo?: string }>('/companies/me')
+        .then(c => {
+          if (c?.name) setMyName(c.name)
+          if (c?.logo) setMyAvatar(c.logo)
+        })
+        .catch(() => {})
+    } else if (user.role === 'COLEGIO') {
+      api.get<{ name: string; logo?: string }>('/schools/me')
+        .then(s => {
+          if (s?.name) setMyName(s.name)
+          if (s?.logo) setMyAvatar(s.logo)
+        })
+        .catch(() => {})
+    }
+  }, [isAuthenticated, user?.role])
 
   // Load thread when conversation selected
   const loadThread = useCallback(async (conv: Conversation) => {
@@ -138,13 +172,9 @@ export default function MessagesLayout() {
       })
 
       // Add to local messages immediately for better UX
-      const senderName = user?.role === 'STUDENT'
-        ? `${(user?.profile as any)?.firstName || ''} ${(user?.profile as any)?.lastName || ''}`.trim() || 'Yo'
-        : (user?.profile as any)?.name || 'Yo'
-      
       const optimisticMessage = {
         ...sent,
-        sender: { name: senderName, role: user?.role },
+        sender: { name: myName, role: user?.role },
       }
       setMessages(prev => [...prev, optimisticMessage])
 
@@ -247,17 +277,25 @@ export default function MessagesLayout() {
                 </div>
               ) : (
                 filteredConvs.map(conv => (
-                  <button
+                  <div
                     key={conv.id}
+                    role="button"
+                    tabIndex={0}
                     onClick={() => { setNewConvUserId(null); loadThread(conv) }}
+                    onKeyDown={e => {
+                      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setNewConvUserId(null); loadThread(conv) }
+                    }}
                     className={cn(
-                      'w-full flex items-start gap-3 px-5 py-4 text-left transition-colors border-b border-outline-variant/5',
+                      'w-full flex items-start gap-3 px-5 py-4 text-left transition-colors border-b border-outline-variant/5 cursor-pointer',
                       selected?.id === conv.id
                         ? 'bg-primary-fixed/40'
                         : 'hover:bg-surface-container-low',
                     )}
                   >
-                    <div className="relative shrink-0">
+                    <div
+                      className="relative shrink-0 cursor-pointer"
+                      onClick={e => { e.stopPropagation(); goToProfile(conv.participantId) }}
+                    >
                       <Avatar
                         src={conv.participantAvatar}
                         name={conv.participantName}
@@ -272,10 +310,13 @@ export default function MessagesLayout() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between gap-2">
-                        <span className={cn(
-                          'text-sm font-bold truncate',
-                          selected?.id === conv.id ? 'text-primary' : 'text-on-surface',
-                        )}>
+                        <span
+                          onClick={e => { e.stopPropagation(); goToProfile(conv.participantId) }}
+                          className={cn(
+                            'text-sm font-bold truncate cursor-pointer hover:underline',
+                            selected?.id === conv.id ? 'text-primary' : 'text-on-surface',
+                          )}
+                        >
                           {conv.participantName}
                         </span>
                         <span className="text-[10px] text-outline shrink-0">{timeAgo(conv.lastMessageAt)}</span>
@@ -287,7 +328,7 @@ export default function MessagesLayout() {
                         {conv.lastMessage}
                       </p>
                     </div>
-                  </button>
+                  </div>
                 ))
               )}
             </div>
@@ -297,7 +338,10 @@ export default function MessagesLayout() {
           {selected ? (
             <div className="flex-1 flex flex-col">
               {/* Header */}
-              <div className="px-6 py-4 border-b border-outline-variant/10 flex items-center gap-4">
+              <div
+                className="px-6 py-4 border-b border-outline-variant/10 flex items-center gap-4 cursor-pointer"
+                onClick={() => goToProfile(selected.participantId)}
+              >
                 <Avatar
                   src={selected.participantAvatar}
                   name={selected.participantName}
@@ -305,7 +349,7 @@ export default function MessagesLayout() {
                   shape={selected.participantRole !== 'STUDENT' ? 'rounded' : 'circle'}
                 />
                 <div>
-                  <h3 className="font-headline font-bold text-on-surface">{selected.participantName}</h3>
+                  <h3 className="font-headline font-bold text-on-surface hover:underline">{selected.participantName}</h3>
                   <p className="text-xs text-outline capitalize">
                     {selected.participantRole === 'EMPRESA' ? 'Empresa' :
                      selected.participantRole === 'COLEGIO' ? 'Colegio' : 'Estudiante'}
@@ -371,12 +415,8 @@ export default function MessagesLayout() {
                         </div>
                         {isMe && (
                           <Avatar
-                            src={user?.avatar ?? undefined}
-                            name={
-                              user?.role === 'STUDENT'
-                                ? `${(user?.profile as any)?.firstName || ''} ${(user?.profile as any)?.lastName || ''}`.trim() || 'Yo'
-                                : (user?.profile as any)?.name ?? 'Yo'
-                            }
+                            src={mediaUrl(myAvatar ?? user?.avatar ?? undefined)}
+                            name={myName}
                             size="sm"
                             shape={user?.role !== 'STUDENT' ? 'rounded' : 'circle'}
                           />
