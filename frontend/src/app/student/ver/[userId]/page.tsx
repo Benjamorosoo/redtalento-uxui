@@ -41,6 +41,7 @@ export default function VerPerfilPage() {
   const [toast,            setToast]            = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null)
   const [burstSkillId,     setBurstSkillId]     = useState<string | null>(null)
   const [animatingSkillId, setAnimatingSkillId] = useState<string | null>(null)
+  const [hasConversation,  setHasConversation]  = useState(false)
 
   const isSelf = user?.id === userId
 
@@ -60,6 +61,12 @@ export default function VerPerfilPage() {
           const ids = s.skills.map((sk: Skill) => sk.id).join(',')
           api.get<string[]>(`/skills/endorsed-by-me?skillIds=${ids}`)
             .then(endorsed => setEndorsedIds(new Set(endorsed)))
+            .catch(() => {})
+        }
+
+        if (p.role === 'STUDENT' && isAuthenticated && user?.id !== userId && (user?.role === 'EMPRESA' || user?.role === 'COLEGIO')) {
+          api.get<{ participantId: string }[]>('/messages/conversations')
+            .then(convs => setHasConversation(convs.some(c => c.participantId === userId)))
             .catch(() => {})
         }
       })
@@ -136,6 +143,12 @@ export default function VerPerfilPage() {
   }
 
   const isStudent = profile.role === 'STUDENT'
+  const canMessage = !isSelf && isAuthenticated && isStudent && (user?.role === 'EMPRESA' || user?.role === 'COLEGIO')
+
+  const handleMessage = () => {
+    const base = user?.role === 'EMPRESA' ? '/empresa/mensajes' : '/colegio/mensajes'
+    router.push(`${base}?with=${userId}`)
+  }
   const fullName  = student ? `${student.firstName} ${student.lastName}` : profile.name
   const breakdown = student ? calculateReadinessScore(student) : null
   const technicalSkills = student?.skills.filter(s => s.category === 'TECNICA') ?? []
@@ -193,6 +206,17 @@ export default function VerPerfilPage() {
               className="border-4 border-surface-container-lowest shadow-md"
             />
             <div className="flex items-center gap-3 sm:mb-1">
+              {canMessage && (
+                <button
+                  onClick={handleMessage}
+                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold bg-primary text-on-primary shadow-md hover:shadow-lg hover:opacity-90 transition-all"
+                >
+                  <span className="material-symbols-outlined text-[18px]">
+                    {hasConversation ? 'forum' : 'chat'}
+                  </span>
+                  Mensaje
+                </button>
+              )}
               {!isSelf && isAuthenticated && (
                 <button
                   onClick={handleFollow}

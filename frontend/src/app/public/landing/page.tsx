@@ -208,7 +208,7 @@ export default async function LandingPage() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {studentBenefits.map(({ icon, title, description }) => (
-              <div key={title} className="card p-6 card-hover">
+              <div key={title} className="card p-6">
                 <div className="w-12 h-12 rounded-xl editorial-gradient flex items-center justify-center mb-5">
                   <span className="material-symbols-outlined text-on-primary icon-filled">{icon}</span>
                 </div>
@@ -229,7 +229,7 @@ export default async function LandingPage() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {companyBenefits.map(({ icon, title, description }) => (
-              <div key={title} className="bg-on-primary/10 backdrop-blur-sm rounded-xl p-6 hover:bg-on-primary/15 transition-colors">
+              <div key={title} className="bg-on-primary/10 backdrop-blur-sm rounded-xl p-6">
                 <div className="w-12 h-12 rounded-xl bg-on-primary/20 flex items-center justify-center mb-5">
                   <span className="material-symbols-outlined text-on-primary icon-filled">{icon}</span>
                 </div>
@@ -250,7 +250,7 @@ export default async function LandingPage() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {schoolBenefits.map(({ icon, title, description }) => (
-              <div key={title} className="card p-6 card-hover">
+              <div key={title} className="card p-6">
                 <div className="w-12 h-12 rounded-xl bg-surface-container-high flex items-center justify-center mb-5">
                   <span className="material-symbols-outlined text-primary icon-filled">{icon}</span>
                 </div>
