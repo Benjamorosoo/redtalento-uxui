@@ -147,11 +147,14 @@ function NavBell({ href }: { href: string }) {
 }
 
 const navItems = [
-  { href: '/colegio/inicio',       icon: 'home',      label: 'Inicio' },
-  { href: '/colegio/dashboard',    icon: 'dashboard', label: 'Dashboard' },
-  { href: '/colegio/estudiantes',  icon: 'group',     label: 'Estudiantes' },
-  { href: '/colegio/validaciones', icon: 'verified',  label: 'Validaciones' },
-  { href: '/colegio/mensajes',     icon: 'mail',      label: 'Mensajes' },
+  { href: '/colegio/inicio',                    icon: 'home',                 label: 'Inicio' },
+  { href: '/colegio/dashboard',                 icon: 'dashboard',            label: 'Dashboard' },
+  { href: '/colegio/dashboard#alertas',         icon: 'notifications_active', label: 'Alertas' },
+  { href: '/colegio/dashboard#indice',          icon: 'monitoring',           label: 'Índice de empleabilidad' },
+  { href: '/colegio/estudiantes',               icon: 'group',                label: 'Estudiantes' },
+  { href: '/colegio/estudiantes?tab=egresados', icon: 'school',               label: 'Egresados' },
+  { href: '/colegio/validaciones',              icon: 'verified',             label: 'Validaciones' },
+  { href: '/colegio/mensajes',                  icon: 'mail',                 label: 'Mensajes' },
 ]
 
 export function ColegioNav() {
@@ -206,7 +209,7 @@ export function ColegioNav() {
         </div>
 
         {/* Center: Nav */}
-        <nav className="hidden xl:flex items-center gap-1.5 flex-1 min-w-0 overflow-x-auto no-scrollbar">
+        <nav className="hidden xl:flex items-center gap-1.5 flex-1 min-w-0 overflow-x-auto pb-1">
           {navItems.map(({ href, icon, label }) => {
             const active = pathname === href || pathname.startsWith(href + '/')
             return (

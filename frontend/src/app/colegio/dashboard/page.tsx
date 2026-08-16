@@ -90,13 +90,15 @@ export default function ColegioDashboardPage() {
       </div>
 
       {/* Alertas operativas */}
-      <AlertsBanner
-        pendingValidations={stats?.pendingValidations ?? 0}
-        inactiveStudents={stats?.inactiveStudents ?? 0}
-      />
+      <div id="alertas" className="scroll-mt-28">
+        <AlertsBanner
+          pendingValidations={stats?.pendingValidations ?? 0}
+          inactiveStudents={stats?.inactiveStudents ?? 0}
+        />
+      </div>
 
       {/* Índice de empleabilidad destacado + acceso a egresados */}
-      <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] gap-6 mb-8">
+      <div id="indice" className="scroll-mt-28 grid grid-cols-1 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] gap-6 mb-8">
         <div className="rounded-2xl editorial-gradient p-6 sm:p-8 shadow-editorial text-on-primary">
           <p className="text-xs font-black uppercase tracking-[0.18em] text-on-primary/70 mb-2">
             Índice de empleabilidad
