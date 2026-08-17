@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { Avatar } from '@/components/ui/Avatar'
 import { api } from '@/lib/api-client'
 import { mediaUrl } from '@/lib/utils'
+import { useModalA11y } from '@/lib/useModalA11y'
 import Link from 'next/link'
 
 interface FollowUser {
@@ -50,12 +51,8 @@ export function FollowListModal({ userId, mode, onClose }: FollowListModalProps)
       .finally(() => setLoading(false))
   }, [userId, mode])
 
-  // Close on Escape
-  useEffect(() => {
-    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
-    document.addEventListener('keydown', handler)
-    return () => document.removeEventListener('keydown', handler)
-  }, [onClose])
+  const modalRef = useModalA11y<HTMLDivElement>(onClose)
+  const titleId = mode === 'followers' ? 'follow-list-title-followers' : 'follow-list-title-following'
 
   return (
     <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
@@ -63,17 +60,26 @@ export function FollowListModal({ userId, mode, onClose }: FollowListModalProps)
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
 
       {/* Modal */}
-      <div className="relative w-full max-w-md max-h-[80vh] flex flex-col rounded-2xl bg-surface shadow-2xl animate-slide-up overflow-hidden">
+      <div
+        ref={modalRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
+        tabIndex={-1}
+        className="relative w-full max-w-md max-h-[80vh] flex flex-col rounded-2xl bg-surface shadow-2xl animate-slide-up overflow-hidden"
+      >
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-outline-variant/15">
-          <h2 className="font-headline font-bold text-on-surface text-lg">
+          <h2 id={titleId} className="font-headline font-bold text-on-surface text-lg">
             {mode === 'followers' ? 'Seguidores' : 'Siguiendo'}
           </h2>
           <button
+            type="button"
             onClick={onClose}
+            aria-label="Cerrar"
             className="p-2 rounded-full text-on-surface-variant hover:bg-surface-container-high transition-colors"
           >
-            <span className="material-symbols-outlined text-[20px]">close</span>
+            <span className="material-symbols-outlined text-[20px]" aria-hidden="true">close</span>
           </button>
         </div>
 
@@ -93,13 +99,13 @@ export function FollowListModal({ userId, mode, onClose }: FollowListModalProps)
             </div>
           ) : users.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 px-6 text-center">
-              <span className="material-symbols-outlined text-[48px] text-outline mb-3">
+              <span className="material-symbols-outlined text-[48px] text-outline mb-3" aria-hidden="true">
                 {mode === 'followers' ? 'group_off' : 'person_search'}
               </span>
               <p className="font-semibold text-on-surface text-sm">
                 {mode === 'followers' ? 'Sin seguidores aún' : 'No sigue a nadie aún'}
               </p>
-              <p className="text-xs text-outline mt-1">
+              <p className="text-xs text-on-surface-variant mt-1">
                 {mode === 'followers'
                   ? 'Cuando alguien te siga, aparecerá aquí.'
                   : 'Cuando siga a alguien, aparecerá aquí.'}
@@ -129,10 +135,10 @@ export function FollowListModal({ userId, mode, onClose }: FollowListModalProps)
                         <p className="text-xs text-on-surface-variant truncate mt-0.5">{u.headline}</p>
                       )}
                       {u.specialty && (
-                        <p className="text-xs text-outline truncate">{u.specialty}</p>
+                        <p className="text-xs text-on-surface-variant truncate">{u.specialty}</p>
                       )}
                     </div>
-                    <span className="shrink-0 material-symbols-outlined text-[14px] text-primary icon-filled">
+                    <span className="shrink-0 material-symbols-outlined text-[14px] text-primary icon-filled" aria-hidden="true">
                       {roleIcon[u.role] ?? 'person'}
                     </span>
                   </Link>

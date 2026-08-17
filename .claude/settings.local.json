@@ -32,7 +32,10 @@
       "Bash(node scratch-backdate.js)",
       "Bash(rm -f scratch-backdate.js)",
       "Bash(xargs grep -L \"sm:grid-cols\\\\|md:grid-cols\\\\|lg:grid-cols\")",
-      "Bash(awk -F'[][]' '{gsub\\(\"px\",\"\",$2\\); if\\($2+0>=200\\) print}')"
+      "Bash(awk -F'[][]' '{gsub\\(\"px\",\"\",$2\\); if\\($2+0>=200\\) print}')",
+      "Bash(node _contrast.js)",
+      "Bash(node -e ' *)",
+      "Bash(npx eslint *)"
     ]
   }
 }

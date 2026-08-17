@@ -211,8 +211,8 @@ export default function CargaMasivaPage() {
             onChange={e => setForm(p => ({ ...p, specialty: e.target.value }))}
             placeholder="Ej: Informática" />
           <div>
-            <label className="block text-sm font-semibold text-on-surface mb-1.5">Año</label>
-            <select value={form.year} onChange={e => setForm(p => ({ ...p, year: e.target.value }))}
+            <label htmlFor="new-student-year" className="block text-sm font-semibold text-on-surface mb-1.5">Año</label>
+            <select id="new-student-year" value={form.year} onChange={e => setForm(p => ({ ...p, year: e.target.value }))}
               className="w-full rounded-xl border border-outline-variant/40 bg-surface px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary">
               {[1,2,3,4,5,6,7].map(y => <option key={y} value={y}>{y}° año</option>)}
             </select>
@@ -254,10 +254,11 @@ export default function CargaMasivaPage() {
             <p className="text-sm text-on-surface-variant mt-0.5">Sube un archivo CSV o XLSX con los estudiantes a registrar.</p>
           </div>
           <button
+            type="button"
             onClick={downloadTemplate}
             className="flex items-center gap-2 text-sm font-semibold text-primary hover:underline"
           >
-            <span className="material-symbols-outlined text-[18px]">download</span>
+            <span className="material-symbols-outlined text-[18px]" aria-hidden="true">download</span>
             Descargar plantilla
           </button>
         </div>
@@ -272,28 +273,35 @@ export default function CargaMasivaPage() {
         {/* Drop zone */}
         {!csvRows.length && !showDone && (
           <>
-            <input ref={fileInputRef} type="file" accept=".csv,.xlsx,.xls" className="hidden" onChange={handleFilePick} />
-            <div
+            <input
+              ref={fileInputRef}
+              id="csv-file-input"
+              type="file"
+              accept=".csv,.xlsx,.xls"
+              className="sr-only"
+              onChange={handleFilePick}
+            />
+            <label
+              htmlFor="csv-file-input"
               onDragOver={e => { e.preventDefault(); setDragOver(true) }}
               onDragLeave={() => setDragOver(false)}
               onDrop={handleDrop}
-              onClick={() => fileInputRef.current?.click()}
-              className={`flex flex-col items-center justify-center p-12 rounded-xl border-2 border-dashed cursor-pointer transition-all ${
+              className={`flex flex-col items-center justify-center p-12 rounded-xl border-2 border-dashed cursor-pointer transition-all focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2 ${
                 dragOver
                   ? 'border-primary bg-primary-fixed/20'
                   : 'border-outline-variant/30 hover:border-primary/50 hover:bg-surface-container-low'
               }`}
             >
-              <div className="w-14 h-14 rounded-2xl bg-primary-fixed flex items-center justify-center mb-3">
+              <div className="w-14 h-14 rounded-2xl bg-primary-fixed flex items-center justify-center mb-3" aria-hidden="true">
                 <span className="material-symbols-outlined text-primary text-[28px]">upload_file</span>
               </div>
               <p className="font-bold text-on-surface text-sm">Arrastra tu archivo aquí</p>
               <p className="text-xs text-on-surface-variant mt-1">o haz clic para seleccionar</p>
-              <p className="text-xs text-outline mt-2">.CSV o .XLSX · Máximo 5MB · Hasta 500 filas</p>
-            </div>
+              <p className="text-xs text-on-surface-variant mt-2">.CSV o .XLSX · Máximo 5MB · Hasta 500 filas</p>
+            </label>
             {parseError && (
-              <div className="mt-4 flex items-start gap-2 p-4 bg-red-50 border border-red-200 rounded-xl">
-                <span className="material-symbols-outlined text-error text-[18px] shrink-0 mt-0.5">error</span>
+              <div role="alert" className="mt-4 flex items-start gap-2 p-4 bg-red-50 border border-red-200 rounded-xl">
+                <span className="material-symbols-outlined text-error text-[18px] shrink-0 mt-0.5" aria-hidden="true">error</span>
                 <p className="text-sm text-error font-semibold">{parseError}</p>
               </div>
             )}
@@ -309,13 +317,13 @@ export default function CargaMasivaPage() {
                 {errorRows.length > 0
                   ? <span className="text-xs font-bold text-error bg-red-50 border border-red-200 px-2.5 py-1 rounded-full">{errorRows.length} con errores</span>
                   : <span className="text-xs font-bold text-green-700 bg-green-50 border border-green-200 px-2.5 py-1 rounded-full flex items-center gap-1">
-                      <span className="material-symbols-outlined text-[12px] icon-filled">check_circle</span>
+                      <span className="material-symbols-outlined text-[12px] icon-filled" aria-hidden="true">check_circle</span>
                       Sin errores
                     </span>
                 }
               </div>
-              <button onClick={() => { setCsvRows([]); setParseError(null) }}
-                className="text-xs font-semibold text-outline hover:text-error transition-colors">
+              <button type="button" onClick={() => { setCsvRows([]); setParseError(null) }}
+                className="text-xs font-semibold text-on-surface-variant hover:text-error transition-colors">
                 Cancelar
               </button>
             </div>
@@ -325,7 +333,7 @@ export default function CargaMasivaPage() {
                 <thead className="bg-surface-container-low">
                   <tr>
                     {['#', 'Nombre', 'Apellido', 'Email', 'Especialidad', 'Año', 'Estado'].map(h => (
-                      <th key={h} className="px-4 py-3 text-left text-[11px] font-black uppercase tracking-widest text-outline whitespace-nowrap">{h}</th>
+                      <th key={h} scope="col" className="px-4 py-3 text-left text-[11px] font-black uppercase tracking-widest text-outline whitespace-nowrap">{h}</th>
                     ))}
                   </tr>
                 </thead>
@@ -341,7 +349,10 @@ export default function CargaMasivaPage() {
                       <td className="px-4 py-3">
                         {row.error
                           ? <span className="text-xs text-error font-semibold">{row.error}</span>
-                          : <span className="material-symbols-outlined text-green-600 text-[16px] icon-filled">check_circle</span>
+                          : <span className="inline-flex items-center gap-1 text-xs text-green-700 font-semibold">
+                              <span className="material-symbols-outlined text-green-600 text-[16px] icon-filled" aria-hidden="true">check_circle</span>
+                              Válido
+                            </span>
                         }
                       </td>
                     </tr>
@@ -370,8 +381,8 @@ export default function CargaMasivaPage() {
         {/* Done state */}
         {showDone && (
           <div className="animate-slide-up">
-            <div className="flex items-center gap-4 mb-5">
-              <div className="w-14 h-14 rounded-full bg-green-50 flex items-center justify-center shrink-0">
+            <div className="flex items-center gap-4 mb-5" role="status" aria-live="polite">
+              <div className="w-14 h-14 rounded-full bg-green-50 flex items-center justify-center shrink-0" aria-hidden="true">
                 <span className="material-symbols-outlined text-[32px] text-green-500 icon-filled">task_alt</span>
               </div>
               <div>
@@ -389,7 +400,7 @@ export default function CargaMasivaPage() {
                 <thead className="bg-surface-container-low">
                   <tr>
                     {['Estudiante', 'Email', 'Estado', 'Contraseña temporal'].map(h => (
-                      <th key={h} className="px-4 py-3 text-left text-[11px] font-black uppercase tracking-widest text-outline">{h}</th>
+                      <th key={h} scope="col" className="px-4 py-3 text-left text-[11px] font-black uppercase tracking-widest text-outline">{h}</th>
                     ))}
                   </tr>
                 </thead>

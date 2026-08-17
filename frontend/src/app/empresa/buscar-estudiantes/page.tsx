@@ -193,12 +193,18 @@ export default function BuscarEstudiantesPage() {
             <h3 className="font-headline font-bold text-[11px] uppercase tracking-widest text-outline mb-4">Especialidad</h3>
             <div className="space-y-2.5">
               {SPECIALTIES.map(s => (
-                <label key={s} className="flex items-center gap-2.5 cursor-pointer" onClick={() => toggleSpecialty(s)}>
-                  <div className={`w-4 h-4 rounded border-2 flex items-center justify-center transition-all ${
+                <label key={s} className="flex items-center gap-2.5 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={specialties.includes(s)}
+                    onChange={() => toggleSpecialty(s)}
+                    className="sr-only peer"
+                  />
+                  <div className={`w-4 h-4 rounded border-2 flex items-center justify-center transition-all peer-focus-visible:ring-2 peer-focus-visible:ring-primary peer-focus-visible:ring-offset-1 ${
                     specialties.includes(s)
                       ? 'bg-primary-container border-primary-container'
                       : 'border-outline-variant'
-                  }`}>
+                  }`} aria-hidden="true">
                     {specialties.includes(s) && (
                       <span className="material-symbols-outlined text-on-primary text-[11px]">check</span>
                     )}

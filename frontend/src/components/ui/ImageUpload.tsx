@@ -124,14 +124,14 @@ export function ImageUpload({
         {preview ? (
           <Image
             src={preview}
-            alt="Imagen de perfil"
+            alt={label}
             fill
             className="object-cover"
             unoptimized  // Necesario para URLs de blob y servidor local
           />
         ) : (
           placeholder ?? (
-            <div className="w-full h-full flex items-center justify-center bg-surface-container text-outline">
+            <div className="w-full h-full flex items-center justify-center bg-surface-container text-outline" aria-hidden="true">
               <span className="material-symbols-outlined text-[32px]">add_a_photo</span>
             </div>
           )
@@ -142,7 +142,7 @@ export function ImageUpload({
           'absolute inset-0 flex flex-col items-center justify-center gap-1',
           'bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity',
           shapeClass,
-        )}>
+        )} aria-hidden="true">
           {uploading ? (
             <span className="material-symbols-outlined text-white text-[24px] animate-spin">
               progress_activity
@@ -156,9 +156,14 @@ export function ImageUpload({
         </div>
       </button>
 
+      {/* Estado de subida, anunciado a lectores de pantalla */}
+      <span role="status" aria-live="polite" className="sr-only">
+        {uploading ? 'Subiendo imagen…' : ''}
+      </span>
+
       {/* Error */}
       {error && (
-        <p className="mt-1.5 text-[11px] text-error font-semibold">{error}</p>
+        <p role="alert" className="mt-1.5 text-[11px] text-error font-semibold">{error}</p>
       )}
     </div>
   )

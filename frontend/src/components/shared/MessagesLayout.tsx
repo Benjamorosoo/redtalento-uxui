@@ -53,6 +53,7 @@ export default function MessagesLayout() {
   const [myAvatar, setMyAvatar] = useState<string | undefined>(undefined)
 
   const bottomRef = useRef<HTMLDivElement>(null)
+  const [liveAnnouncement, setLiveAnnouncement] = useState('')
 
   // Resolve the current user's real display name/avatar — mirrors the logic
   // used in StudentNav/EmpresaNav/ColegioNav, since AuthUser.profile is never
@@ -137,6 +138,13 @@ export default function MessagesLayout() {
           })
         }
 
+        // Announce incoming messages (not our own) to screen reader users
+        if (socketMsg.senderId !== user?.id) {
+          const senderName = conversations.find(c => c.participantId === socketMsg.senderId)?.participantName
+            ?? (selected && selected.participantId === socketMsg.senderId ? selected.participantName : 'un contacto')
+          setLiveAnnouncement(`Nuevo mensaje de ${senderName}: ${socketMsg.content}`)
+        }
+
         // Update conversations list
         setConversations(prev =>
           prev.map(c => {
@@ -154,7 +162,7 @@ export default function MessagesLayout() {
       })
       clearMessages()
     }
-  }, [socketMessages, selected, clearMessages])
+  }, [socketMessages, selected, clearMessages, user?.id, conversations])
 
   const send = async () => {
     if (!message.trim() || !selected || sending) return
@@ -227,6 +235,9 @@ export default function MessagesLayout() {
 
   return (
     <main className="max-w-[1440px] mx-auto px-8 py-10">
+      {/* Announces incoming chat messages to screen reader users */}
+      <div role="status" aria-live="polite" className="sr-only">{liveAnnouncement}</div>
+
       <div className="card overflow-hidden" style={{ height: 'calc(100vh - 8rem)' }}>
         <div className="flex h-full">
 
@@ -239,26 +250,27 @@ export default function MessagesLayout() {
                   <div className={cn(
                     'w-2 h-2 rounded-full',
                     isConnected ? 'bg-green-500' : 'bg-red-500'
-                  )} />
-                  <span className="text-xs text-outline">
+                  )} aria-hidden="true" />
+                  <span className="text-xs text-on-surface-variant">
                     {isConnected ? 'Conectado' : 'Desconectado'}
                   </span>
                 </div>
               </div>
               <div className="flex items-center bg-surface-container-low rounded-lg px-3 py-2 gap-2">
-                <span className="material-symbols-outlined text-outline text-[18px]">search</span>
+                <span className="material-symbols-outlined text-outline text-[18px]" aria-hidden="true">search</span>
                 <input
                   value={search}
                   onChange={e => setSearch(e.target.value)}
                   placeholder="Buscar conversación..."
-                  className="bg-transparent outline-none text-sm w-full placeholder:text-outline"
+                  aria-label="Buscar conversación"
+                  className="bg-transparent outline-none text-sm w-full placeholder:text-outline focus-visible:ring-2 focus-visible:ring-primary rounded"
                 />
               </div>
             </div>
 
             <div className="flex-1 overflow-y-auto">
               {loadingConvs ? (
-                <div className="space-y-0">
+                <div className="space-y-0" aria-hidden="true">
                   {[1,2,3].map(i => (
                     <div key={i} className="flex items-start gap-3 px-5 py-4 border-b border-outline-variant/5 animate-pulse">
                       <div className="w-10 h-10 rounded-full bg-surface-container-low shrink-0" />
@@ -271,7 +283,7 @@ export default function MessagesLayout() {
                 </div>
               ) : filteredConvs.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
-                  <span className="material-symbols-outlined text-[48px] text-outline">forum</span>
+                  <span className="material-symbols-outlined text-[48px] text-outline" aria-hidden="true">forum</span>
                   <p className="mt-3 text-sm font-semibold text-on-surface-variant">Sin conversaciones</p>
                   <p className="text-xs text-outline mt-1">Cuando alguien te escriba, aparecerá aquí.</p>
                 </div>
@@ -281,21 +293,19 @@ export default function MessagesLayout() {
                     key={conv.id}
                     role="button"
                     tabIndex={0}
+                    aria-label={`Conversación con ${conv.participantName}${conv.unreadCount > 0 ? `, ${conv.unreadCount} sin leer` : ''}`}
                     onClick={() => { setNewConvUserId(null); loadThread(conv) }}
                     onKeyDown={e => {
                       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setNewConvUserId(null); loadThread(conv) }
                     }}
                     className={cn(
-                      'w-full flex items-start gap-3 px-5 py-4 text-left transition-colors border-b border-outline-variant/5 cursor-pointer',
+                      'w-full flex items-start gap-3 px-5 py-4 text-left transition-colors border-b border-outline-variant/5 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset',
                       selected?.id === conv.id
                         ? 'bg-primary-fixed/40'
                         : 'hover:bg-surface-container-low',
                     )}
                   >
-                    <div
-                      className="relative shrink-0 cursor-pointer"
-                      onClick={e => { e.stopPropagation(); goToProfile(conv.participantId) }}
-                    >
+                    <div className="relative shrink-0">
                       <Avatar
                         src={conv.participantAvatar}
                         name={conv.participantName}
@@ -303,7 +313,7 @@ export default function MessagesLayout() {
                         shape={conv.participantRole !== 'STUDENT' ? 'rounded' : 'circle'}
                       />
                       {conv.unreadCount > 0 && (
-                        <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-primary text-on-primary text-[9px] font-bold rounded-full flex items-center justify-center">
+                        <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-primary text-on-primary text-[9px] font-bold rounded-full flex items-center justify-center" aria-hidden="true">
                           {conv.unreadCount}
                         </span>
                       )}
@@ -311,15 +321,15 @@ export default function MessagesLayout() {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between gap-2">
                         <span
-                          onClick={e => { e.stopPropagation(); goToProfile(conv.participantId) }}
                           className={cn(
-                            'text-sm font-bold truncate cursor-pointer hover:underline',
+                            'text-sm font-bold truncate',
                             selected?.id === conv.id ? 'text-primary' : 'text-on-surface',
                           )}
                         >
                           {conv.participantName}
+                          {conv.unreadCount > 0 && <span className="sr-only"> ({conv.unreadCount} sin leer)</span>}
                         </span>
-                        <span className="text-[10px] text-outline shrink-0">{timeAgo(conv.lastMessageAt)}</span>
+                        <span className="text-[10px] text-on-surface-variant shrink-0">{timeAgo(conv.lastMessageAt)}</span>
                       </div>
                       <p className={cn(
                         'text-xs truncate mt-0.5',
@@ -338,9 +348,11 @@ export default function MessagesLayout() {
           {selected ? (
             <div className="flex-1 flex flex-col">
               {/* Header */}
-              <div
-                className="px-6 py-4 border-b border-outline-variant/10 flex items-center gap-4 cursor-pointer"
+              <button
+                type="button"
+                className="px-6 py-4 border-b border-outline-variant/10 flex items-center gap-4 cursor-pointer w-full text-left hover:bg-surface-container-low transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset"
                 onClick={() => goToProfile(selected.participantId)}
+                aria-label={`Ver perfil de ${selected.participantName}`}
               >
                 <Avatar
                   src={selected.participantAvatar}
@@ -350,12 +362,12 @@ export default function MessagesLayout() {
                 />
                 <div>
                   <h3 className="font-headline font-bold text-on-surface hover:underline">{selected.participantName}</h3>
-                  <p className="text-xs text-outline capitalize">
+                  <p className="text-xs text-on-surface-variant capitalize">
                     {selected.participantRole === 'EMPRESA' ? 'Empresa' :
                      selected.participantRole === 'COLEGIO' ? 'Colegio' : 'Estudiante'}
                   </p>
                 </div>
-              </div>
+              </button>
 
               {/* Messages */}
               <div className="flex-1 overflow-y-auto p-6 space-y-4">
@@ -373,9 +385,9 @@ export default function MessagesLayout() {
                   </div>
                 ) : messages.length === 0 ? (
                   <div className="flex flex-col items-center justify-center h-full py-20 text-center">
-                    <span className="material-symbols-outlined text-[64px] text-outline">mail</span>
+                    <span className="material-symbols-outlined text-[64px] text-outline" aria-hidden="true">mail</span>
                     <p className="mt-4 font-semibold text-on-surface-variant">Inicia la conversación</p>
-                    <p className="text-sm text-outline mt-1">Envía el primer mensaje a {selected.participantName}</p>
+                    <p className="text-sm text-on-surface-variant mt-1">Envía el primer mensaje a {selected.participantName}</p>
                   </div>
                 ) : (
                   messages.map(msg => {
@@ -435,15 +447,18 @@ export default function MessagesLayout() {
                     value={message}
                     onChange={e => setMessage(e.target.value)}
                     placeholder="Escribe un mensaje..."
-                    className="flex-1 bg-transparent outline-none text-sm placeholder:text-outline"
+                    aria-label={`Mensaje para ${selected.participantName}`}
+                    className="flex-1 bg-transparent outline-none text-sm placeholder:text-outline focus-visible:ring-2 focus-visible:ring-primary rounded"
                     onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send() } }}
                   />
                   <button
+                    type="button"
                     onClick={send}
                     disabled={!message.trim() || sending}
-                    className="w-8 h-8 rounded-lg editorial-gradient flex items-center justify-center disabled:opacity-40 transition-opacity"
+                    aria-label="Enviar mensaje"
+                    className="w-8 h-8 rounded-lg editorial-gradient flex items-center justify-center disabled:opacity-40 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
                   >
-                    <span className="material-symbols-outlined text-on-primary text-[18px]">send</span>
+                    <span className="material-symbols-outlined text-on-primary text-[18px]" aria-hidden="true">send</span>
                   </button>
                 </div>
               </div>
@@ -461,7 +476,7 @@ export default function MessagesLayout() {
               {/* Empty messages area */}
               <div className="flex-1 flex items-center justify-center">
                 <div className="text-center">
-                  <span className="material-symbols-outlined text-[64px] text-outline">mail</span>
+                  <span className="material-symbols-outlined text-[64px] text-outline" aria-hidden="true">mail</span>
                   <p className="mt-4 font-semibold text-on-surface-variant">Escribe tu primer mensaje</p>
                 </div>
               </div>
@@ -473,15 +488,18 @@ export default function MessagesLayout() {
                     value={newConvMessage}
                     onChange={e => setNewConvMessage(e.target.value)}
                     placeholder="Escribe un mensaje..."
-                    className="flex-1 bg-transparent outline-none text-sm placeholder:text-outline"
+                    aria-label="Mensaje"
+                    className="flex-1 bg-transparent outline-none text-sm placeholder:text-outline focus-visible:ring-2 focus-visible:ring-primary rounded"
                     onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendNewConversation() } }}
                   />
                   <button
+                    type="button"
                     onClick={sendNewConversation}
                     disabled={!newConvMessage.trim() || sendingNew}
-                    className="w-8 h-8 rounded-lg editorial-gradient flex items-center justify-center disabled:opacity-40 transition-opacity"
+                    aria-label="Enviar mensaje"
+                    className="w-8 h-8 rounded-lg editorial-gradient flex items-center justify-center disabled:opacity-40 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
                   >
-                    <span className="material-symbols-outlined text-on-primary text-[18px]">send</span>
+                    <span className="material-symbols-outlined text-on-primary text-[18px]" aria-hidden="true">send</span>
                   </button>
                 </div>
               </div>
@@ -489,7 +507,7 @@ export default function MessagesLayout() {
           ) : (
             <div className="flex-1 flex items-center justify-center">
               <div className="text-center">
-                <span className="material-symbols-outlined text-[64px] text-outline">forum</span>
+                <span className="material-symbols-outlined text-[64px] text-outline" aria-hidden="true">forum</span>
                 <p className="font-headline font-bold text-on-surface mt-4">Selecciona una conversación</p>
                 <p className="text-sm text-on-surface-variant mt-1">Elige un chat de la lista para empezar</p>
               </div>

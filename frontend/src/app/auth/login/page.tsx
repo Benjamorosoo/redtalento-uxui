@@ -191,7 +191,7 @@ export default function LoginPage() {
                   onClick={() => { setSelectedRole(null); setError('') }}
                   className="flex items-center gap-2 text-sm text-on-surface-variant hover:text-primary transition-colors mb-6 group"
                 >
-                  <span className="material-symbols-outlined text-[18px] group-hover:-translate-x-0.5 transition-transform">arrow_back</span>
+                  <span className="material-symbols-outlined text-[18px] group-hover:-translate-x-0.5 transition-transform" aria-hidden="true">arrow_back</span>
                   Cambiar tipo de cuenta
                 </button>
 
@@ -223,7 +223,7 @@ export default function LoginPage() {
                   <p className="text-sm font-bold text-on-surface">Usar cuenta demo de {selectedRoleData!.label}</p>
                   <p className="text-xs text-on-surface-variant">{selectedRoleData!.demo.email}</p>
                 </div>
-                <span className="text-xs font-bold text-primary px-2 py-1 bg-primary-fixed rounded-lg">
+                <span className="text-xs font-bold text-primary-container px-2 py-1 bg-primary-fixed rounded-lg">
                   Demo
                 </span>
               </button>
@@ -252,8 +252,8 @@ export default function LoginPage() {
                 />
 
                 {error && (
-                  <div className="flex items-center gap-2 bg-error-container rounded-xl px-4 py-3 text-sm">
-                    <span className="material-symbols-outlined text-[18px] text-error shrink-0">error</span>
+                  <div role="alert" className="flex items-center gap-2 bg-error-container rounded-xl px-4 py-3 text-sm">
+                    <span className="material-symbols-outlined text-[18px] text-error shrink-0" aria-hidden="true">error</span>
                     <span className="text-on-error-container">{error}</span>
                   </div>
                 )}

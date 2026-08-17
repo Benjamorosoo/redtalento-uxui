@@ -211,7 +211,7 @@ function RegisterPage() {
                   onClick={() => { setStep('role'); setError('') }}
                   className="flex items-center gap-2 text-sm text-on-surface-variant hover:text-primary transition-colors mb-6 group"
                 >
-                  <span className="material-symbols-outlined text-[18px] group-hover:-translate-x-0.5 transition-transform">arrow_back</span>
+                  <span className="material-symbols-outlined text-[18px] group-hover:-translate-x-0.5 transition-transform" aria-hidden="true">arrow_back</span>
                   Cambiar tipo de cuenta
                 </button>
 
@@ -248,21 +248,23 @@ function RegisterPage() {
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wide mb-1.5 block">
+                        <label htmlFor="reg-specialty" className="text-xs font-bold text-on-surface-variant uppercase tracking-wide mb-1.5 block">
                           Especialidad
                         </label>
                         <input
+                          id="reg-specialty"
                           placeholder="Informática, Electrónica..."
-                          className="w-full bg-surface-container-low border border-outline-variant/30 focus:border-primary/60 rounded-lg px-3 py-2.5 text-sm outline-none transition-colors"
+                          className="w-full bg-surface-container-low border border-outline-variant/30 focus:border-primary/60 focus-visible:ring-2 focus-visible:ring-primary rounded-lg px-3 py-2.5 text-sm outline-none transition-colors"
                           {...register('specialty')}
                         />
                       </div>
                       <div>
-                        <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wide mb-1.5 block">
+                        <label htmlFor="reg-year" className="text-xs font-bold text-on-surface-variant uppercase tracking-wide mb-1.5 block">
                           Año cursado
                         </label>
                         <select
-                          className="w-full bg-surface-container-low border border-outline-variant/30 focus:border-primary/60 rounded-lg px-3 py-2.5 text-sm outline-none transition-colors"
+                          id="reg-year"
+                          className="w-full bg-surface-container-low border border-outline-variant/30 focus:border-primary/60 focus-visible:ring-2 focus-visible:ring-primary rounded-lg px-3 py-2.5 text-sm outline-none transition-colors"
                           {...register('year')}
                         >
                           <option value="">Seleccionar...</option>
@@ -274,11 +276,12 @@ function RegisterPage() {
                     </div>
                     {schools.length > 0 && (
                       <div>
-                        <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wide mb-1.5 block">
+                        <label htmlFor="reg-school" className="text-xs font-bold text-on-surface-variant uppercase tracking-wide mb-1.5 block">
                           Mi colegio <span className="font-normal normal-case">(opcional)</span>
                         </label>
                         <select
-                          className="w-full bg-surface-container-low border border-outline-variant/30 focus:border-primary/60 rounded-lg px-3 py-2.5 text-sm outline-none transition-colors"
+                          id="reg-school"
+                          className="w-full bg-surface-container-low border border-outline-variant/30 focus:border-primary/60 focus-visible:ring-2 focus-visible:ring-primary rounded-lg px-3 py-2.5 text-sm outline-none transition-colors"
                           {...register('schoolUserId')}
                         >
                           <option value="">— Sin colegio vinculado —</option>
@@ -317,8 +320,8 @@ function RegisterPage() {
                 />
 
                 {error && (
-                  <div className="flex items-center gap-2 bg-error-container rounded-xl px-4 py-3 text-sm">
-                    <span className="material-symbols-outlined text-[18px] text-error shrink-0">error</span>
+                  <div role="alert" className="flex items-center gap-2 bg-error-container rounded-xl px-4 py-3 text-sm">
+                    <span className="material-symbols-outlined text-[18px] text-error shrink-0" aria-hidden="true">error</span>
                     <span className="text-on-error-container">{error}</span>
                   </div>
                 )}
@@ -327,10 +330,8 @@ function RegisterPage() {
                   Crear cuenta como {selectedRoleData.label}
                 </Button>
 
-                <p className="text-[11px] text-outline text-center">
-                  Al crear una cuenta aceptas nuestros{' '}
-                  <a href="#" className="underline">Términos de uso</a> y{' '}
-                  <a href="#" className="underline">Política de privacidad</a>.
+                <p className="text-[11px] text-on-surface-variant text-center">
+                  Al crear una cuenta aceptas nuestros Términos de uso y Política de privacidad.
                 </p>
               </form>
 

@@ -32,9 +32,21 @@ export function Toast({ message, type = 'success', onDismiss, duration = 3000 }:
   }
 
   return (
-    <div className={`fixed bottom-6 left-1/2 -translate-x-1/2 z-[300] flex items-center gap-3 px-5 py-3.5 rounded-2xl shadow-xl ${styles[type]} animate-fade-in`}>
-      <span className="material-symbols-outlined text-[20px] icon-filled">{icons[type]}</span>
+    <div
+      role={type === 'error' ? 'alert' : 'status'}
+      aria-live={type === 'error' ? 'assertive' : 'polite'}
+      className={`fixed bottom-6 left-1/2 -translate-x-1/2 z-[300] flex items-center gap-3 px-5 py-3.5 rounded-2xl shadow-xl ${styles[type]} animate-fade-in`}
+    >
+      <span className="material-symbols-outlined text-[20px] icon-filled" aria-hidden="true">{icons[type]}</span>
       <span className="text-sm font-semibold">{message}</span>
+      <button
+        type="button"
+        onClick={() => { setVisible(false); onDismiss() }}
+        aria-label="Cerrar aviso"
+        className="ml-1 -mr-1 p-1 rounded-full hover:bg-white/15 transition-colors shrink-0"
+      >
+        <span className="material-symbols-outlined text-[16px]" aria-hidden="true">close</span>
+      </button>
     </div>
   )
 }

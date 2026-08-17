@@ -37,6 +37,11 @@ export function OpportunityCard({
 
   return (
     <article className={cn('card group', className)}>
+      {/* Announces the outcome of applying to screen reader users */}
+      <div role="status" aria-live="polite" className="sr-only">
+        {applied ? `Postulación enviada a ${opportunity.title}` : ''}
+      </div>
+
       <div className="p-6">
         {/* Header */}
         <div className="flex items-start gap-4 mb-4">
@@ -51,7 +56,7 @@ export function OpportunityCard({
               />
             </div>
           ) : (
-            <div className="w-12 h-12 rounded-xl bg-surface-container-low flex items-center justify-center shrink-0 border border-outline-variant/20">
+            <div className="w-12 h-12 rounded-xl bg-surface-container-low flex items-center justify-center shrink-0 border border-outline-variant/20" aria-hidden="true">
               <span className="material-symbols-outlined text-primary text-[24px]">business</span>
             </div>
           )}
@@ -68,17 +73,19 @@ export function OpportunityCard({
           {/* Match badge — clickable para expandir desglose */}
           {matchScore > 0 && (
             <button
+              type="button"
               onClick={() => hasMatch && setShowMatchDetails(v => !v)}
+              aria-expanded={hasMatch ? showMatchDetails : undefined}
+              aria-label={hasMatch ? `${matchScore}% de compatibilidad. Ver desglose del match` : `${matchScore}% de compatibilidad`}
               className={cn(
                 'shrink-0 text-xs font-bold px-2.5 py-1 rounded-full transition-all',
                 scoreBgColor(matchScore),
                 hasMatch && 'hover:opacity-80 cursor-pointer',
               )}
-              title={hasMatch ? 'Ver desglose del match' : undefined}
             >
               {matchScore}% match
               {hasMatch && (
-                <span className="ml-1 material-symbols-outlined text-[12px] align-middle">
+                <span className="ml-1 material-symbols-outlined text-[12px] align-middle" aria-hidden="true">
                   {showMatchDetails ? 'expand_less' : 'expand_more'}
                 </span>
               )}
@@ -97,7 +104,7 @@ export function OpportunityCard({
 
             {/* Barra de progreso general */}
             <div>
-              <div className="flex justify-between text-[11px] font-semibold text-outline mb-1">
+              <div className="flex justify-between text-[11px] font-semibold text-on-surface-variant mb-1">
                 <span>Compatibilidad general</span>
                 <span>{matchScore}%</span>
               </div>
@@ -118,7 +125,7 @@ export function OpportunityCard({
             {(matchBreakdown.totalCount > 0) && (
               <div className="grid grid-cols-2 gap-3">
                 <div className="bg-surface-container rounded-lg p-3">
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-outline mb-1">Técnicas</p>
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant mb-1">Técnicas</p>
                   <div className="flex items-end gap-1">
                     <span className="text-xl font-black text-on-surface">{matchBreakdown.technicalScore}%</span>
                   </div>
@@ -127,7 +134,7 @@ export function OpportunityCard({
                   </div>
                 </div>
                 <div className="bg-surface-container rounded-lg p-3">
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-outline mb-1">Blandas</p>
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant mb-1">Blandas</p>
                   <div className="flex items-end gap-1">
                     <span className="text-xl font-black text-on-surface">{matchBreakdown.softScore}%</span>
                   </div>
@@ -141,7 +148,7 @@ export function OpportunityCard({
             {/* Detalle por habilidad */}
             {matchDetails && matchDetails.length > 0 && (
               <div>
-                <p className="text-[11px] font-bold uppercase tracking-widest text-outline mb-2">
+                <p className="text-[11px] font-bold uppercase tracking-widest text-on-surface-variant mb-2">
                   Requisitos ({matchBreakdown.matchedCount}/{matchBreakdown.totalCount})
                 </p>
                 <div className="space-y-1.5">
@@ -158,9 +165,10 @@ export function OpportunityCard({
                       <span className={cn(
                         'material-symbols-outlined text-[14px]',
                         detail.isMet ? 'text-green-600' : 'text-outline',
-                      )}>
+                      )} aria-hidden="true">
                         {detail.isMet ? 'check_circle' : 'radio_button_unchecked'}
                       </span>
+                      <span className="sr-only">{detail.isMet ? 'Cumplido: ' : 'No cumplido: '}</span>
                       <span className="flex-1">{detail.requirement}</span>
                       {detail.isMet && detail.matchedVia === 'synonym' && (
                         <span className="text-[9px] font-bold text-green-600 opacity-70">similar</span>
@@ -184,7 +192,7 @@ export function OpportunityCard({
             {/* Bonus evidencias */}
             {matchBreakdown.evidenceBonus > 0 && (
               <div className="flex items-center gap-2 text-xs text-green-700 bg-green-50 px-3 py-2 rounded-lg">
-                <span className="material-symbols-outlined text-[14px] text-green-600">workspace_premium</span>
+                <span className="material-symbols-outlined text-[14px] text-green-600" aria-hidden="true">workspace_premium</span>
                 +{matchBreakdown.evidenceBonus} pts por evidencias relacionadas en tu portafolio
               </div>
             )}
@@ -192,13 +200,13 @@ export function OpportunityCard({
             {/* Tips */}
             {matchBreakdown.tips && matchBreakdown.tips.length > 0 && (
               <div className="border-t border-outline-variant/15 pt-3">
-                <p className="text-[11px] font-bold uppercase tracking-widest text-outline mb-2">
+                <p className="text-[11px] font-bold uppercase tracking-widest text-on-surface-variant mb-2">
                   Cómo mejorar tu match
                 </p>
                 <ul className="space-y-1">
                   {matchBreakdown.tips.map((tip, i) => (
                     <li key={i} className="flex items-start gap-2 text-xs text-on-surface-variant">
-                      <span className="material-symbols-outlined text-[13px] text-amber-500 mt-0.5 shrink-0">lightbulb</span>
+                      <span className="material-symbols-outlined text-[13px] text-amber-500 mt-0.5 shrink-0" aria-hidden="true">lightbulb</span>
                       {tip}
                     </li>
                   ))}
@@ -211,16 +219,16 @@ export function OpportunityCard({
         {/* Meta */}
         <div className="flex flex-wrap gap-2 mb-4">
           <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-on-surface-variant bg-surface-container px-2.5 py-1 rounded-full">
-            <span className="material-symbols-outlined text-[13px]">work</span>
+            <span className="material-symbols-outlined text-[13px]" aria-hidden="true">work</span>
             {typeLabel[opportunity.type]}
           </span>
           <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-on-surface-variant bg-surface-container px-2.5 py-1 rounded-full">
-            <span className="material-symbols-outlined text-[13px]">location_on</span>
+            <span className="material-symbols-outlined text-[13px]" aria-hidden="true">location_on</span>
             {opportunity.location}
           </span>
           {opportunity.isRemote && (
-            <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-primary bg-primary-fixed/60 px-2.5 py-1 rounded-full">
-              <span className="material-symbols-outlined text-[13px]">wifi</span>
+            <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-primary-container bg-primary-fixed px-2.5 py-1 rounded-full">
+              <span className="material-symbols-outlined text-[13px]" aria-hidden="true">wifi</span>
               Remoto
             </span>
           )}
@@ -261,14 +269,14 @@ export function OpportunityCard({
 
         {/* Footer */}
         <div className="flex items-center justify-between pt-4 border-t border-outline-variant/15">
-          <div className="flex items-center gap-3 text-xs text-outline">
+          <div className="flex items-center gap-3 text-xs text-on-surface-variant">
             <span className="flex items-center gap-1">
-              <span className="material-symbols-outlined text-[14px]">group</span>
+              <span className="material-symbols-outlined text-[14px]" aria-hidden="true">group</span>
               {opportunity.applicantsCount} postulantes
             </span>
             {opportunity.deadline && (
               <span className="flex items-center gap-1">
-                <span className="material-symbols-outlined text-[14px]">schedule</span>
+                <span className="material-symbols-outlined text-[14px]" aria-hidden="true">schedule</span>
                 Hasta {new Date(opportunity.deadline).toLocaleDateString('es-CL', { day: 'numeric', month: 'short' })}
               </span>
             )}
@@ -276,26 +284,29 @@ export function OpportunityCard({
 
           <div className="flex items-center gap-2">
             <button
+              type="button"
               onClick={() => onSave?.(opportunity.id)}
+              aria-pressed={saved}
+              aria-label={saved ? 'Quitar de guardados' : 'Guardar oportunidad'}
               className={cn(
                 'p-1.5 rounded-md transition-colors',
                 saved
                   ? 'text-primary bg-primary-fixed/60'
                   : 'text-outline hover:text-on-surface hover:bg-surface-container',
               )}
-              title={saved ? 'Guardado' : 'Guardar'}
             >
-              <span className={cn('material-symbols-outlined text-[18px]', saved && 'icon-filled')}>
+              <span className={cn('material-symbols-outlined text-[18px]', saved && 'icon-filled')} aria-hidden="true">
                 bookmark
               </span>
             </button>
             <button
+              type="button"
               onClick={() => onApply?.(opportunity.id)}
               disabled={applied}
               className={cn(
                 'px-4 py-1.5 rounded-md text-xs font-bold transition-all',
                 applied
-                  ? 'bg-surface-container text-outline cursor-not-allowed'
+                  ? 'bg-surface-container text-on-surface-variant cursor-not-allowed'
                   : 'bg-primary-container text-on-primary hover:opacity-90',
               )}
             >

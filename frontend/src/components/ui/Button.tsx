@@ -54,13 +54,14 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         {...props}
       >
         {loading ? (
-          <span className="material-symbols-outlined animate-spin text-[18px]">progress_activity</span>
+          <span className="material-symbols-outlined animate-spin text-[18px]" aria-hidden="true">progress_activity</span>
         ) : icon ? (
-          <span className="material-symbols-outlined text-[18px]">{icon}</span>
+          <span className="material-symbols-outlined text-[18px]" aria-hidden="true">{icon}</span>
         ) : null}
+        {loading && <span className="sr-only">Cargando…</span>}
         {children}
         {iconRight && !loading && (
-          <span className="material-symbols-outlined text-[18px]">{iconRight}</span>
+          <span className="material-symbols-outlined text-[18px]" aria-hidden="true">{iconRight}</span>
         )}
       </button>
     )

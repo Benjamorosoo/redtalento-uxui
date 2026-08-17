@@ -42,7 +42,7 @@ interface AffectedStudent {
 function MetricCard({ value, label, icon, className }: { value: string | number; label: string; icon: string; className?: string }) {
   return (
     <div className="card p-5">
-      <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-surface-container text-on-surface-variant mb-4">
+      <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-surface-container text-on-surface-variant mb-4" aria-hidden="true">
         <span className="material-symbols-outlined text-[20px]">{icon}</span>
       </span>
       <p className={`font-headline text-3xl font-black text-on-surface ${className ?? ''}`}>{value}</p>
@@ -60,25 +60,29 @@ function AffectedStudentsList({ students }: { students: AffectedStudent[] }) {
 
   return (
     <div className="mt-3 space-y-1 border-t border-outline-variant/10 pt-3">
-      {visible.map((s, i) => (
-        <Link
-          key={`${s.userId}-${i}`}
-          href={`/student/ver/${s.userId}`}
-          className="flex items-center gap-3 px-2 py-1.5 rounded-lg hover:bg-surface-container-low transition-colors group"
-        >
-          <Avatar src={s.avatar} name={s.name} size="xs" />
-          <span className="text-xs font-bold text-on-surface group-hover:text-primary transition-colors truncate shrink-0">
-            {s.name}
-          </span>
-          <span className="text-[11px] text-on-surface-variant truncate">{s.detail}</span>
-          <span className="material-symbols-outlined text-[14px] text-outline ml-auto shrink-0 group-hover:text-primary transition-colors">
-            arrow_forward
-          </span>
-        </Link>
-      ))}
+      <ul>
+        {visible.map((s, i) => (
+          <li key={`${s.userId}-${i}`}>
+            <Link
+              href={`/student/ver/${s.userId}`}
+              className="flex items-center gap-3 px-2 py-1.5 rounded-lg hover:bg-surface-container-low transition-colors group"
+            >
+              <Avatar src={s.avatar} name={s.name} size="xs" />
+              <span className="text-xs font-bold text-on-surface group-hover:text-primary transition-colors truncate shrink-0">
+                {s.name}
+              </span>
+              <span className="text-[11px] text-on-surface-variant truncate">{s.detail}</span>
+              <span className="material-symbols-outlined text-[14px] text-outline ml-auto shrink-0 group-hover:text-primary transition-colors" aria-hidden="true">
+                arrow_forward
+              </span>
+            </Link>
+          </li>
+        ))}
+      </ul>
 
       {!expanded && hiddenCount > 0 && (
         <button
+          type="button"
           onClick={() => setExpanded(true)}
           className="text-xs font-bold text-primary hover:underline px-2 py-1"
         >
@@ -87,6 +91,7 @@ function AffectedStudentsList({ students }: { students: AffectedStudent[] }) {
       )}
       {expanded && students.length > COLLAPSE_AT && (
         <button
+          type="button"
           onClick={() => setExpanded(false)}
           className="text-xs font-bold text-on-surface-variant hover:underline px-2 py-1"
         >
@@ -166,18 +171,18 @@ export default function AlertasPage() {
 
       {!hasAlerts ? (
         <div className="card p-10 flex flex-col items-center text-center">
-          <span className="material-symbols-outlined icon-filled text-green-600 text-[48px]">task_alt</span>
+          <span className="material-symbols-outlined icon-filled text-green-600 text-[48px]" aria-hidden="true">task_alt</span>
           <p className="mt-4 font-headline font-bold text-lg text-on-surface">Todo al día</p>
           <p className="mt-1 text-sm text-on-surface-variant">No hay alertas pendientes por revisar.</p>
         </div>
       ) : (
         <section className="card p-5 sm:p-6">
-          <h3 className="font-headline text-lg font-bold text-on-surface mb-4">Alertas activas</h3>
+          <h2 className="font-headline text-lg font-bold text-on-surface mb-4">Alertas activas</h2>
           <div className="divide-y divide-outline-variant/15">
             {pendingValidations > 0 && (
               <div className="py-4 first:pt-0">
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-red-50 text-red-600">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-red-50 text-red-600" aria-hidden="true">
                     <span className="material-symbols-outlined text-[22px]">verified_off</span>
                   </div>
                   <div className="min-w-0 flex-1">
@@ -199,11 +204,11 @@ export default function AlertasPage() {
             {inactiveStudents > 0 && (
               <div className="py-4 last:pb-0">
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg" style={{ backgroundColor: '#26C6DA1A', color: '#26C6DA' }}>
-                    <span className="material-symbols-outlined text-[22px]">person_off</span>
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg" style={{ backgroundColor: '#26C6DA1A', color: '#00363D' }}>
+                    <span className="material-symbols-outlined text-[22px]" aria-hidden="true">person_off</span>
                   </div>
                   <div className="min-w-0 flex-1">
-                    <span className="inline-flex rounded-full px-2.5 py-1 text-[11px] font-black uppercase tracking-wide" style={{ backgroundColor: '#26C6DA1A', color: '#1B8A9C', border: '1px solid #26C6DA33' }}>
+                    <span className="inline-flex rounded-full px-2.5 py-1 text-[11px] font-black uppercase tracking-wide" style={{ backgroundColor: '#26C6DA1A', color: '#00363D', border: '1px solid #26C6DA33' }}>
                       Perfil inactivo
                     </span>
                     <p className="mt-2 text-sm font-bold text-on-surface">

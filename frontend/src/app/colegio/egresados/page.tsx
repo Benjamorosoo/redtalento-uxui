@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/Button'
 import { Toast } from '@/components/ui/Toast'
 import { api } from '@/lib/api-client'
+import { useModalA11y } from '@/lib/useModalA11y'
 
 const graduates = [
   { name: 'Camila Torres', specialty: 'Programación', status: 'working', label: 'Trabaja en su área', delay: '1 mes', company: 'InnoSoft' },
@@ -30,10 +31,89 @@ function MetricCard({ value, label, icon }: { value: string; label: string; icon
   return (
     <div className="card p-5">
       <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-surface-container text-on-surface-variant mb-4">
-        <span className="material-symbols-outlined text-[20px]">{icon}</span>
+        <span className="material-symbols-outlined text-[20px]" aria-hidden="true">{icon}</span>
       </span>
       <p className="font-headline text-3xl font-black text-on-surface">{value}</p>
       <p className="mt-1 text-xs font-bold text-on-surface-variant">{label}</p>
+    </div>
+  )
+}
+
+function SendSurveyModal({
+  questions,
+  onQuestionChange,
+  sending,
+  onCancel,
+  onConfirm,
+}: {
+  questions: string[]
+  onQuestionChange: (index: number, value: string) => void
+  sending: boolean
+  onCancel: () => void
+  onConfirm: () => void
+}) {
+  const modalRef = useModalA11y<HTMLDivElement>(() => { if (!sending) onCancel() })
+
+  return (
+    <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => !sending && onCancel()} />
+
+      <div
+        ref={modalRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="send-survey-title"
+        tabIndex={-1}
+        className="relative w-full max-w-md rounded-2xl bg-surface shadow-2xl animate-slide-up overflow-hidden"
+      >
+        <div className="flex items-center justify-between px-6 py-4 border-b border-outline-variant/15">
+          <h2 id="send-survey-title" className="font-headline font-bold text-on-surface text-lg">Enviar encuesta</h2>
+          <button
+            type="button"
+            onClick={() => !sending && onCancel()}
+            aria-label="Cerrar"
+            className="p-2 rounded-full text-on-surface-variant hover:bg-surface-container-high transition-colors"
+          >
+            <span className="material-symbols-outlined text-[20px]" aria-hidden="true">close</span>
+          </button>
+        </div>
+
+        <div className="p-6">
+          <p className="text-sm text-on-surface-variant mb-4">
+            Editá las preguntas si querés — se enviarán como notificación a todos los estudiantes marcados como egresados:
+          </p>
+          <ol className="space-y-2.5">
+            {questions.map((question, index) => (
+              <li key={index} className="flex items-center gap-3 rounded-lg border border-outline-variant/15 bg-surface-container-low p-3 focus-within:border-primary/60 transition-colors">
+                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-primary text-[11px] font-black text-on-primary" aria-hidden="true">
+                  {index + 1}
+                </span>
+                <label htmlFor={`survey-question-${index}`} className="sr-only">Pregunta {index + 1}</label>
+                <input
+                  id={`survey-question-${index}`}
+                  value={question}
+                  onChange={e => onQuestionChange(index, e.target.value)}
+                  className="flex-1 min-w-0 bg-transparent text-sm font-semibold text-on-surface outline-none focus-visible:ring-2 focus-visible:ring-primary rounded"
+                />
+              </li>
+            ))}
+          </ol>
+        </div>
+
+        <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-outline-variant/15 bg-surface-container-low">
+          <button
+            type="button"
+            onClick={onCancel}
+            disabled={sending}
+            className="px-4 py-2 rounded-lg text-sm font-bold text-on-surface-variant hover:bg-surface-container-high transition-colors disabled:opacity-50"
+          >
+            Cancelar
+          </button>
+          <Button onClick={onConfirm} disabled={sending} icon="send">
+            {sending ? 'Enviando...' : 'Confirmar y enviar'}
+          </Button>
+        </div>
+      </div>
     </div>
   )
 }
@@ -77,7 +157,7 @@ export default function EgresadosPage() {
         <h1 className="font-headline text-3xl font-bold text-on-surface mb-1">Seguimiento egresados</h1>
         <p className="text-on-surface-variant">El alumno no desaparece al egresar: se mantiene el pulso del resultado real.</p>
         <span className="inline-flex items-center gap-1.5 mt-4 text-[11px] font-bold text-amber-700 bg-amber-50 border border-amber-200 rounded-full px-3 py-1">
-          <span className="material-symbols-outlined text-[14px]">science</span>
+          <span className="material-symbols-outlined text-[14px]" aria-hidden="true">science</span>
           Vista previa — contenido de ejemplo, aún no conectado a información real
         </span>
       </div>
@@ -86,7 +166,7 @@ export default function EgresadosPage() {
         <section className="card overflow-x-auto p-5 sm:p-6">
           <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h3 className="font-headline text-lg font-bold text-on-surface">Seguimiento de egresados</h3>
+              <h2 className="font-headline text-lg font-bold text-on-surface">Seguimiento de egresados</h2>
               <p className="text-sm text-on-surface-variant">Estado laboral reportado por encuesta corta.</p>
             </div>
             <Button variant="secondary" icon="send" onClick={openConfirm}>
@@ -97,11 +177,11 @@ export default function EgresadosPage() {
           <table className="w-full min-w-[720px] border-collapse">
             <thead>
               <tr className="border-b border-outline-variant/20 text-left text-[11px] font-black uppercase tracking-wide text-outline">
-                <th className="pb-3 pr-4">Egresado</th>
-                <th className="pb-3 pr-4">Especialidad</th>
-                <th className="pb-3 pr-4">Estado</th>
-                <th className="pb-3 pr-4">Tiempo</th>
-                <th className="pb-3">Empresa</th>
+                <th scope="col" className="pb-3 pr-4">Egresado</th>
+                <th scope="col" className="pb-3 pr-4">Especialidad</th>
+                <th scope="col" className="pb-3 pr-4">Estado</th>
+                <th scope="col" className="pb-3 pr-4">Tiempo</th>
+                <th scope="col" className="pb-3">Empresa</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-outline-variant/15">
@@ -131,20 +211,20 @@ export default function EgresadosPage() {
 
         <aside className="space-y-6">
           <section className="card p-6">
-            <h3 className="font-headline text-base font-bold text-on-surface">Encuesta automática</h3>
+            <h2 className="font-headline text-base font-bold text-on-surface">Encuesta automática</h2>
             <p className="mt-2 text-sm text-on-surface-variant">
               Cada egresado recibe una encuesta breve para mantener respuestas comparables y accionables.
             </p>
-            <div className="mt-5 space-y-3">
+            <ol className="mt-5 space-y-3">
               {surveyQuestions.map((question, index) => (
-                <div key={question} className="flex items-center gap-3 rounded-lg border border-outline-variant/15 bg-surface-container-low p-3">
-                  <span className="flex h-7 w-7 items-center justify-center rounded-md bg-primary text-xs font-black text-on-primary">
+                <li key={question} className="flex items-center gap-3 rounded-lg border border-outline-variant/15 bg-surface-container-low p-3">
+                  <span className="flex h-7 w-7 items-center justify-center rounded-md bg-primary text-xs font-black text-on-primary" aria-hidden="true">
                     {index + 1}
                   </span>
                   <span className="text-sm font-semibold text-on-surface">{question}</span>
-                </div>
+                </li>
               ))}
-            </div>
+            </ol>
           </section>
 
           <section className="grid grid-cols-2 gap-4">
@@ -155,54 +235,13 @@ export default function EgresadosPage() {
       </div>
 
       {confirming && (
-        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
-          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => !sending && setConfirming(false)} />
-
-          <div className="relative w-full max-w-md rounded-2xl bg-surface shadow-2xl animate-slide-up overflow-hidden">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-outline-variant/15">
-              <h2 className="font-headline font-bold text-on-surface text-lg">Enviar encuesta</h2>
-              <button
-                onClick={() => !sending && setConfirming(false)}
-                className="p-2 rounded-full text-on-surface-variant hover:bg-surface-container-high transition-colors"
-              >
-                <span className="material-symbols-outlined text-[20px]">close</span>
-              </button>
-            </div>
-
-            <div className="p-6">
-              <p className="text-sm text-on-surface-variant mb-4">
-                Editá las preguntas si querés — se enviarán como notificación a todos los estudiantes marcados como egresados:
-              </p>
-              <div className="space-y-2.5">
-                {editedQuestions.map((question, index) => (
-                  <div key={index} className="flex items-center gap-3 rounded-lg border border-outline-variant/15 bg-surface-container-low p-3 focus-within:border-primary/60 transition-colors">
-                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-primary text-[11px] font-black text-on-primary">
-                      {index + 1}
-                    </span>
-                    <input
-                      value={question}
-                      onChange={e => setQuestion(index, e.target.value)}
-                      className="flex-1 min-w-0 bg-transparent text-sm font-semibold text-on-surface outline-none"
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-outline-variant/15 bg-surface-container-low">
-              <button
-                onClick={() => setConfirming(false)}
-                disabled={sending}
-                className="px-4 py-2 rounded-lg text-sm font-bold text-on-surface-variant hover:bg-surface-container-high transition-colors disabled:opacity-50"
-              >
-                Cancelar
-              </button>
-              <Button onClick={sendSurvey} disabled={sending} icon="send">
-                {sending ? 'Enviando...' : 'Confirmar y enviar'}
-              </Button>
-            </div>
-          </div>
-        </div>
+        <SendSurveyModal
+          questions={editedQuestions}
+          onQuestionChange={setQuestion}
+          sending={sending}
+          onCancel={() => setConfirming(false)}
+          onConfirm={sendSurvey}
+        />
       )}
 
       {toast && <Toast message={toast.message} type={toast.type} onDismiss={() => setToast(null)} />}

@@ -64,10 +64,12 @@ export default function EditarPerfilColegioPage() {
     <main className="max-w-2xl mx-auto px-6 py-10">
       <div className="flex items-center gap-3 mb-8">
         <button
+          type="button"
           onClick={() => router.back()}
+          aria-label="Volver"
           className="p-2 rounded-full hover:bg-surface-container text-on-surface-variant transition-colors"
         >
-          <span className="material-symbols-outlined text-[22px]">arrow_back</span>
+          <span className="material-symbols-outlined text-[22px]" aria-hidden="true">arrow_back</span>
         </button>
         <div>
           <h1 className="font-headline text-2xl font-bold text-on-surface">Editar perfil del colegio</h1>
@@ -80,41 +82,46 @@ export default function EditarPerfilColegioPage() {
           <h2 className="font-semibold text-on-surface mb-4">Información de la institución</h2>
           <div className="space-y-4">
             <div>
-              <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wide mb-1.5 block">Nombre del colegio</label>
+              <label htmlFor="school-name" className="text-xs font-bold text-on-surface-variant uppercase tracking-wide mb-1.5 block">Nombre del colegio</label>
               <input
+                id="school-name"
                 value={form.name}
                 onChange={e => set('name', e.target.value)}
                 required
-                className="w-full bg-surface-container-low border border-outline-variant/30 focus:border-primary/60 rounded-lg px-3 py-2 text-sm outline-none transition-colors"
+                aria-required="true"
+                className="w-full bg-surface-container-low border border-outline-variant/30 focus:border-primary/60 focus-visible:ring-2 focus-visible:ring-primary rounded-lg px-3 py-2 text-sm outline-none transition-colors"
                 placeholder="Nombre del colegio"
               />
             </div>
             <div>
-              <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wide mb-1.5 block">Descripción</label>
+              <label htmlFor="school-description" className="text-xs font-bold text-on-surface-variant uppercase tracking-wide mb-1.5 block">Descripción</label>
               <textarea
+                id="school-description"
                 value={form.description}
                 onChange={e => set('description', e.target.value)}
                 rows={4}
-                className="w-full bg-surface-container-low border border-outline-variant/30 focus:border-primary/60 rounded-lg px-3 py-2 text-sm outline-none transition-colors resize-none"
+                className="w-full bg-surface-container-low border border-outline-variant/30 focus:border-primary/60 focus-visible:ring-2 focus-visible:ring-primary rounded-lg px-3 py-2 text-sm outline-none transition-colors resize-none"
                 placeholder="¿Qué hace especial a tu institución? ¿Qué carreras o especialidades ofrecen?"
               />
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wide mb-1.5 block">Ubicación</label>
+                <label htmlFor="school-location" className="text-xs font-bold text-on-surface-variant uppercase tracking-wide mb-1.5 block">Ubicación</label>
                 <input
+                  id="school-location"
                   value={form.location}
                   onChange={e => set('location', e.target.value)}
-                  className="w-full bg-surface-container-low border border-outline-variant/30 focus:border-primary/60 rounded-lg px-3 py-2 text-sm outline-none transition-colors"
+                  className="w-full bg-surface-container-low border border-outline-variant/30 focus:border-primary/60 focus-visible:ring-2 focus-visible:ring-primary rounded-lg px-3 py-2 text-sm outline-none transition-colors"
                   placeholder="Ciudad, País"
                 />
               </div>
               <div>
-                <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wide mb-1.5 block">Sitio web</label>
+                <label htmlFor="school-website" className="text-xs font-bold text-on-surface-variant uppercase tracking-wide mb-1.5 block">Sitio web</label>
                 <input
+                  id="school-website"
                   value={form.website}
                   onChange={e => set('website', e.target.value)}
-                  className="w-full bg-surface-container-low border border-outline-variant/30 focus:border-primary/60 rounded-lg px-3 py-2 text-sm outline-none transition-colors"
+                  className="w-full bg-surface-container-low border border-outline-variant/30 focus:border-primary/60 focus-visible:ring-2 focus-visible:ring-primary rounded-lg px-3 py-2 text-sm outline-none transition-colors"
                   placeholder="https://micolegio.edu"
                 />
               </div>
@@ -123,15 +130,15 @@ export default function EditarPerfilColegioPage() {
         </div>
 
         {error && (
-          <div className="flex items-center gap-2 p-3 bg-error-container/30 border border-error/20 rounded-lg">
-            <span className="material-symbols-outlined text-error text-[18px]">error</span>
+          <div role="alert" className="flex items-center gap-2 p-3 bg-error-container/30 border border-error/20 rounded-lg">
+            <span className="material-symbols-outlined text-error text-[18px]" aria-hidden="true">error</span>
             <p className="text-sm text-error">{error}</p>
           </div>
         )}
 
         {success && (
-          <div className="flex items-center gap-2 p-3 bg-green-50 border border-green-200 rounded-lg">
-            <span className="material-symbols-outlined text-green-600 text-[18px]">check_circle</span>
+          <div role="status" aria-live="polite" className="flex items-center gap-2 p-3 bg-green-50 border border-green-200 rounded-lg">
+            <span className="material-symbols-outlined text-green-600 text-[18px]" aria-hidden="true">check_circle</span>
             <p className="text-sm text-green-700">¡Perfil actualizado! Redirigiendo...</p>
           </div>
         )}

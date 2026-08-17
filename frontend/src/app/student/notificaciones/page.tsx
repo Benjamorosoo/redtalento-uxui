@@ -95,6 +95,7 @@ export default function NotificacionesPage() {
         </div>
         {unreadCount > 0 && (
           <button
+            type="button"
             onClick={markAllRead}
             className="text-xs font-semibold text-primary hover:underline"
           >
@@ -105,7 +106,7 @@ export default function NotificacionesPage() {
 
       {notifications.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-24 text-center">
-          <span className="material-symbols-outlined text-[64px] text-outline">notifications_off</span>
+          <span className="material-symbols-outlined text-[64px] text-outline" aria-hidden="true">notifications_off</span>
           <h2 className="font-headline text-xl font-bold text-on-surface mt-4">Sin notificaciones</h2>
           <p className="text-on-surface-variant text-sm mt-2">
             Aquí verás actualizaciones de tus postulaciones, habilidades validadas y más.
@@ -115,18 +116,26 @@ export default function NotificacionesPage() {
         <div className="space-y-2">
           {notifications.map(notif => {
             const { icon, color } = typeIcon[notif.type] ?? typeIcon.GENERAL
+            const activate = () => {
+              if (!notif.isRead) markRead(notif.id)
+              if (notif.link) router.push(notif.link)
+            }
             return (
               <article
                 key={notif.id}
-                onClick={() => {
-                  if (!notif.isRead) markRead(notif.id)
-                  if (notif.link) router.push(notif.link)
+                role="button"
+                tabIndex={0}
+                aria-label={`${notif.title}. ${notif.isRead ? 'Leída' : 'No leída'}.`}
+                onClick={activate}
+                onKeyDown={e => {
+                  if (e.target !== e.currentTarget) return
+                  if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); activate() }
                 }}
-                className={`card p-4 flex items-start gap-4 cursor-pointer transition-all hover:shadow-md ${
+                className={`card p-4 flex items-start gap-4 cursor-pointer transition-all hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
                   notif.isRead ? 'opacity-70' : 'border-l-4 border-primary'
                 }`}
               >
-                <div className={`w-10 h-10 rounded-full bg-surface-container flex items-center justify-center shrink-0 ${color}`}>
+                <div className={`w-10 h-10 rounded-full bg-surface-container flex items-center justify-center shrink-0 ${color}`} aria-hidden="true">
                   <span className="material-symbols-outlined text-[20px] icon-filled">{icon}</span>
                 </div>
                 <div className="flex-1 min-w-0">
@@ -134,19 +143,20 @@ export default function NotificacionesPage() {
                     <p className="text-sm font-semibold text-on-surface leading-snug">{notif.title}</p>
                     <div className="flex items-center gap-1 shrink-0">
                       {!notif.isRead && (
-                        <span className="w-2 h-2 rounded-full bg-primary shrink-0" />
+                        <span className="w-2 h-2 rounded-full bg-primary shrink-0" aria-hidden="true" />
                       )}
                       <button
+                        type="button"
                         onClick={e => { e.stopPropagation(); remove(notif.id) }}
                         className="p-0.5 text-outline hover:text-error rounded transition-colors"
-                        title="Eliminar"
+                        aria-label="Eliminar notificación"
                       >
-                        <span className="material-symbols-outlined text-[16px]">close</span>
+                        <span className="material-symbols-outlined text-[16px]" aria-hidden="true">close</span>
                       </button>
                     </div>
                   </div>
                   <p className="text-xs text-on-surface-variant mt-0.5 leading-relaxed">{notif.body}</p>
-                  <p className="text-[11px] text-outline mt-1.5">{timeAgo(notif.createdAt)}</p>
+                  <p className="text-[11px] text-on-surface-variant mt-1.5">{timeAgo(notif.createdAt)}</p>
                 </div>
               </article>
             )

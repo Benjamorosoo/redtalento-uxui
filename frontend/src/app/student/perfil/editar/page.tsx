@@ -85,10 +85,12 @@ export default function EditarPerfilStudentPage() {
     <main className="max-w-2xl mx-auto px-6 py-10">
       <div className="flex items-center gap-3 mb-8">
         <button
+          type="button"
           onClick={() => router.back()}
+          aria-label="Volver"
           className="p-2 rounded-full hover:bg-surface-container text-on-surface-variant transition-colors"
         >
-          <span className="material-symbols-outlined text-[22px]">arrow_back</span>
+          <span className="material-symbols-outlined text-[22px]" aria-hidden="true">arrow_back</span>
         </button>
         <div>
           <h1 className="font-headline text-2xl font-bold text-on-surface">Editar perfil</h1>
@@ -102,21 +104,23 @@ export default function EditarPerfilStudentPage() {
           <h2 className="font-semibold text-on-surface mb-4">Información básica</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wide mb-1.5 block">Nombre</label>
+              <label htmlFor="firstName" className="text-xs font-bold text-on-surface-variant uppercase tracking-wide mb-1.5 block">Nombre</label>
               <input
+                id="firstName"
                 value={form.firstName}
                 onChange={e => set('firstName', e.target.value)}
-                className="w-full bg-surface-container-low border border-outline-variant/30 focus:border-primary/60 rounded-lg px-3 py-2 text-sm outline-none transition-colors"
+                className="w-full bg-surface-container-low border border-outline-variant/30 focus:border-primary/60 focus-visible:ring-2 focus-visible:ring-primary rounded-lg px-3 py-2 text-sm outline-none transition-colors"
                 placeholder="Nombre"
                 maxLength={100}
               />
             </div>
             <div>
-              <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wide mb-1.5 block">Apellido</label>
+              <label htmlFor="lastName" className="text-xs font-bold text-on-surface-variant uppercase tracking-wide mb-1.5 block">Apellido</label>
               <input
+                id="lastName"
                 value={form.lastName}
                 onChange={e => set('lastName', e.target.value)}
-                className="w-full bg-surface-container-low border border-outline-variant/30 focus:border-primary/60 rounded-lg px-3 py-2 text-sm outline-none transition-colors"
+                className="w-full bg-surface-container-low border border-outline-variant/30 focus:border-primary/60 focus-visible:ring-2 focus-visible:ring-primary rounded-lg px-3 py-2 text-sm outline-none transition-colors"
                 placeholder="Apellido"
                 maxLength={100}
               />
@@ -125,13 +129,15 @@ export default function EditarPerfilStudentPage() {
 
           <div className="mt-4">
             <div className="flex items-center justify-between mb-1.5">
-              <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wide block">Titular / Headline</label>
-              <span className="text-[11px] text-outline tabular-nums">{form.headline.length}/150</span>
+              <label htmlFor="headline" className="text-xs font-bold text-on-surface-variant uppercase tracking-wide block">Titular / Headline</label>
+              <span id="headline-count" className="text-[11px] text-on-surface-variant tabular-nums">{form.headline.length}/150</span>
             </div>
             <input
+              id="headline"
               value={form.headline}
               onChange={e => set('headline', e.target.value)}
-              className="w-full bg-surface-container-low border border-outline-variant/30 focus:border-primary/60 rounded-lg px-3 py-2 text-sm outline-none transition-colors"
+              aria-describedby="headline-count"
+              className="w-full bg-surface-container-low border border-outline-variant/30 focus:border-primary/60 focus-visible:ring-2 focus-visible:ring-primary rounded-lg px-3 py-2 text-sm outline-none transition-colors"
               placeholder="Ej: Desarrollador Full Stack · Especialidad Informática"
               maxLength={150}
             />
@@ -139,14 +145,16 @@ export default function EditarPerfilStudentPage() {
 
           <div className="mt-4">
             <div className="flex items-center justify-between mb-1.5">
-              <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wide block">Biografía</label>
-              <span className="text-[11px] text-outline tabular-nums">{form.bio.length}/500</span>
+              <label htmlFor="bio" className="text-xs font-bold text-on-surface-variant uppercase tracking-wide block">Biografía</label>
+              <span id="bio-count" className="text-[11px] text-on-surface-variant tabular-nums">{form.bio.length}/500</span>
             </div>
             <textarea
+              id="bio"
               value={form.bio}
               onChange={e => set('bio', e.target.value)}
               rows={3}
-              className="w-full bg-surface-container-low border border-outline-variant/30 focus:border-primary/60 rounded-lg px-3 py-2 text-sm outline-none transition-colors resize-none"
+              aria-describedby="bio-count"
+              className="w-full bg-surface-container-low border border-outline-variant/30 focus:border-primary/60 focus-visible:ring-2 focus-visible:ring-primary rounded-lg px-3 py-2 text-sm outline-none transition-colors resize-none"
               placeholder="Cuéntale a las empresas sobre vos..."
               maxLength={500}
             />
@@ -158,21 +166,23 @@ export default function EditarPerfilStudentPage() {
           <h2 className="font-semibold text-on-surface mb-4">Información académica</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wide mb-1.5 block">Especialidad</label>
+              <label htmlFor="specialty" className="text-xs font-bold text-on-surface-variant uppercase tracking-wide mb-1.5 block">Especialidad</label>
               <input
+                id="specialty"
                 value={form.specialty}
                 onChange={e => set('specialty', e.target.value)}
-                className="w-full bg-surface-container-low border border-outline-variant/30 focus:border-primary/60 rounded-lg px-3 py-2 text-sm outline-none transition-colors"
+                className="w-full bg-surface-container-low border border-outline-variant/30 focus:border-primary/60 focus-visible:ring-2 focus-visible:ring-primary rounded-lg px-3 py-2 text-sm outline-none transition-colors"
                 placeholder="Informática, Electrónica..."
                 maxLength={100}
               />
             </div>
             <div>
-              <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wide mb-1.5 block">Año</label>
+              <label htmlFor="year" className="text-xs font-bold text-on-surface-variant uppercase tracking-wide mb-1.5 block">Año</label>
               <select
+                id="year"
                 value={form.year}
                 onChange={e => set('year', Number(e.target.value))}
-                className="w-full bg-surface-container-low border border-outline-variant/30 focus:border-primary/60 rounded-lg px-3 py-2 text-sm outline-none transition-colors"
+                className="w-full bg-surface-container-low border border-outline-variant/30 focus:border-primary/60 focus-visible:ring-2 focus-visible:ring-primary rounded-lg px-3 py-2 text-sm outline-none transition-colors"
               >
                 {[1,2,3,4].map(y => <option key={y} value={y}>{y}° año</option>)}
               </select>
@@ -187,13 +197,14 @@ export default function EditarPerfilStudentPage() {
             Vincularte a tu colegio permite que vean tus habilidades y puedan validarlas.
           </p>
           <div>
-            <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wide mb-1.5 block">
+            <label htmlFor="schoolUserId" className="text-xs font-bold text-on-surface-variant uppercase tracking-wide mb-1.5 block">
               Colegio
             </label>
             <select
+              id="schoolUserId"
               value={form.schoolUserId}
               onChange={e => set('schoolUserId', e.target.value)}
-              className="w-full bg-surface-container-low border border-outline-variant/30 focus:border-primary/60 rounded-lg px-3 py-2.5 text-sm outline-none transition-colors"
+              className="w-full bg-surface-container-low border border-outline-variant/30 focus:border-primary/60 focus-visible:ring-2 focus-visible:ring-primary rounded-lg px-3 py-2.5 text-sm outline-none transition-colors"
             >
               <option value="">— Sin colegio vinculado —</option>
               {schools.map(s => (
@@ -208,24 +219,28 @@ export default function EditarPerfilStudentPage() {
           <h2 className="font-semibold text-on-surface mb-4">Contacto y ubicación</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wide mb-1.5 block">Teléfono</label>
+              <label htmlFor="phone" className="text-xs font-bold text-on-surface-variant uppercase tracking-wide mb-1.5 block">Teléfono</label>
               <input
+                id="phone"
                 type="tel"
                 value={form.phone}
                 onChange={e => set('phone', e.target.value)}
-                className="w-full bg-surface-container-low border border-outline-variant/30 focus:border-primary/60 rounded-lg px-3 py-2 text-sm outline-none transition-colors"
+                aria-describedby="phone-hint"
+                className="w-full bg-surface-container-low border border-outline-variant/30 focus:border-primary/60 focus-visible:ring-2 focus-visible:ring-primary rounded-lg px-3 py-2 text-sm outline-none transition-colors"
                 placeholder="+54 11 1234-5678"
                 maxLength={20}
                 pattern="^\+?[0-9\s-]{6,20}$"
                 title="Solo números, espacios, guiones y '+' al inicio"
               />
+              <p id="phone-hint" className="text-[11px] text-on-surface-variant mt-1">Solo números, espacios, guiones y &quot;+&quot; al inicio.</p>
             </div>
             <div>
-              <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wide mb-1.5 block">Ubicación</label>
+              <label htmlFor="location" className="text-xs font-bold text-on-surface-variant uppercase tracking-wide mb-1.5 block">Ubicación</label>
               <input
+                id="location"
                 value={form.location}
                 onChange={e => set('location', e.target.value)}
-                className="w-full bg-surface-container-low border border-outline-variant/30 focus:border-primary/60 rounded-lg px-3 py-2 text-sm outline-none transition-colors"
+                className="w-full bg-surface-container-low border border-outline-variant/30 focus:border-primary/60 focus-visible:ring-2 focus-visible:ring-primary rounded-lg px-3 py-2 text-sm outline-none transition-colors"
                 placeholder="Buenos Aires, Argentina"
                 maxLength={150}
               />
@@ -243,14 +258,15 @@ export default function EditarPerfilStudentPage() {
               { field: 'portfolioUrl' as const, label: 'Portfolio URL', icon: 'public', placeholder: 'https://miportfolio.dev' },
             ].map(({ field, label, icon, placeholder }) => (
               <div key={field} className="flex items-center gap-3">
-                <span className="material-symbols-outlined text-outline text-[20px]">{icon}</span>
+                <span className="material-symbols-outlined text-outline text-[20px]" aria-hidden="true">{icon}</span>
                 <div className="flex-1">
-                  <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wide mb-1 block">{label}</label>
+                  <label htmlFor={field} className="text-xs font-bold text-on-surface-variant uppercase tracking-wide mb-1 block">{label}</label>
                   <input
+                    id={field}
                     type="url"
                     value={form[field]}
                     onChange={e => set(field, e.target.value)}
-                    className="w-full bg-surface-container-low border border-outline-variant/30 focus:border-primary/60 rounded-lg px-3 py-2 text-sm outline-none transition-colors"
+                    className="w-full bg-surface-container-low border border-outline-variant/30 focus:border-primary/60 focus-visible:ring-2 focus-visible:ring-primary rounded-lg px-3 py-2 text-sm outline-none transition-colors"
                     placeholder={placeholder}
                     maxLength={300}
                   />
@@ -261,15 +277,15 @@ export default function EditarPerfilStudentPage() {
         </div>
 
         {error && (
-          <div className="flex items-center gap-2 p-3 bg-error-container/30 border border-error/20 rounded-lg">
-            <span className="material-symbols-outlined text-error text-[18px]">error</span>
+          <div role="alert" className="flex items-center gap-2 p-3 bg-error-container/30 border border-error/20 rounded-lg">
+            <span className="material-symbols-outlined text-error text-[18px]" aria-hidden="true">error</span>
             <p className="text-sm text-error">{error}</p>
           </div>
         )}
 
         {success && (
-          <div className="flex items-center gap-2 p-3 bg-green-50 border border-green-200 rounded-lg">
-            <span className="material-symbols-outlined text-green-600 text-[18px]">check_circle</span>
+          <div role="status" aria-live="polite" className="flex items-center gap-2 p-3 bg-green-50 border border-green-200 rounded-lg">
+            <span className="material-symbols-outlined text-green-600 text-[18px]" aria-hidden="true">check_circle</span>
             <p className="text-sm text-green-700">¡Perfil actualizado! Redirigiendo...</p>
           </div>
         )}

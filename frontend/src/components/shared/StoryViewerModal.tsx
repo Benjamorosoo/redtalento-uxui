@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Avatar } from '@/components/ui/Avatar'
 import { api } from '@/lib/api-client'
 import { cn, mediaUrl, timeAgo } from '@/lib/utils'
@@ -39,6 +39,7 @@ export function StoryViewerModal({
 
   const story   = stories[idx]
   const isOwner = user?.id === story?.authorId
+  const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     setIdx(initialIndex)
@@ -53,6 +54,14 @@ export function StoryViewerModal({
     window.addEventListener('keydown', handler)
     return () => window.removeEventListener('keydown', handler)
   }, [onClose, stories.length])
+
+  // Move focus into the dialog on mount, restore it to the trigger on unmount
+  useEffect(() => {
+    const triggerEl = document.activeElement as HTMLElement | null
+    containerRef.current?.focus()
+    return () => { triggerEl?.focus?.() }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const goNext = () => {
     if (idx < stories.length - 1) setIdx(i => i + 1)
@@ -92,12 +101,17 @@ export function StoryViewerModal({
       onClick={onClose}
     >
       <div
+        ref={containerRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label={`Historia de ${story.authorName}`}
+        tabIndex={-1}
         className="relative rounded-2xl overflow-hidden bg-black shadow-2xl select-none"
         style={{ width: 'min(360px, 100vw - 32px)', aspectRatio: '9/16', maxHeight: 'calc(100vh - 32px)' }}
         onClick={e => e.stopPropagation()}
       >
         {/* Progress bars */}
-        <div className="absolute top-0 left-0 right-0 flex gap-1 px-3 pt-3 z-20">
+        <div className="absolute top-0 left-0 right-0 flex gap-1 px-3 pt-3 z-20" aria-hidden="true">
           {stories.map((_, i) => (
             <div key={i} className="flex-1 h-0.5 bg-white/30 rounded-full overflow-hidden">
               <div
@@ -125,30 +139,33 @@ export function StoryViewerModal({
           {isOwner && (
             <>
               <button
+                type="button"
                 onClick={handleHighlight}
                 disabled={pinning}
-                title={isPinned ? 'Quitar de destacadas' : 'Destacar historia'}
+                aria-label={isPinned ? 'Quitar de destacadas' : 'Destacar historia'}
+                aria-pressed={isPinned}
                 className={cn(
                   'p-1.5 rounded-full transition-colors',
                   isPinned ? 'text-amber-400 hover:text-amber-300' : 'text-white/70 hover:text-amber-400',
                 )}
               >
-                <span className={cn('material-symbols-outlined text-[20px]', isPinned && 'icon-filled')}>
+                <span className={cn('material-symbols-outlined text-[20px]', isPinned && 'icon-filled')} aria-hidden="true">
                   push_pin
                 </span>
               </button>
               <button
+                type="button"
                 onClick={handleDelete}
                 className="p-1.5 rounded-full text-white/70 hover:text-red-400"
-                title="Eliminar historia"
+                aria-label="Eliminar historia"
               >
-                <span className="material-symbols-outlined text-[20px]">delete</span>
+                <span className="material-symbols-outlined text-[20px]" aria-hidden="true">delete</span>
               </button>
             </>
           )}
 
-          <button onClick={onClose} className="p-1.5 rounded-full text-white/80 hover:text-white">
-            <span className="material-symbols-outlined text-[20px]">close</span>
+          <button type="button" onClick={onClose} className="p-1.5 rounded-full text-white/80 hover:text-white" aria-label="Cerrar">
+            <span className="material-symbols-outlined text-[20px]" aria-hidden="true">close</span>
           </button>
         </div>
 
@@ -156,7 +173,7 @@ export function StoryViewerModal({
         {story.imageUrl ? (
           <img
             src={mediaUrl(story.imageUrl)}
-            alt="Historia"
+            alt={story.content ? story.content : `Historia publicada por ${story.authorName}`}
             className="absolute inset-0 w-full h-full object-cover object-center"
             draggable={false}
           />
@@ -175,25 +192,29 @@ export function StoryViewerModal({
 
         {/* Tap zones */}
         <div className="absolute inset-0 flex z-10" style={{ top: '80px' }}>
-          <button className="w-1/3 h-full opacity-0" onClick={goPrev} aria-label="Historia anterior" />
-          <button className="w-2/3 h-full opacity-0" onClick={goNext} aria-label="Historia siguiente" />
+          <button type="button" className="w-1/3 h-full opacity-0" onClick={goPrev} aria-label="Historia anterior" />
+          <button type="button" className="w-2/3 h-full opacity-0" onClick={goNext} aria-label="Historia siguiente" />
         </div>
 
         {/* Arrow buttons */}
         {idx > 0 && (
           <button
+            type="button"
             onClick={goPrev}
+            aria-label="Historia anterior"
             className="absolute left-2 top-1/2 -translate-y-1/2 z-20 bg-black/40 hover:bg-black/60 text-white rounded-full p-1"
           >
-            <span className="material-symbols-outlined">chevron_left</span>
+            <span className="material-symbols-outlined" aria-hidden="true">chevron_left</span>
           </button>
         )}
         {idx < stories.length - 1 && (
           <button
+            type="button"
             onClick={goNext}
+            aria-label="Historia siguiente"
             className="absolute right-2 top-1/2 -translate-y-1/2 z-20 bg-black/40 hover:bg-black/60 text-white rounded-full p-1"
           >
-            <span className="material-symbols-outlined">chevron_right</span>
+            <span className="material-symbols-outlined" aria-hidden="true">chevron_right</span>
           </button>
         )}
 
@@ -207,7 +228,7 @@ export function StoryViewerModal({
         {/* Pinned badge */}
         {isPinned && (
           <div className="absolute top-16 right-3 z-20 flex items-center gap-1 bg-amber-500/90 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
-            <span className="material-symbols-outlined text-[12px] icon-filled">push_pin</span>
+            <span className="material-symbols-outlined text-[12px] icon-filled" aria-hidden="true">push_pin</span>
             Destacada
           </div>
         )}

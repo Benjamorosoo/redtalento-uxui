@@ -5,6 +5,7 @@ import { Avatar } from '@/components/ui/Avatar'
 import { api } from '@/lib/api-client'
 import { useAuthStore } from '@/store/auth.store'
 import { mediaUrl, timeAgo } from '@/lib/utils'
+import { useModalA11y } from '@/lib/useModalA11y'
 import type { StudentProfile, Publication, Skill, PortfolioEvidence } from '@/types'
 
 interface PublicProfile {
@@ -83,12 +84,7 @@ export function ProfileModal({ userId, onClose }: Props) {
       .finally(() => setLoading(false))
   }, [userId])
 
-  // Close on Escape
-  useEffect(() => {
-    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
-    document.addEventListener('keydown', handler)
-    return () => document.removeEventListener('keydown', handler)
-  }, [onClose])
+  const modalRef = useModalA11y<HTMLDivElement>(onClose)
 
   const handleFollow = async () => {
     if (!isAuthenticated || toggling) return
@@ -115,15 +111,23 @@ export function ProfileModal({ userId, onClose }: Props) {
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
 
       {/* Modal */}
-      <div className="relative w-full max-w-3xl max-h-[92vh] overflow-y-auto rounded-2xl bg-surface shadow-2xl animate-slide-up flex flex-col">
+      <div
+        ref={modalRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Perfil de usuario"
+        tabIndex={-1}
+        className="relative w-full max-w-3xl max-h-[92vh] overflow-y-auto rounded-2xl bg-surface shadow-2xl animate-slide-up flex flex-col"
+      >
         {/* Close */}
         <button
+          type="button"
           onClick={onClose}
+          aria-label="Cerrar"
           className="sticky top-3 left-full z-20 -mr-1 p-2 rounded-full bg-surface/90 hover:bg-surface-container text-on-surface-variant hover:text-on-surface transition-colors shadow-md"
           style={{ float: 'right', marginRight: '12px', marginTop: '12px' }}
-          aria-label="Cerrar"
         >
-          <span className="material-symbols-outlined text-[20px]">close</span>
+          <span className="material-symbols-outlined text-[20px]" aria-hidden="true">close</span>
         </button>
 
         {loading ? (
@@ -160,15 +164,17 @@ export function ProfileModal({ userId, onClose }: Props) {
                 />
                 {!isSelf && isAuthenticated && (
                   <button
+                    type="button"
                     onClick={handleFollow}
                     disabled={toggling}
+                    aria-pressed={following}
                     className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold transition-all disabled:opacity-60 ${
                       following
                         ? 'bg-surface-container text-on-surface-variant border border-outline-variant/30 hover:bg-error-container hover:text-error hover:border-error/30'
                         : 'bg-primary text-on-primary shadow-md hover:shadow-lg hover:opacity-90'
                     }`}
                   >
-                    <span className="material-symbols-outlined text-[18px]">
+                    <span className="material-symbols-outlined text-[18px]" aria-hidden="true">
                       {following ? 'person_remove' : 'person_add'}
                     </span>
                     {following ? 'Siguiendo' : 'Seguir'}
@@ -179,8 +185,8 @@ export function ProfileModal({ userId, onClose }: Props) {
               {/* Name + role */}
               <div className="flex items-center gap-2 flex-wrap mb-1">
                 <h2 className="font-headline text-2xl font-bold text-on-surface">{profile.name}</h2>
-                <span className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-widest text-primary bg-primary-fixed px-2.5 py-1 rounded-full">
-                  <span className="material-symbols-outlined text-[11px] icon-filled">
+                <span className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-widest text-primary-container bg-primary-fixed px-2.5 py-1 rounded-full">
+                  <span className="material-symbols-outlined text-[11px] icon-filled" aria-hidden="true">
                     {roleIcon[profile.role] ?? 'person'}
                   </span>
                   {roleLabel[profile.role] ?? profile.role}
@@ -191,29 +197,29 @@ export function ProfileModal({ userId, onClose }: Props) {
                 <p className="text-sm font-semibold text-on-surface-variant mb-2">{profile.headline}</p>
               )}
 
-              <div className="flex items-center gap-3 text-xs text-outline flex-wrap mb-4">
+              <div className="flex items-center gap-3 text-xs text-on-surface-variant flex-wrap mb-4">
                 {profile.schoolName && (
                   <span className="flex items-center gap-1">
-                    <span className="material-symbols-outlined text-[14px]">school</span>
+                    <span className="material-symbols-outlined text-[14px]" aria-hidden="true">school</span>
                     {profile.schoolName}
                   </span>
                 )}
                 {profile.specialty && (
                   <span className="flex items-center gap-1">
-                    <span className="material-symbols-outlined text-[14px]">psychology</span>
+                    <span className="material-symbols-outlined text-[14px]" aria-hidden="true">psychology</span>
                     {profile.specialty}
                   </span>
                 )}
                 {profile.location && (
                   <span className="flex items-center gap-1">
-                    <span className="material-symbols-outlined text-[14px]">location_on</span>
+                    <span className="material-symbols-outlined text-[14px]" aria-hidden="true">location_on</span>
                     {profile.location}
                   </span>
                 )}
                 {profile.website && (
                   <a href={profile.website} target="_blank" rel="noreferrer"
                     className="flex items-center gap-1 hover:text-primary transition-colors">
-                    <span className="material-symbols-outlined text-[14px]">link</span>
+                    <span className="material-symbols-outlined text-[14px]" aria-hidden="true">link</span>
                     {profile.website}
                   </a>
                 )}
@@ -225,18 +231,18 @@ export function ProfileModal({ userId, onClose }: Props) {
 
               {/* ── Followers / Following ── */}
               <div className="flex items-center gap-3 mb-6">
-                <div className="flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-xl border border-primary/20">
-                  <span className="material-symbols-outlined text-[18px] icon-filled">group</span>
+                <div className="flex items-center gap-2 bg-primary/10 text-primary-container px-4 py-2 rounded-xl border border-primary/20">
+                  <span className="material-symbols-outlined text-[18px] icon-filled" aria-hidden="true">group</span>
                   <div>
                     <p className="font-black text-lg leading-none font-headline">{profile.followerCount}</p>
                     <p className="text-[10px] font-semibold uppercase tracking-wider opacity-80">Seguidores</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2 bg-surface-container px-4 py-2 rounded-xl border border-outline-variant/20">
-                  <span className="material-symbols-outlined text-[18px] text-on-surface-variant">person_add</span>
+                  <span className="material-symbols-outlined text-[18px] text-on-surface-variant" aria-hidden="true">person_add</span>
                   <div>
                     <p className="font-black text-lg leading-none font-headline text-on-surface">{profile.followingCount}</p>
-                    <p className="text-[10px] font-semibold uppercase tracking-wider text-outline">Siguiendo</p>
+                    <p className="text-[10px] font-semibold uppercase tracking-wider text-on-surface-variant">Siguiendo</p>
                   </div>
                 </div>
               </div>
@@ -248,9 +254,9 @@ export function ProfileModal({ userId, onClose }: Props) {
               {profile.role === 'STUDENT' && student && student.skills && student.skills.length > 0 && (
                 <section className="mb-6">
                   <h3 className="font-headline text-base font-bold text-on-surface mb-3 flex items-center gap-2">
-                    <span className="material-symbols-outlined text-[18px] text-primary">psychology</span>
+                    <span className="material-symbols-outlined text-[18px] text-primary" aria-hidden="true">psychology</span>
                     Habilidades
-                    <span className="text-xs font-normal text-outline ml-1">
+                    <span className="text-xs font-normal text-on-surface-variant ml-1">
                       ({student.skills.filter((s: Skill) => s.isValidated).length} validadas)
                     </span>
                   </h3>
@@ -265,9 +271,10 @@ export function ProfileModal({ userId, onClose }: Props) {
                         }`}
                       >
                         {skill.isValidated && (
-                          <span className="material-symbols-outlined text-[12px] text-green-600 icon-filled">verified</span>
+                          <span className="material-symbols-outlined text-[12px] text-green-600 icon-filled" aria-hidden="true">verified</span>
                         )}
                         {skill.name}
+                        {skill.isValidated && <span className="sr-only"> (validada por el colegio)</span>}
                       </span>
                     ))}
                   </div>
@@ -278,7 +285,7 @@ export function ProfileModal({ userId, onClose }: Props) {
               {profile.role === 'STUDENT' && student && student.evidences && student.evidences.filter((e: PortfolioEvidence) => e.isPublic).length > 0 && (
                 <section className="mb-6">
                   <h3 className="font-headline text-base font-bold text-on-surface mb-3 flex items-center gap-2">
-                    <span className="material-symbols-outlined text-[18px] text-primary">folder_open</span>
+                    <span className="material-symbols-outlined text-[18px] text-primary" aria-hidden="true">folder_open</span>
                     Portafolio
                   </h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -293,7 +300,7 @@ export function ProfileModal({ userId, onClose }: Props) {
                         )}
                         <p className="text-sm font-semibold text-on-surface truncate">{ev.title}</p>
                         {ev.description && (
-                          <p className="text-xs text-outline mt-0.5 line-clamp-2">{ev.description}</p>
+                          <p className="text-xs text-on-surface-variant mt-0.5 line-clamp-2">{ev.description}</p>
                         )}
                         {ev.url && (
                           <a
@@ -302,14 +309,14 @@ export function ProfileModal({ userId, onClose }: Props) {
                             rel="noreferrer"
                             className="inline-flex items-center gap-1 text-xs text-primary hover:underline mt-1.5"
                           >
-                            <span className="material-symbols-outlined text-[12px]">link</span>
+                            <span className="material-symbols-outlined text-[12px]" aria-hidden="true">link</span>
                             Ver proyecto
                           </a>
                         )}
                         {ev.tags && ev.tags.length > 0 && (
                           <div className="flex flex-wrap gap-1 mt-2">
                             {ev.tags.slice(0, 3).map(t => (
-                              <span key={t} className="text-[10px] bg-surface-container px-1.5 py-0.5 rounded text-outline">
+                              <span key={t} className="text-[10px] bg-surface-container px-1.5 py-0.5 rounded text-on-surface-variant">
                                 {t}
                               </span>
                             ))}
@@ -325,7 +332,7 @@ export function ProfileModal({ userId, onClose }: Props) {
               {pubs.length > 0 && (
                 <section>
                   <h3 className="font-headline text-base font-bold text-on-surface mb-3 flex items-center gap-2">
-                    <span className="material-symbols-outlined text-[18px] text-primary">article</span>
+                    <span className="material-symbols-outlined text-[18px] text-primary" aria-hidden="true">article</span>
                     Publicaciones
                   </h3>
                   <div className="space-y-3">
@@ -342,14 +349,16 @@ export function ProfileModal({ userId, onClose }: Props) {
                           <p className="text-sm font-bold text-on-surface mb-1">{pub.title}</p>
                         )}
                         <p className="text-sm text-on-surface-variant leading-relaxed line-clamp-3">{pub.content}</p>
-                        <div className="flex items-center gap-4 mt-3 text-xs text-outline">
+                        <div className="flex items-center gap-4 mt-3 text-xs text-on-surface-variant">
                           <span className="flex items-center gap-1">
-                            <span className="material-symbols-outlined text-[13px]">favorite</span>
+                            <span className="material-symbols-outlined text-[13px]" aria-hidden="true">favorite</span>
                             {pub.likes}
+                            <span className="sr-only"> me gusta</span>
                           </span>
                           <span className="flex items-center gap-1">
-                            <span className="material-symbols-outlined text-[13px]">mode_comment</span>
+                            <span className="material-symbols-outlined text-[13px]" aria-hidden="true">mode_comment</span>
                             {pub.comments}
+                            <span className="sr-only"> comentarios</span>
                           </span>
                           <span className="ml-auto">{timeAgo(pub.createdAt)}</span>
                         </div>
@@ -362,7 +371,7 @@ export function ProfileModal({ userId, onClose }: Props) {
               {/* Empty state for students with no content yet */}
               {profile.role === 'STUDENT' && student && !student.skills?.length && !pubs.length && (
                 <div className="text-center py-8 text-on-surface-variant text-sm">
-                  <span className="material-symbols-outlined text-[40px] block mb-2 text-outline">person</span>
+                  <span className="material-symbols-outlined text-[40px] block mb-2 text-outline" aria-hidden="true">person</span>
                   Perfil en construcción
                 </div>
               )}

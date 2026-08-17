@@ -6,6 +6,7 @@ import { PublicationCard } from '@/components/shared/PublicationCard'
 import { api } from '@/lib/api-client'
 import { cn, mediaUrl, timeAgo } from '@/lib/utils'
 import { useAuthStore } from '@/store/auth.store'
+import { useModalA11y } from '@/lib/useModalA11y'
 import type { Publication } from '@/types'
 
 interface Story {
@@ -100,6 +101,7 @@ function StoryViewer({
 
   const story   = group.stories[idx]
   const isOwner = user?.id === group.authorId
+  const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -110,6 +112,14 @@ function StoryViewer({
     window.addEventListener('keydown', handler)
     return () => window.removeEventListener('keydown', handler)
   }, [onClose, group.stories.length])
+
+  // Move focus into the dialog on mount, restore it to the trigger on unmount
+  useEffect(() => {
+    const triggerEl = document.activeElement as HTMLElement | null
+    containerRef.current?.focus()
+    return () => { triggerEl?.focus?.() }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   // Reset to first story when group changes
   useEffect(() => { setIdx(0) }, [group.authorId])
@@ -153,12 +163,17 @@ function StoryViewer({
     >
       {/* 9:16 card — fixed proportions, no deformation */}
       <div
+        ref={containerRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label={`Historia de ${group.authorName}`}
+        tabIndex={-1}
         className="relative rounded-2xl overflow-hidden bg-black shadow-2xl select-none"
         style={{ width: 'min(360px, 100vw - 32px)', aspectRatio: '9/16', maxHeight: 'calc(100vh - 32px)' }}
         onClick={e => e.stopPropagation()}
       >
         {/* ── Segmented progress bars ── */}
-        <div className="absolute top-0 left-0 right-0 flex gap-1 px-3 pt-3 z-20">
+        <div className="absolute top-0 left-0 right-0 flex gap-1 px-3 pt-3 z-20" aria-hidden="true">
           {group.stories.map((_, i) => (
             <div key={i} className="flex-1 h-0.5 bg-white/30 rounded-full overflow-hidden">
               <div
@@ -187,9 +202,11 @@ function StoryViewer({
           {isOwner && (
             <>
               <button
+                type="button"
                 onClick={handleHighlight}
                 disabled={pinning}
-                title={isPinned ? 'Quitar de destacadas' : 'Destacar historia'}
+                aria-label={isPinned ? 'Quitar de destacadas' : 'Destacar historia'}
+                aria-pressed={isPinned}
                 className={cn(
                   'p-1.5 rounded-full transition-colors',
                   isPinned
@@ -197,25 +214,28 @@ function StoryViewer({
                     : 'text-white/70 hover:text-amber-400',
                 )}
               >
-                <span className={cn('material-symbols-outlined text-[20px]', isPinned && 'icon-filled')}>
+                <span className={cn('material-symbols-outlined text-[20px]', isPinned && 'icon-filled')} aria-hidden="true">
                   push_pin
                 </span>
               </button>
               <button
+                type="button"
                 onClick={handleDelete}
                 className="p-1.5 rounded-full text-white/70 hover:text-red-400"
-                title="Eliminar historia"
+                aria-label="Eliminar historia"
               >
-                <span className="material-symbols-outlined text-[20px]">delete</span>
+                <span className="material-symbols-outlined text-[20px]" aria-hidden="true">delete</span>
               </button>
             </>
           )}
 
           <button
+            type="button"
             onClick={onClose}
             className="p-1.5 rounded-full text-white/80 hover:text-white"
+            aria-label="Cerrar"
           >
-            <span className="material-symbols-outlined text-[20px]">close</span>
+            <span className="material-symbols-outlined text-[20px]" aria-hidden="true">close</span>
           </button>
         </div>
 
@@ -223,7 +243,7 @@ function StoryViewer({
         {story.imageUrl ? (
           <img
             src={mediaUrl(story.imageUrl)}
-            alt="Historia"
+            alt={story.content ? story.content : `Historia publicada por ${group.authorName}`}
             className="absolute inset-0 w-full h-full object-cover object-center"
             draggable={false}
           />
@@ -246,25 +266,29 @@ function StoryViewer({
 
         {/* ── Tap zones for navigation ── */}
         <div className="absolute inset-0 flex z-10" style={{ top: '80px' }}>
-          <button className="w-1/3 h-full opacity-0" onClick={goPrev} aria-label="Historia anterior" />
-          <button className="w-2/3 h-full opacity-0" onClick={goNext} aria-label="Historia siguiente" />
+          <button type="button" className="w-1/3 h-full opacity-0" onClick={goPrev} aria-label="Historia anterior" />
+          <button type="button" className="w-2/3 h-full opacity-0" onClick={goNext} aria-label="Historia siguiente" />
         </div>
 
         {/* ── Arrow buttons (visible) ── */}
         {idx > 0 && (
           <button
+            type="button"
             onClick={goPrev}
+            aria-label="Historia anterior"
             className="absolute left-2 top-1/2 -translate-y-1/2 z-20 bg-black/40 hover:bg-black/60 text-white rounded-full p-1"
           >
-            <span className="material-symbols-outlined">chevron_left</span>
+            <span className="material-symbols-outlined" aria-hidden="true">chevron_left</span>
           </button>
         )}
         {idx < group.stories.length - 1 && (
           <button
+            type="button"
             onClick={goNext}
+            aria-label="Historia siguiente"
             className="absolute right-2 top-1/2 -translate-y-1/2 z-20 bg-black/40 hover:bg-black/60 text-white rounded-full p-1"
           >
-            <span className="material-symbols-outlined">chevron_right</span>
+            <span className="material-symbols-outlined" aria-hidden="true">chevron_right</span>
           </button>
         )}
 
@@ -276,7 +300,7 @@ function StoryViewer({
         {/* ── Pinned badge ── */}
         {isPinned && (
           <div className="absolute top-16 right-3 z-20 flex items-center gap-1 bg-amber-500/90 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
-            <span className="material-symbols-outlined text-[12px] icon-filled">push_pin</span>
+            <span className="material-symbols-outlined text-[12px] icon-filled" aria-hidden="true">push_pin</span>
             Destacada
           </div>
         )}
@@ -323,6 +347,8 @@ function CreatePostModal({
     if (photoInputRef.current) photoInputRef.current.value = ''
   }
 
+  const modalRef = useModalA11y<HTMLDivElement>(onClose)
+
   const submit = async () => {
     if (!content.trim() && !selectedImage) { setError('Escribe algo o agrega una imagen'); return }
     if (!isAuthenticated) { setError('Debes iniciar sesión'); return }
@@ -350,12 +376,20 @@ function CreatePostModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4" onClick={onClose}>
-      <div className="w-full max-w-lg bg-surface rounded-2xl shadow-2xl overflow-hidden" onClick={e => e.stopPropagation()}>
+      <div
+        ref={modalRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="create-post-title"
+        tabIndex={-1}
+        className="w-full max-w-lg bg-surface rounded-2xl shadow-2xl overflow-hidden"
+        onClick={e => e.stopPropagation()}
+      >
         {/* Modal header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-outline-variant/15">
-          <h2 className="font-headline font-bold text-lg text-on-surface">Nueva publicación</h2>
-          <button onClick={onClose} className="p-1.5 text-outline hover:text-on-surface rounded-md transition-colors">
-            <span className="material-symbols-outlined">close</span>
+          <h2 id="create-post-title" className="font-headline font-bold text-lg text-on-surface">Nueva publicación</h2>
+          <button type="button" onClick={onClose} aria-label="Cerrar" className="p-1.5 text-outline hover:text-on-surface rounded-md transition-colors">
+            <span className="material-symbols-outlined" aria-hidden="true">close</span>
           </button>
         </div>
 
@@ -371,48 +405,54 @@ function CreatePostModal({
         {/* Form */}
         <div className="px-6 pt-4 pb-2 space-y-3">
           <div>
-            <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-1.5 block">
-              Título <span className="text-outline font-normal normal-case">(opcional)</span>
+            <label htmlFor="post-title" className="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-1.5 block">
+              Título <span className="text-on-surface-variant font-normal normal-case">(opcional)</span>
             </label>
             <input
+              id="post-title"
               type="text"
               value={title}
               onChange={e => setTitle(e.target.value)}
               placeholder="Ej: Mi proyecto de fin de año"
               maxLength={120}
-              className="w-full bg-surface-container-low border border-outline-variant/30 focus:border-primary rounded-xl px-4 py-2.5 text-sm outline-none transition-colors"
+              className="w-full bg-surface-container-low border border-outline-variant/30 focus:border-primary focus-visible:ring-2 focus-visible:ring-primary rounded-xl px-4 py-2.5 text-sm outline-none transition-colors"
             />
           </div>
 
           <div>
-            <label className="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-1.5 block">
+            <label htmlFor="post-content" className="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-1.5 block">
               Descripción <span className="text-error">*</span>
             </label>
             <textarea
+              id="post-content"
               value={content}
               onChange={e => { setContent(e.target.value); setError('') }}
               placeholder="¿Qué quieres compartir con tu red?"
               rows={4}
-              className="w-full bg-surface-container-low border border-outline-variant/30 focus:border-primary rounded-xl px-4 py-3 text-sm outline-none transition-colors resize-none"
-              autoFocus
+              aria-required="true"
+              aria-invalid={!!error}
+              aria-describedby={error ? 'post-error' : undefined}
+              className="w-full bg-surface-container-low border border-outline-variant/30 focus:border-primary focus-visible:ring-2 focus-visible:ring-primary rounded-xl px-4 py-3 text-sm outline-none transition-colors resize-none"
             />
           </div>
 
           {imagePreview && (
             <div className="relative rounded-xl overflow-hidden">
-              <img src={imagePreview} alt="Preview" className="w-full max-h-56 object-cover rounded-xl" />
+              <img src={imagePreview} alt="Previsualización de la imagen a publicar" className="w-full max-h-56 object-cover rounded-xl" />
               <button
+                type="button"
                 onClick={clearImage}
+                aria-label="Quitar imagen"
                 className="absolute top-2 right-2 bg-black/60 text-white rounded-full p-1 hover:bg-black/80 transition-colors"
               >
-                <span className="material-symbols-outlined text-[18px]">close</span>
+                <span className="material-symbols-outlined text-[18px]" aria-hidden="true">close</span>
               </button>
             </div>
           )}
 
           {error && (
-            <p className="text-xs text-error flex items-center gap-1">
-              <span className="material-symbols-outlined text-[14px]">error</span>
+            <p id="post-error" role="alert" className="text-xs text-error flex items-center gap-1">
+              <span className="material-symbols-outlined text-[14px]" aria-hidden="true">error</span>
               {error}
             </p>
           )}
@@ -427,23 +467,91 @@ function CreatePostModal({
               accept="image/jpeg,image/png,image/webp,image/gif"
               className="hidden"
               onChange={handlePhotoSelected}
+              aria-label="Seleccionar imagen para la publicación"
             />
             <button
+              type="button"
               onClick={() => photoInputRef.current?.click()}
-              title="Agregar imagen"
               className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold text-on-surface-variant hover:bg-surface-container hover:text-primary transition-colors"
             >
-              <span className="material-symbols-outlined text-[18px]">image</span>
+              <span className="material-symbols-outlined text-[18px]" aria-hidden="true">image</span>
               {selectedImage ? 'Cambiar foto' : 'Foto'}
             </button>
           </div>
           <button
+            type="button"
             onClick={submit}
             disabled={(!content.trim() && !selectedImage) || posting}
             className="px-6 py-2.5 rounded-xl editorial-gradient text-on-primary text-sm font-bold disabled:opacity-50 transition-all hover:shadow-md"
           >
             {posting ? 'Publicando...' : 'Publicar'}
           </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ─── Story confirmation modal ─────────────────────────────────────────────────
+function StoryConfirmModal({
+  preview,
+  onCancel,
+  onConfirm,
+}: {
+  preview: string
+  onCancel: () => void
+  onConfirm: () => void
+}) {
+  const modalRef = useModalA11y<HTMLDivElement>(onCancel)
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+      <div
+        ref={modalRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="story-confirm-title"
+        tabIndex={-1}
+        className="w-full max-w-sm bg-surface rounded-2xl shadow-2xl overflow-hidden"
+      >
+        <div className="flex items-center justify-between px-5 py-4 border-b border-outline-variant/15">
+          <h2 id="story-confirm-title" className="font-headline font-bold text-base text-on-surface">Vista previa de historia</h2>
+          <button
+            type="button"
+            onClick={onCancel}
+            aria-label="Cerrar"
+            className="p-1.5 text-outline hover:text-on-surface rounded-md transition-colors"
+          >
+            <span className="material-symbols-outlined text-[20px]" aria-hidden="true">close</span>
+          </button>
+        </div>
+        <div className="p-4">
+          <div className="rounded-xl overflow-hidden mb-4" style={{ aspectRatio: '9/16', maxHeight: '320px' }}>
+            <img
+              src={preview}
+              alt="Vista previa de tu historia"
+              className="w-full h-full object-cover"
+            />
+          </div>
+          <p className="text-xs text-on-surface-variant text-center mb-4">
+            Esta imagen se publicará como tu historia por 24 horas.
+          </p>
+          <div className="flex gap-3">
+            <button
+              type="button"
+              onClick={onCancel}
+              className="flex-1 px-4 py-2.5 rounded-xl border border-outline-variant/30 text-sm font-semibold text-on-surface-variant hover:bg-surface-container transition-colors"
+            >
+              Cancelar
+            </button>
+            <button
+              type="button"
+              onClick={onConfirm}
+              className="flex-1 px-4 py-2.5 rounded-xl editorial-gradient text-on-primary text-sm font-bold hover:shadow-md transition-all"
+            >
+              Publicar historia
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -561,45 +669,11 @@ export function FeedSection({
 
       {/* Story preview confirmation modal */}
       {storyPending && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-          <div className="w-full max-w-sm bg-surface rounded-2xl shadow-2xl overflow-hidden">
-            <div className="flex items-center justify-between px-5 py-4 border-b border-outline-variant/15">
-              <h2 className="font-headline font-bold text-base text-on-surface">Vista previa de historia</h2>
-              <button
-                onClick={() => setStoryPending(null)}
-                className="p-1.5 text-outline hover:text-on-surface rounded-md transition-colors"
-              >
-                <span className="material-symbols-outlined text-[20px]">close</span>
-              </button>
-            </div>
-            <div className="p-4">
-              <div className="rounded-xl overflow-hidden mb-4" style={{ aspectRatio: '9/16', maxHeight: '320px' }}>
-                <img
-                  src={storyPending.preview}
-                  alt="Vista previa"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <p className="text-xs text-on-surface-variant text-center mb-4">
-                Esta imagen se publicará como tu historia por 24 horas.
-              </p>
-              <div className="flex gap-3">
-                <button
-                  onClick={() => setStoryPending(null)}
-                  className="flex-1 px-4 py-2.5 rounded-xl border border-outline-variant/30 text-sm font-semibold text-on-surface-variant hover:bg-surface-container transition-colors"
-                >
-                  Cancelar
-                </button>
-                <button
-                  onClick={handleStoryConfirm}
-                  className="flex-1 px-4 py-2.5 rounded-xl editorial-gradient text-on-primary text-sm font-bold hover:shadow-md transition-all"
-                >
-                  Publicar historia
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+        <StoryConfirmModal
+          preview={storyPending.preview}
+          onCancel={() => setStoryPending(null)}
+          onConfirm={handleStoryConfirm}
+        />
       )}
 
       {/* Story viewer */}
@@ -638,14 +712,16 @@ export function FeedSection({
           <div className="flex gap-4 overflow-x-auto pb-1 no-scrollbar">
             {/* Create story */}
             <button
+              type="button"
               onClick={() => storyInputRef.current?.click()}
               disabled={uploadingStory || !isAuthenticated}
+              aria-label={uploadingStory ? 'Subiendo historia' : 'Agregar historia'}
               className="flex flex-col items-center gap-2 flex-none cursor-pointer group disabled:opacity-60"
             >
               <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-outline-variant group-hover:border-primary transition-colors relative bg-surface-container flex items-center justify-center">
                 <Avatar src={selfAvatar ? mediaUrl(selfAvatar) : undefined} name={selfName} size="lg" />
                 <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <span className="material-symbols-outlined text-white text-xl">
+                  <span className="material-symbols-outlined text-white text-xl" aria-hidden="true">
                     {uploadingStory ? 'hourglass_empty' : 'add'}
                   </span>
                 </div>
@@ -658,8 +734,10 @@ export function FeedSection({
             {/* Story groups — one bubble per user */}
             {storyGroups.map(group => (
               <button
+                type="button"
                 key={group.authorId}
                 onClick={() => handleOpenStoryGroup(group)}
+                aria-label={`Ver historia de ${group.authorName}${!group.seen ? ' (nueva)' : ''}`}
                 className="flex flex-col items-center gap-2 flex-none group"
               >
                 <div className="relative">
@@ -673,7 +751,7 @@ export function FeedSection({
                     {group.stories[0]?.imageUrl ? (
                       <img
                         src={mediaUrl(group.stories[0].imageUrl)}
-                        alt={group.authorName}
+                        alt=""
                         className="w-full h-full object-cover object-center"
                       />
                     ) : (
@@ -686,7 +764,7 @@ export function FeedSection({
                   </div>
                   {/* Multiple stories indicator */}
                   {group.stories.length > 1 && (
-                    <span className="absolute bottom-0 right-0 bg-primary text-on-primary text-[9px] font-bold rounded-full w-4 h-4 flex items-center justify-center border border-surface">
+                    <span className="absolute bottom-0 right-0 bg-primary text-on-primary text-[9px] font-bold rounded-full w-4 h-4 flex items-center justify-center border border-surface" aria-hidden="true">
                       {group.stories.length}
                     </span>
                   )}
@@ -698,7 +776,7 @@ export function FeedSection({
             ))}
 
             {!loading && storyGroups.length === 0 && (
-              <div className="flex items-center text-xs text-outline ml-2 self-center">
+              <div className="flex items-center text-xs text-on-surface-variant ml-2 self-center">
                 No hay historias aún
               </div>
             )}
@@ -710,6 +788,7 @@ export function FeedSection({
           <div className="flex items-center gap-3">
             <Avatar src={selfAvatar ? mediaUrl(selfAvatar) : undefined} name={selfName} size="md" />
             <button
+              type="button"
               onClick={() => setShowCreateModal(true)}
               className="flex-1 text-left px-4 py-3 rounded-full bg-surface-container-low text-on-surface-variant text-sm hover:bg-surface-container transition-colors"
             >
@@ -720,11 +799,12 @@ export function FeedSection({
           <div className="flex flex-wrap items-center gap-2 mt-3 pt-3 border-t border-outline-variant/10">
             {postActions.map(({ icon, label, action }) => (
               <button
+                type="button"
                 key={label}
                 onClick={() => setShowCreateModal(true)}
                 className="flex items-center gap-1.5 px-3 sm:px-4 py-2 rounded-md text-xs font-semibold text-on-surface-variant hover:bg-surface-container transition-colors"
               >
-                <span className="material-symbols-outlined text-[18px]">{icon}</span>
+                <span className="material-symbols-outlined text-[18px]" aria-hidden="true">{icon}</span>
                 {label}
               </button>
             ))}
@@ -733,7 +813,7 @@ export function FeedSection({
 
         {/* Feed */}
         {loading ? (
-          <div className="space-y-4">
+          <div className="space-y-4" aria-hidden="true">
             {[1, 2].map(i => (
               <div key={i} className="card p-6 animate-pulse">
                 <div className="flex gap-3 mb-4">
@@ -752,7 +832,7 @@ export function FeedSection({
           </div>
         ) : publications.length === 0 ? (
           <div className="card p-10 text-center">
-            <span className="material-symbols-outlined text-[48px] text-outline">feed</span>
+            <span className="material-symbols-outlined text-[48px] text-outline" aria-hidden="true">feed</span>
             <p className="text-on-surface-variant text-sm mt-3">No hay publicaciones aún. ¡Sé el primero!</p>
           </div>
         ) : (

@@ -143,93 +143,108 @@ export default function GestionOfertasPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <div>
-              <label className="text-xs font-bold uppercase tracking-widest text-outline mb-2 block">Título del cargo *</label>
+              <label htmlFor="offer-title" className="text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2 block">Título del cargo *</label>
               <input
+                id="offer-title"
                 value={form.title}
                 onChange={e => setForm(f => ({ ...f, title: e.target.value }))}
                 placeholder="Ej: Pasantía Desarrollador Frontend"
-                className="w-full bg-surface-container-low rounded-lg px-4 py-2.5 text-sm outline-none border border-transparent focus:border-primary transition-colors"
+                aria-required="true"
+                className="w-full bg-surface-container-low rounded-lg px-4 py-2.5 text-sm outline-none border border-transparent focus:border-primary focus-visible:ring-2 focus-visible:ring-primary transition-colors"
               />
             </div>
 
             <div>
-              <label className="text-xs font-bold uppercase tracking-widest text-outline mb-2 block">Ubicación *</label>
+              <label htmlFor="offer-location" className="text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2 block">Ubicación *</label>
               <input
+                id="offer-location"
                 value={form.location}
                 onChange={e => setForm(f => ({ ...f, location: e.target.value }))}
                 placeholder="Ej: Santiago, Chile"
-                className="w-full bg-surface-container-low rounded-lg px-4 py-2.5 text-sm outline-none border border-transparent focus:border-primary transition-colors"
+                aria-required="true"
+                className="w-full bg-surface-container-low rounded-lg px-4 py-2.5 text-sm outline-none border border-transparent focus:border-primary focus-visible:ring-2 focus-visible:ring-primary transition-colors"
               />
             </div>
 
             <div>
-              <label className="text-xs font-bold uppercase tracking-widest text-outline mb-2 block">Tipo</label>
+              <label htmlFor="offer-type" className="text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2 block">Tipo</label>
               <select
+                id="offer-type"
                 value={form.type}
                 onChange={e => setForm(f => ({ ...f, type: e.target.value as OpportunityType }))}
-                className="w-full bg-surface-container-low rounded-lg px-4 py-2.5 text-sm outline-none border border-transparent focus:border-primary"
+                className="w-full bg-surface-container-low rounded-lg px-4 py-2.5 text-sm outline-none border border-transparent focus:border-primary focus-visible:ring-2 focus-visible:ring-primary"
               >
                 {Object.entries(typeLabel).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
               </select>
             </div>
 
             <div>
-              <label className="text-xs font-bold uppercase tracking-widest text-outline mb-2 block">Fecha límite</label>
+              <label htmlFor="offer-deadline" className="text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2 block">Fecha límite</label>
               <input
+                id="offer-deadline"
                 type="date"
                 value={form.deadline}
                 onChange={e => setForm(f => ({ ...f, deadline: e.target.value }))}
-                className="w-full bg-surface-container-low rounded-lg px-4 py-2.5 text-sm outline-none border border-transparent focus:border-primary"
+                className="w-full bg-surface-container-low rounded-lg px-4 py-2.5 text-sm outline-none border border-transparent focus:border-primary focus-visible:ring-2 focus-visible:ring-primary"
               />
             </div>
 
             <div>
-              <label className="text-xs font-bold uppercase tracking-widest text-outline mb-2 block">Renta / Estipendio</label>
+              <label htmlFor="offer-salary" className="text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2 block">Renta / Estipendio</label>
               <input
+                id="offer-salary"
                 value={form.salary}
                 onChange={e => setForm(f => ({ ...f, salary: e.target.value }))}
                 placeholder="Ej: $450.000 - $600.000 CLP"
-                className="w-full bg-surface-container-low rounded-lg px-4 py-2.5 text-sm outline-none border border-transparent focus:border-primary transition-colors"
+                className="w-full bg-surface-container-low rounded-lg px-4 py-2.5 text-sm outline-none border border-transparent focus:border-primary focus-visible:ring-2 focus-visible:ring-primary transition-colors"
               />
             </div>
 
             <div className="flex items-center gap-3 self-end pb-2">
               <button
+                type="button"
+                role="switch"
+                aria-checked={form.isRemote}
+                aria-label="Modalidad remota"
                 onClick={() => setForm(f => ({ ...f, isRemote: !f.isRemote }))}
-                className={`w-10 h-6 rounded-full relative transition-colors ${form.isRemote ? 'bg-primary-container' : 'bg-surface-container-high'}`}
+                className={`w-10 h-6 rounded-full relative transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${form.isRemote ? 'bg-primary-container' : 'bg-surface-container-high'}`}
               >
-                <div className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow transition-all ${form.isRemote ? 'right-1' : 'left-1'}`} />
+                <div className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow transition-all ${form.isRemote ? 'right-1' : 'left-1'}`} aria-hidden="true" />
               </button>
               <span className="text-sm font-semibold text-on-surface">Modalidad remota</span>
             </div>
 
             <div className="md:col-span-2">
-              <label className="text-xs font-bold uppercase tracking-widest text-outline mb-2 block">Descripción *</label>
+              <label htmlFor="offer-description" className="text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2 block">Descripción *</label>
               <textarea
+                id="offer-description"
                 rows={4}
                 value={form.description}
                 onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
                 placeholder="Describe la oportunidad, lo que aprenderá el estudiante y el ambiente de trabajo..."
-                className="w-full bg-surface-container-low rounded-lg px-4 py-3 text-sm outline-none border border-transparent focus:border-primary resize-none transition-colors"
+                aria-required="true"
+                className="w-full bg-surface-container-low rounded-lg px-4 py-3 text-sm outline-none border border-transparent focus:border-primary focus-visible:ring-2 focus-visible:ring-primary resize-none transition-colors"
               />
             </div>
 
             <div className="md:col-span-2">
-              <label className="text-xs font-bold uppercase tracking-widest text-outline mb-2 block">Habilidades requeridas</label>
+              <label htmlFor="offer-skills" className="text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2 block">Habilidades requeridas</label>
               <input
+                id="offer-skills"
                 value={form.skills}
                 onChange={e => setForm(f => ({ ...f, skills: e.target.value }))}
                 placeholder="React, Node.js, SQL, Trabajo en equipo (separadas por coma)"
-                className="w-full bg-surface-container-low rounded-lg px-4 py-2.5 text-sm outline-none border border-transparent focus:border-primary transition-colors"
+                aria-describedby="offer-skills-hint"
+                className="w-full bg-surface-container-low rounded-lg px-4 py-2.5 text-sm outline-none border border-transparent focus:border-primary focus-visible:ring-2 focus-visible:ring-primary transition-colors"
               />
-              <p className="text-[11px] text-outline mt-1.5">
+              <p id="offer-skills-hint" className="text-[11px] text-on-surface-variant mt-1.5">
                 Estas habilidades se usan para calcular el match con los estudiantes.
               </p>
             </div>
           </div>
 
           {error && (
-            <p className="mt-4 text-sm text-error font-semibold">{error}</p>
+            <p role="alert" className="mt-4 text-sm text-error font-semibold">{error}</p>
           )}
 
           <div className="flex items-center gap-3 mt-6 justify-end">
@@ -318,12 +333,13 @@ function OfferRow({
 
             <div className="flex items-center gap-2 shrink-0">
               <button
+                type="button"
                 onClick={() => onToggle(offer.id)}
                 className={cn(
                   'px-3 py-1.5 rounded-lg text-xs font-bold transition-all',
                   offer.isActive
                     ? 'bg-surface-container text-on-surface-variant hover:bg-error-container hover:text-error'
-                    : 'bg-primary-fixed text-primary hover:bg-primary-container hover:text-on-primary',
+                    : 'bg-primary-fixed text-primary-container hover:bg-primary-container hover:text-on-primary',
                 )}
               >
                 {offer.isActive ? 'Pausar' : 'Activar'}
@@ -332,24 +348,30 @@ function OfferRow({
               {confirmDelete ? (
                 <>
                   <button
+                    type="button"
                     onClick={() => { onDelete(offer.id); setConfirmDelete(false) }}
+                    aria-label={`Confirmar eliminación de ${offer.title}`}
                     className="px-3 py-1.5 rounded-lg text-xs font-bold bg-error text-on-error hover:opacity-90 transition-all"
                   >
                     Confirmar
                   </button>
                   <button
+                    type="button"
                     onClick={() => setConfirmDelete(false)}
+                    aria-label="Cancelar eliminación"
                     className="p-1.5 rounded-lg text-outline hover:text-on-surface hover:bg-surface-container transition-all"
                   >
-                    <span className="material-symbols-outlined text-[16px]">close</span>
+                    <span className="material-symbols-outlined text-[16px]" aria-hidden="true">close</span>
                   </button>
                 </>
               ) : (
                 <button
+                  type="button"
                   onClick={() => setConfirmDelete(true)}
+                  aria-label={`Eliminar oferta ${offer.title}`}
                   className="p-1.5 rounded-lg text-outline hover:text-error hover:bg-error-container transition-all"
                 >
-                  <span className="material-symbols-outlined text-[18px]">delete</span>
+                  <span className="material-symbols-outlined text-[18px]" aria-hidden="true">delete</span>
                 </button>
               )}
             </div>

@@ -147,7 +147,9 @@ function OportunidadesContent() {
                 {typeFilters.map(({ label, value }) => (
                   <button
                     key={value}
+                    type="button"
                     onClick={() => setTypeFilter(value)}
+                    aria-pressed={typeFilter === value}
                     className={`px-3 py-1 rounded-full text-xs font-semibold transition-all ${
                       typeFilter === value
                         ? 'bg-primary-container text-on-primary'
@@ -161,24 +163,27 @@ function OportunidadesContent() {
             </div>
 
             {/* Solo remotas */}
-            <div className="mb-6">
-              <label className="flex items-center gap-3 cursor-pointer">
-                <button
-                  onClick={() => setOnlyRemote(v => !v)}
-                  className={`w-10 h-6 rounded-full relative transition-colors ${onlyRemote ? 'bg-primary-container' : 'bg-surface-container-high'}`}
-                >
-                  <div className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow transition-all ${onlyRemote ? 'right-1' : 'left-1'}`} />
-                </button>
-                <span className="text-sm font-semibold text-on-surface">Solo remotas</span>
-              </label>
+            <div className="mb-6 flex items-center gap-3">
+              <button
+                type="button"
+                role="switch"
+                aria-checked={onlyRemote}
+                aria-label="Solo remotas"
+                onClick={() => setOnlyRemote(v => !v)}
+                className={`w-10 h-6 rounded-full relative transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${onlyRemote ? 'bg-primary-container' : 'bg-surface-container-high'}`}
+              >
+                <div className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow transition-all ${onlyRemote ? 'right-1' : 'left-1'}`} aria-hidden="true" />
+              </button>
+              <span className="text-sm font-semibold text-on-surface">Solo remotas</span>
             </div>
 
             {/* Match mínimo */}
             {isAuthenticated && (
               <div>
-                <p className="text-[11px] font-bold uppercase tracking-widest text-outline mb-3">Match mínimo</p>
+                <label htmlFor="min-match" className="text-[11px] font-bold uppercase tracking-widest text-outline mb-3 block">Match mínimo</label>
                 <div className="flex items-center gap-3">
                   <input
+                    id="min-match"
                     type="range" min="0" max="100" step="10"
                     value={minMatch}
                     onChange={e => setMinMatch(Number(e.target.value))}
@@ -194,7 +199,7 @@ function OportunidadesContent() {
           {isAuthenticated && opportunities.length > 0 && (
             <div className="card p-5 bg-primary-fixed/40">
               <div className="flex items-center gap-2 mb-3">
-                <span className="material-symbols-outlined text-primary text-[20px] icon-filled">auto_awesome</span>
+                <span className="material-symbols-outlined text-primary text-[20px] icon-filled" aria-hidden="true">auto_awesome</span>
                 <h3 className="font-headline font-bold text-sm text-on-surface">Tu perfil es compatible</h3>
               </div>
               <p className="text-xs text-on-surface-variant leading-relaxed mb-3">
@@ -212,7 +217,7 @@ function OportunidadesContent() {
           {/* Consejos */}
           <div className="card p-5 bg-[#fff8e1] border border-[#ffecb3]">
             <div className="flex items-center gap-2 mb-3">
-              <span className="material-symbols-outlined text-amber-600 text-[20px] icon-filled">lightbulb</span>
+              <span className="material-symbols-outlined text-amber-600 text-[20px] icon-filled" aria-hidden="true">lightbulb</span>
               <h3 className="font-headline font-bold text-sm text-amber-900">Consejos para Entrevistas</h3>
             </div>
             <ul className="text-xs text-amber-800/80 space-y-2 list-disc pl-4">
@@ -239,8 +244,8 @@ function OportunidadesContent() {
 
           {/* Aviso de error no crítico */}
           {error && (
-            <div className="mb-4 px-4 py-3 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-800 flex items-center gap-2">
-              <span className="material-symbols-outlined text-[14px]">info</span>
+            <div role="alert" className="mb-4 px-4 py-3 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-800 flex items-center gap-2">
+              <span className="material-symbols-outlined text-[14px]" aria-hidden="true">info</span>
               {error}
             </div>
           )}

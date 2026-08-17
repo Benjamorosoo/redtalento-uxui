@@ -32,6 +32,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body className="bg-surface text-on-surface font-body antialiased">
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[999] focus:px-4 focus:py-2.5 focus:rounded-lg focus:bg-primary focus:text-on-primary focus:text-sm focus:font-bold focus:shadow-elevated"
+        >
+          Saltar al contenido principal
+        </a>
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}
           strategy="afterInteractive"
@@ -46,7 +52,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </Script>
         <CeibboDecor />
         <RootNavWrapper />
-        {children}
+        <main id="main-content" tabIndex={-1}>
+          {children}
+        </main>
       </body>
     </html>
   )

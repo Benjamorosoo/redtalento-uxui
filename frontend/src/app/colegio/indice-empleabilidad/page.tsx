@@ -48,14 +48,14 @@ export default function IndiceEmpleabilidadPage() {
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1.6fr)_minmax(280px,1fr)]">
         <div className="rounded-2xl editorial-gradient p-6 sm:p-8 shadow-editorial text-on-primary">
-          <p className="text-xs font-black uppercase tracking-[0.18em] text-on-primary/70 mb-2">
+          <p className="text-xs font-black uppercase tracking-[0.18em] text-on-primary mb-2" style={{ textShadow: '0 1px 2px rgba(0,0,0,0.25)' }}>
             Score promedio
           </p>
           <div className="flex items-end gap-2">
             <span className="font-headline text-6xl font-black leading-none">{avgScore}</span>
             <span className="pb-2 text-2xl font-black">%</span>
           </div>
-          <p className="mt-3 max-w-md text-sm leading-relaxed text-on-primary/80">
+          <p className="mt-3 max-w-md text-sm leading-relaxed text-on-primary" style={{ textShadow: '0 1px 2px rgba(0,0,0,0.25)' }}>
             Preparación promedio de tus estudiantes en la plataforma — perfil, habilidades, portafolio y evidencias.
           </p>
 
@@ -67,7 +67,7 @@ export default function IndiceEmpleabilidadPage() {
             ].map(({ value, label }) => (
               <div key={label}>
                 <p className="font-headline text-2xl font-black leading-none">{value}</p>
-                <p className="mt-1 text-[11px] font-semibold text-on-primary/70">{label}</p>
+                <p className="mt-1 text-[11px] font-semibold text-on-primary" style={{ textShadow: '0 1px 2px rgba(0,0,0,0.25)' }}>{label}</p>
               </div>
             ))}
           </div>

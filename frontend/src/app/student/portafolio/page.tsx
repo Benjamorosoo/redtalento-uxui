@@ -114,7 +114,7 @@ export default function PortafolioPage() {
             href="/student/perfil"
             className="inline-flex items-center gap-1.5 text-sm text-on-surface-variant hover:text-primary transition-colors mb-3 group"
           >
-            <span className="material-symbols-outlined text-[18px] group-hover:-translate-x-0.5 transition-transform">arrow_back</span>
+            <span className="material-symbols-outlined text-[18px] group-hover:-translate-x-0.5 transition-transform" aria-hidden="true">arrow_back</span>
             Volver al perfil
           </Link>
           <h1 className="font-headline text-3xl font-bold text-on-surface">Mi Portafolio</h1>
@@ -133,74 +133,85 @@ export default function PortafolioPage() {
           <h2 className="font-headline text-xl font-bold text-on-surface mb-6">Nueva evidencia</h2>
 
           {/* Tipo */}
-          <div className="mb-6">
-            <p className="text-[11px] font-bold uppercase tracking-widest text-outline mb-3">Tipo de evidencia</p>
+          <fieldset className="mb-6">
+            <legend className="text-[11px] font-bold uppercase tracking-widest text-on-surface-variant mb-3">Tipo de evidencia</legend>
             <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
               {evidenceTypes.map(({ value, label, icon }) => (
                 <button
                   key={value}
+                  type="button"
                   onClick={() => setForm(f => ({ ...f, type: value }))}
+                  aria-pressed={form.type === value}
                   className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border-2 text-xs font-semibold transition-all ${
                     form.type === value
-                      ? 'border-primary bg-primary-fixed/40 text-primary'
+                      ? 'border-primary bg-primary-fixed/40 text-primary-container'
                       : 'border-outline-variant/20 text-on-surface-variant hover:border-primary/40 hover:bg-surface-container'
                   }`}
                 >
-                  <span className="material-symbols-outlined text-[22px]">{icon}</span>
+                  <span className="material-symbols-outlined text-[22px]" aria-hidden="true">{icon}</span>
                   {label}
                 </button>
               ))}
             </div>
-          </div>
+          </fieldset>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
             {/* Título */}
             <div className="md:col-span-2">
-              <label className="text-xs font-bold uppercase tracking-widest text-outline mb-2 block">
+              <label htmlFor="evidence-title" className="text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2 block">
                 Título *
               </label>
               <input
+                id="evidence-title"
                 value={form.title}
                 onChange={e => setForm(f => ({ ...f, title: e.target.value }))}
                 placeholder="Ej: Sistema de gestión escolar en React"
-                className="w-full bg-surface-container-low rounded-lg px-4 py-2.5 text-sm outline-none border border-transparent focus:border-primary transition-colors"
+                aria-required="true"
+                className="w-full bg-surface-container-low rounded-lg px-4 py-2.5 text-sm outline-none border border-transparent focus:border-primary focus-visible:ring-2 focus-visible:ring-primary transition-colors"
               />
             </div>
 
             {/* Descripción */}
             <div className="md:col-span-2">
-              <label className="text-xs font-bold uppercase tracking-widest text-outline mb-2 block">
+              <label htmlFor="evidence-description" className="text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2 block">
                 Descripción *
               </label>
               <textarea
+                id="evidence-description"
                 value={form.description}
                 onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
                 rows={3}
                 placeholder="Describe qué hiciste, qué aprendiste y qué tecnologías usaste..."
-                className="w-full bg-surface-container-low rounded-lg px-4 py-3 text-sm outline-none border border-transparent focus:border-primary resize-none transition-colors"
+                aria-required="true"
+                className="w-full bg-surface-container-low rounded-lg px-4 py-3 text-sm outline-none border border-transparent focus:border-primary focus-visible:ring-2 focus-visible:ring-primary resize-none transition-colors"
               />
             </div>
 
             {/* Tags */}
             <div>
-              <label className="text-xs font-bold uppercase tracking-widest text-outline mb-2 block">
+              <label htmlFor="evidence-tags" className="text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2 block">
                 Etiquetas
               </label>
               <input
+                id="evidence-tags"
                 value={form.tags}
                 onChange={e => setForm(f => ({ ...f, tags: e.target.value }))}
                 placeholder="React, Node.js, PostgreSQL (separadas por coma)"
-                className="w-full bg-surface-container-low rounded-lg px-4 py-2.5 text-sm outline-none border border-transparent focus:border-primary transition-colors"
+                className="w-full bg-surface-container-low rounded-lg px-4 py-2.5 text-sm outline-none border border-transparent focus:border-primary focus-visible:ring-2 focus-visible:ring-primary transition-colors"
               />
             </div>
 
             {/* Visibilidad */}
             <div className="flex items-center gap-3 self-end pb-2">
               <button
+                type="button"
+                role="switch"
+                aria-checked={form.isPublic}
+                aria-label="Visible públicamente"
                 onClick={() => setForm(f => ({ ...f, isPublic: !f.isPublic }))}
-                className={`w-10 h-6 rounded-full relative transition-colors ${form.isPublic ? 'bg-primary-container' : 'bg-surface-container-high'}`}
+                className={`w-10 h-6 rounded-full relative transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${form.isPublic ? 'bg-primary-container' : 'bg-surface-container-high'}`}
               >
-                <div className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow transition-all ${form.isPublic ? 'right-1' : 'left-1'}`} />
+                <div className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow transition-all ${form.isPublic ? 'right-1' : 'left-1'}`} aria-hidden="true" />
               </button>
               <div>
                 <p className="text-sm font-semibold text-on-surface">Visible públicamente</p>
@@ -233,7 +244,7 @@ export default function PortafolioPage() {
           </div>
 
           {error && (
-            <p className="mb-4 text-sm text-error font-semibold">{error}</p>
+            <p role="alert" className="mb-4 text-sm text-error font-semibold">{error}</p>
           )}
 
           <div className="flex justify-end gap-3">
@@ -251,7 +262,9 @@ export default function PortafolioPage() {
       {evidences.length > 0 && (
         <div className="flex items-center gap-2 mb-6 overflow-x-auto pb-1 no-scrollbar">
           <button
+            type="button"
             onClick={() => setActiveFilter('ALL')}
+            aria-pressed={activeFilter === 'ALL'}
             className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all ${
               activeFilter === 'ALL' ? 'bg-primary-container text-on-primary' : 'bg-surface-container text-on-surface-variant hover:bg-surface-container-high'
             }`}
@@ -264,7 +277,9 @@ export default function PortafolioPage() {
             return (
               <button
                 key={value}
+                type="button"
                 onClick={() => setActiveFilter(value)}
+                aria-pressed={activeFilter === value}
                 className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all ${
                   activeFilter === value ? 'bg-primary-container text-on-primary' : 'bg-surface-container text-on-surface-variant hover:bg-surface-container-high'
                 }`}
@@ -289,7 +304,7 @@ export default function PortafolioPage() {
 
         {filtered.length === 0 && (
           <div className="col-span-3 flex flex-col items-center justify-center py-20 text-center">
-            <span className="material-symbols-outlined text-[64px] text-outline">folder_open</span>
+            <span className="material-symbols-outlined text-[64px] text-outline" aria-hidden="true">folder_open</span>
             <h2 className="font-headline text-xl font-bold text-on-surface mt-4">
               {activeFilter === 'ALL' ? 'Aún no tienes evidencias' : 'Sin evidencias en esta categoría'}
             </h2>
@@ -332,7 +347,7 @@ function EvidenceCard({
         {imageUrl ? (
           <img src={imageUrl} alt={evidence.title} className="w-full h-full object-cover" />
         ) : (
-          <span className="material-symbols-outlined text-[44px] text-outline icon-filled">{icon}</span>
+          <span className="material-symbols-outlined text-[44px] text-outline icon-filled" aria-hidden="true">{icon}</span>
         )}
 
         {/* Badge tipo */}
@@ -341,18 +356,22 @@ function EvidenceCard({
         </span>
 
         {/* Acciones */}
-        <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+        <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 focus-within:opacity-100 transition-opacity">
           {confirmDelete ? (
             <>
               <button
+                type="button"
                 onClick={() => { onDelete(evidence.id); setConfirmDelete(false) }}
                 disabled={isDeleting}
+                aria-label={`Confirmar eliminación de ${evidence.title}`}
                 className="text-[10px] font-bold px-2 py-1 rounded bg-error text-on-error hover:opacity-90"
               >
                 {isDeleting ? '...' : 'Confirmar'}
               </button>
               <button
+                type="button"
                 onClick={() => setConfirmDelete(false)}
+                aria-label="Cancelar eliminación"
                 className="text-[10px] font-bold px-2 py-1 rounded bg-surface-container text-on-surface"
               >
                 No
@@ -360,11 +379,12 @@ function EvidenceCard({
             </>
           ) : (
             <button
+              type="button"
               onClick={() => setConfirmDelete(true)}
+              aria-label={`Eliminar ${evidence.title}`}
               className="p-1 rounded bg-black/40 text-white hover:bg-error/80 transition-colors backdrop-blur-sm"
-              title="Eliminar"
             >
-              <span className="material-symbols-outlined text-[14px]">delete</span>
+              <span className="material-symbols-outlined text-[14px]" aria-hidden="true">delete</span>
             </button>
           )}
         </div>

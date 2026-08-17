@@ -67,33 +67,49 @@ function GlobalSearchBar({ onSelectUser, mobile = false }: { onSelectUser: (user
   return (
     <div ref={wrapperRef} className={mobile ? 'relative w-full' : 'hidden lg:block relative w-72'}>
       <div className="flex items-center bg-surface-container-low border border-outline-variant/30 hover:border-primary/40 focus-within:border-primary/60 px-4 py-2 rounded-xl gap-3">
-        <span className="material-symbols-outlined text-outline text-[20px]">search</span>
+        <span className="material-symbols-outlined text-outline text-[20px]" aria-hidden="true">search</span>
         <input
           type="text"
           value={searchValue}
           onChange={e => handleSearch(e.target.value)}
           onFocus={() => suggestions.length > 0 && setShowDropdown(true)}
           placeholder="Buscar talento, empresas..."
+          aria-label="Buscar talento, empresas"
+          role="combobox"
+          aria-expanded={showDropdown && suggestions.length > 0}
+          aria-haspopup="listbox"
+          aria-controls={mobile ? 'empresa-nav-search-listbox-mobile' : 'empresa-nav-search-listbox'}
+          aria-autocomplete="list"
           className="bg-transparent border-none outline-none text-sm w-full placeholder:text-outline font-body text-on-surface"
         />
         {loadingSugg && (
-          <div className="w-3.5 h-3.5 border-2 border-primary border-t-transparent rounded-full animate-spin shrink-0" />
+          <div className="w-3.5 h-3.5 border-2 border-primary border-t-transparent rounded-full animate-spin shrink-0" aria-hidden="true" />
         )}
         {searchValue && !loadingSugg && (
           <button
+            type="button"
             onClick={() => { handleSearch(''); setSuggestions([]); setShowDropdown(false) }}
             className="text-outline hover:text-on-surface shrink-0"
+            aria-label="Limpiar búsqueda"
           >
-            <span className="material-symbols-outlined text-[16px]">close</span>
+            <span className="material-symbols-outlined text-[16px]" aria-hidden="true">close</span>
           </button>
         )}
       </div>
 
       {showDropdown && suggestions.length > 0 && (
-        <div className="absolute top-full left-0 right-0 mt-1 bg-surface border border-outline-variant/20 rounded-xl shadow-elevated z-50 py-1 animate-fade-in">
+        <div
+          id={mobile ? 'empresa-nav-search-listbox-mobile' : 'empresa-nav-search-listbox'}
+          role="listbox"
+          aria-label="Resultados de búsqueda"
+          className="absolute top-full left-0 right-0 mt-1 bg-surface border border-outline-variant/20 rounded-xl shadow-elevated z-50 py-1 animate-fade-in"
+        >
           {suggestions.map(s => (
             <button
               key={s.userId}
+              type="button"
+              role="option"
+              aria-selected="false"
               onClick={() => handleSelect(s.userId)}
               className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-surface-container transition-colors text-left"
             >
@@ -107,7 +123,7 @@ function GlobalSearchBar({ onSelectUser, mobile = false }: { onSelectUser: (user
                 <p className="text-sm font-semibold text-on-surface truncate">{s.name}</p>
                 {s.extra && <p className="text-[11px] text-outline truncate">{s.extra}</p>}
               </div>
-              <span className="shrink-0 material-symbols-outlined text-[14px] text-primary icon-filled">
+              <span className="shrink-0 material-symbols-outlined text-[14px] text-primary icon-filled" aria-hidden="true">
                 {roleIcon[s.role] ?? 'person'}
               </span>
             </button>
@@ -135,10 +151,11 @@ function NavBell({ href }: { href: string }) {
     <Link
       href={href}
       className="relative p-2.5 rounded-full text-on-surface-variant hover:text-primary hover:bg-primary-fixed/30 transition-colors"
+      aria-label={unreadCount > 0 ? `Notificaciones, ${unreadCount} sin leer` : 'Notificaciones'}
     >
-      <span className="material-symbols-outlined text-[22px]">notifications</span>
+      <span className="material-symbols-outlined text-[22px]" aria-hidden="true">notifications</span>
       {unreadCount > 0 && (
-        <span className="absolute top-1.5 right-1.5 min-w-[18px] h-[18px] bg-error text-on-error text-[10px] font-black rounded-full flex items-center justify-center border-2 border-surface px-0.5">
+        <span className="absolute top-1.5 right-1.5 min-w-[18px] h-[18px] bg-error text-on-error text-[10px] font-black rounded-full flex items-center justify-center border-2 border-surface px-0.5" aria-hidden="true">
           {unreadCount > 9 ? '9+' : unreadCount}
         </span>
       )}
@@ -185,6 +202,14 @@ export function EmpresaNav() {
     return () => document.removeEventListener('mousedown', handler)
   }, [])
 
+  // Close profile menu on Escape
+  useEffect(() => {
+    if (!menuOpen) return
+    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') setMenuOpen(false) }
+    document.addEventListener('keydown', handler)
+    return () => document.removeEventListener('keydown', handler)
+  }, [menuOpen])
+
   // Close mobile panels on route change
   useEffect(() => {
     setMobileNavOpen(false)
@@ -214,13 +239,14 @@ export function EmpresaNav() {
         </div>
 
         {/* Center: Nav links */}
-        <nav className="hidden xl:flex items-center gap-1 flex-1 min-w-0 overflow-x-auto no-scrollbar">
+        <nav className="hidden xl:flex items-center gap-1 flex-1 min-w-0 overflow-x-auto no-scrollbar" aria-label="Principal">
           {navItems.map(({ href, icon, label }) => {
             const active = pathname === href || pathname.startsWith(href + '/')
             return (
               <Link
                 key={href}
                 href={href}
+                aria-current={active ? 'page' : undefined}
                 className={cn(
                   'flex items-center gap-2 px-4 py-2 rounded-full text-[13px] font-bold tracking-wide transition-colors duration-150 whitespace-nowrap shrink-0',
                   active
@@ -228,7 +254,7 @@ export function EmpresaNav() {
                     : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high',
                 )}
               >
-                <span className={cn('material-symbols-outlined text-[20px] shrink-0', active && 'icon-filled')}>
+                <span className={cn('material-symbols-outlined text-[20px] shrink-0', active && 'icon-filled')} aria-hidden="true">
                   {icon}
                 </span>
                 {label}
@@ -244,8 +270,10 @@ export function EmpresaNav() {
             onClick={() => { setMobileSearchOpen(o => !o); setMobileNavOpen(false) }}
             className="lg:hidden p-2.5 rounded-full text-on-surface-variant hover:text-primary hover:bg-primary-fixed/30"
             aria-label="Buscar"
+            aria-expanded={mobileSearchOpen}
+            aria-controls="empresa-mobile-search-panel"
           >
-            <span className="material-symbols-outlined text-[22px]">search</span>
+            <span className="material-symbols-outlined text-[22px]" aria-hidden="true">search</span>
           </button>
 
           <button
@@ -253,8 +281,10 @@ export function EmpresaNav() {
             onClick={() => { setMobileNavOpen(o => !o); setMobileSearchOpen(false) }}
             className="xl:hidden p-2.5 rounded-full text-on-surface-variant hover:text-primary hover:bg-primary-fixed/30"
             aria-label="Menú"
+            aria-expanded={mobileNavOpen}
+            aria-controls="empresa-mobile-nav-panel"
           >
-            <span className="material-symbols-outlined text-[22px]">{mobileNavOpen ? 'close' : 'menu'}</span>
+            <span className="material-symbols-outlined text-[22px]" aria-hidden="true">{mobileNavOpen ? 'close' : 'menu'}</span>
           </button>
 
           <NavBell href="/empresa/notificaciones" />
@@ -266,6 +296,9 @@ export function EmpresaNav() {
               type="button"
               onClick={() => setMenuOpen(o => !o)}
               className="flex items-center gap-2.5 p-1 pr-3 rounded-full border border-outline-variant/20 hover:border-primary/30 hover:bg-surface-container-low group"
+              aria-haspopup="menu"
+              aria-expanded={menuOpen}
+              aria-label={`Menú de perfil, ${companyName}`}
             >
               <Avatar
                 src={companyLogo ? mediaUrl(companyLogo) : undefined}
@@ -280,28 +313,30 @@ export function EmpresaNav() {
                 </span>
                 <span className="text-[10px] text-on-surface-variant font-medium">Empresa</span>
               </div>
-              <span className={cn('material-symbols-outlined text-[18px] text-on-surface-variant transition-transform hidden md:block', menuOpen && 'rotate-180')}>
+              <span className={cn('material-symbols-outlined text-[18px] text-on-surface-variant transition-transform hidden md:block', menuOpen && 'rotate-180')} aria-hidden="true">
                 expand_more
               </span>
             </button>
 
             {menuOpen && (
-              <div className="absolute top-full right-0 mt-2 w-56 bg-surface border border-outline-variant/20 rounded-xl shadow-elevated z-50 py-1.5 animate-fade-in">
+              <div role="menu" aria-label="Menú de perfil" className="absolute top-full right-0 mt-2 w-56 bg-surface border border-outline-variant/20 rounded-xl shadow-elevated z-50 py-1.5 animate-fade-in">
                 <Link
                   href="/empresa/perfil"
+                  role="menuitem"
                   onClick={() => setMenuOpen(false)}
                   className="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-on-surface hover:bg-surface-container transition-colors"
                 >
-                  <span className="material-symbols-outlined text-[20px] text-on-surface-variant">business</span>
+                  <span className="material-symbols-outlined text-[20px] text-on-surface-variant" aria-hidden="true">business</span>
                   Ver perfil
                 </Link>
                 <div className="h-px bg-outline-variant/20 my-1.5" />
                 <button
                   type="button"
+                  role="menuitem"
                   onClick={handleLogout}
                   className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-semibold text-error hover:bg-error/10 transition-colors text-left"
                 >
-                  <span className="material-symbols-outlined text-[20px]">logout</span>
+                  <span className="material-symbols-outlined text-[20px]" aria-hidden="true">logout</span>
                   Cerrar sesión
                 </button>
               </div>
@@ -312,20 +347,21 @@ export function EmpresaNav() {
 
       {/* Mobile search panel */}
       {mobileSearchOpen && (
-        <div className="lg:hidden absolute left-0 right-0 top-full border-t border-outline-variant/20 bg-surface px-4 py-3 shadow-elevated">
+        <div id="empresa-mobile-search-panel" className="lg:hidden absolute left-0 right-0 top-full border-t border-outline-variant/20 bg-surface px-4 py-3 shadow-elevated">
           <GlobalSearchBar mobile onSelectUser={(uid) => { setMobileSearchOpen(false); router.push('/student/ver/' + uid) }} />
         </div>
       )}
 
       {/* Mobile nav panel */}
       {mobileNavOpen && (
-        <nav className="xl:hidden absolute left-0 right-0 top-full max-h-[calc(100vh-5rem)] overflow-y-auto border-t border-outline-variant/20 bg-surface px-3 py-2 shadow-elevated">
+        <nav id="empresa-mobile-nav-panel" aria-label="Principal (móvil)" className="xl:hidden absolute left-0 right-0 top-full max-h-[calc(100vh-5rem)] overflow-y-auto border-t border-outline-variant/20 bg-surface px-3 py-2 shadow-elevated">
           {navItems.map(({ href, icon, label }) => {
             const active = pathname === href || pathname.startsWith(href + '/')
             return (
               <Link
                 key={href}
                 href={href}
+                aria-current={active ? 'page' : undefined}
                 onClick={() => setMobileNavOpen(false)}
                 className={cn(
                   'flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-bold transition-colors',
@@ -334,7 +370,7 @@ export function EmpresaNav() {
                     : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high',
                 )}
               >
-                <span className={cn('material-symbols-outlined text-[20px]', active && 'icon-filled')}>
+                <span className={cn('material-symbols-outlined text-[20px]', active && 'icon-filled')} aria-hidden="true">
                   {icon}
                 </span>
                 {label}
