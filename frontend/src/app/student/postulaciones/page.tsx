@@ -246,7 +246,7 @@ function PostulacionesContent() {
 
                       {app.coverLetter && (
                         <p className="mt-3 text-xs text-on-surface-variant italic line-clamp-2 bg-surface-container-low rounded-lg px-3 py-2">
-                          "{app.coverLetter}"
+                          &quot;{app.coverLetter}&quot;
                         </p>
                       )}
                     </div>
