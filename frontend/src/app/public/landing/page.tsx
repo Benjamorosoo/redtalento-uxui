@@ -145,6 +145,7 @@ export default async function LandingPage() {
 
       {/* ── Stats ──────────────────────────────────────────────────────── */}
       <section className="py-16 bg-primary-container">
+        <h2 className="sr-only">Cifras de Ceibbo</h2>
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {stats.map(({ value, label }) => (
