@@ -52,9 +52,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </Script>
         <CeibboDecor />
         <RootNavWrapper />
-        <main id="main-content" tabIndex={-1}>
+        <div id="main-content" tabIndex={-1}>
           {children}
-        </main>
+        </div>
       </body>
     </html>
   )
