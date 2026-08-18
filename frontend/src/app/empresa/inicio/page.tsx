@@ -36,7 +36,7 @@ export default function EmpresaInicioPage() {
       <main className="max-w-[1440px] mx-auto px-8 py-10">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
           <aside className="md:col-span-3"><div className="card h-64 animate-pulse" /></aside>
-          <section className="md:col-span-6"><div className="card h-48 animate-pulse" /></section>
+          <div className="md:col-span-6"><div className="card h-48 animate-pulse" /></div>
           <aside className="md:col-span-3"><div className="card h-48 animate-pulse" /></aside>
         </div>
       </main>
@@ -136,7 +136,7 @@ export default function EmpresaInicioPage() {
         </aside>
 
         {/* ── Center Feed ─────────────────────────────────────────────── */}
-        <section className="md:col-span-6">
+        <div className="md:col-span-6">
           <FeedSection
             selfAvatar={logo}
             selfName={companyName}
@@ -148,7 +148,7 @@ export default function EmpresaInicioPage() {
               { icon: 'work',     label: 'Contratación' },
             ]}
           />
-        </section>
+        </div>
 
         {/* ── Right Sidebar ────────────────────────────────────────────── */}
         <aside className="md:col-span-3 space-y-6 sticky top-28">
