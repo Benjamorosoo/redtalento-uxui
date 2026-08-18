@@ -41,10 +41,10 @@ export default function StudentInicioPage() {
           <aside className="md:col-span-3">
             <div className="card h-64 animate-pulse" />
           </aside>
-          <section className="md:col-span-6">
+          <div className="md:col-span-6">
             <div className="card h-32 animate-pulse mb-6" />
             <div className="card h-48 animate-pulse" />
-          </section>
+          </div>
           <aside className="md:col-span-3">
             <div className="card h-48 animate-pulse" />
           </aside>
@@ -118,7 +118,7 @@ export default function StudentInicioPage() {
         </aside>
 
         {/* ── Center Feed ─────────────────────────────────────────────── */}
-        <section className="md:col-span-6">
+        <div className="md:col-span-6">
           <FeedSection
             selfAvatar={avatar}
             selfName={fullName}
@@ -131,7 +131,7 @@ export default function StudentInicioPage() {
               { icon: 'workspace_premium',  label: 'Logro' },
             ]}
           />
-        </section>
+        </div>
 
         {/* ── Right Sidebar ────────────────────────────────────────────── */}
         <aside className="md:col-span-3 space-y-6 md:sticky md:top-24">
