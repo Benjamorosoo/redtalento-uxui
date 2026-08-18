@@ -292,12 +292,12 @@ export default function CargaMasivaPage() {
                   : 'border-outline-variant/30 hover:border-primary/50 hover:bg-surface-container-low'
               }`}
             >
-              <div className="w-14 h-14 rounded-2xl bg-primary-fixed flex items-center justify-center mb-3" aria-hidden="true">
+              <span className="w-14 h-14 rounded-2xl bg-primary-fixed flex items-center justify-center mb-3" aria-hidden="true">
                 <span className="material-symbols-outlined text-primary text-[28px]">upload_file</span>
-              </div>
-              <p className="font-bold text-on-surface text-sm">Arrastra tu archivo aquí</p>
-              <p className="text-xs text-on-surface-variant mt-1">o haz clic para seleccionar</p>
-              <p className="text-xs text-on-surface-variant mt-2">.CSV o .XLSX · Máximo 5MB · Hasta 500 filas</p>
+              </span>
+              <span className="font-bold text-on-surface text-sm block">Arrastra tu archivo aquí</span>
+              <span className="text-xs text-on-surface-variant mt-1 block">o haz clic para seleccionar</span>
+              <span className="text-xs text-on-surface-variant mt-2 block">.CSV o .XLSX · Máximo 5MB · Hasta 500 filas</span>
             </label>
             {parseError && (
               <div role="alert" className="mt-4 flex items-start gap-2 p-4 bg-red-50 border border-red-200 rounded-xl">
