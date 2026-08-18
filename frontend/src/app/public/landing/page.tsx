@@ -108,7 +108,7 @@ export default async function LandingPage() {
         <div className="relative z-10 max-w-7xl mx-auto px-6 w-full py-24">
           <div className="max-w-3xl">
             <span className="inline-block px-3 py-1 mb-6 text-[11px] font-black tracking-widest uppercase bg-primary-container text-on-primary rounded animate-fade-in">
-              Editorial Excellence
+              Impulsando el talento técnico
             </span>
 
             <h1 className="font-headline text-5xl md:text-7xl font-extrabold text-on-surface tracking-tight leading-[1.05] mb-8 animate-slide-up">

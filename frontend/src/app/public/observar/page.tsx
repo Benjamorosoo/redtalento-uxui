@@ -111,7 +111,7 @@ export default function ObservarPage() {
   }> = {
     1: { bar: 'bg-gradient-to-t from-amber-600 to-amber-400',   badge: 'bg-amber-400 text-amber-900',  ring: 'ring-amber-400',  label: 'text-amber-300',  h: 140, delay: '100ms', size: 'xl' },
     2: { bar: 'bg-gradient-to-t from-slate-500 to-slate-300',   badge: 'bg-slate-300 text-slate-800',  ring: 'ring-slate-300',  label: 'text-slate-400',  h: 108, delay: '0ms',   size: 'md' },
-    3: { bar: 'bg-gradient-to-t from-orange-700 to-orange-500', badge: 'bg-orange-500 text-white',     ring: 'ring-orange-500', label: 'text-orange-300', h: 76,  delay: '200ms', size: 'sm' },
+    3: { bar: 'bg-gradient-to-t from-orange-700 to-orange-500', badge: 'bg-orange-700 text-white',     ring: 'ring-orange-500', label: 'text-orange-300', h: 76,  delay: '200ms', size: 'sm' },
   }
 
   return (
@@ -386,7 +386,7 @@ export default function ObservarPage() {
             <span className="material-symbols-outlined text-[24px]">business</span>
           </div>
           <h2 className="text-xl font-bold font-headline text-on-primary-container mb-3">¿Sos una empresa buscando talento?</h2>
-          <p className="text-sm md:text-base text-on-primary-container/80 mb-8 leading-relaxed max-w-2xl mx-auto">
+          <p className="text-sm md:text-base text-on-primary-container/90 mb-8 leading-relaxed max-w-2xl mx-auto">
             Únete a nuestra red para recibir postulaciones y contactar directamente a los alumnos destacados.
           </p>
           <Link href="/auth/register?role=EMPRESA" className="inline-flex items-center gap-2 bg-primary text-on-primary font-bold px-8 py-3.5 rounded-full hover:bg-primary/90 transition-all shadow-md">
