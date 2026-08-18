@@ -180,4 +180,24 @@
   .animate-delay-300 { animation-delay: 300ms; }
   .animate-delay-400 { animation-delay: 400ms; }
   .animate-delay-500 { animation-delay: 500ms; }
+
+  /* /public/observar — reveal-on-scroll cards + hall of fame crown */
+  .student-card {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out,
+                box-shadow 0.2s ease, border-color 0.2s ease;
+  }
+  .student-card.card-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  @keyframes crown-bounce {
+    0%   { transform: translateY(0) rotate(0deg); }
+    25%  { transform: translateY(-10px) rotate(-5deg); }
+    50%  { transform: translateY(-5px) rotate(3deg); }
+    75%  { transform: translateY(-8px) rotate(-2deg); }
+    100% { transform: translateY(0) rotate(0deg); }
+  }
+  .crown-anim { animation: crown-bounce 0.9s ease-out 0.3s 1 both; }
 }

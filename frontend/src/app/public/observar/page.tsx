@@ -115,28 +115,6 @@ export default function ObservarPage() {
   return (
     <div className="min-h-screen bg-surface pb-12 font-body text-on-surface">
 
-      {/* ── Animation styles ─────────────────────────────────────────────────── */}
-      <style>{`
-        .student-card {
-          opacity: 0;
-          transform: translateY(20px);
-          transition: opacity 0.5s ease-out, transform 0.5s ease-out,
-                      box-shadow 0.2s ease, border-color 0.2s ease;
-        }
-        .student-card.card-visible {
-          opacity: 1;
-          transform: translateY(0);
-        }
-        @keyframes crown-bounce {
-          0%   { transform: translateY(0) rotate(0deg); }
-          25%  { transform: translateY(-10px) rotate(-5deg); }
-          50%  { transform: translateY(-5px) rotate(3deg); }
-          75%  { transform: translateY(-8px) rotate(-2deg); }
-          100% { transform: translateY(0) rotate(0deg); }
-        }
-        .crown-anim { animation: crown-bounce 0.9s ease-out 0.3s 1 both; }
-      `}</style>
-
       {/* ── Topbar ───────────────────────────────────────────────────────────── */}
       <div className="bg-surface border-b border-outline-variant/30 px-5 h-20 md:px-8 flex items-center justify-between flex-wrap gap-2 sticky top-0 z-10 glass-nav">
         <Link href="/public/landing" className="flex items-center gap-3 group">
@@ -404,7 +382,7 @@ export default function ObservarPage() {
           <div className="bg-surface w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-5 shadow-sm text-primary">
             <span className="material-symbols-outlined text-[24px]">business</span>
           </div>
-          <h3 className="text-xl font-bold font-headline text-on-primary-container mb-3">¿Sos una empresa buscando talento?</h3>
+          <h2 className="text-xl font-bold font-headline text-on-primary-container mb-3">¿Sos una empresa buscando talento?</h2>
           <p className="text-sm md:text-base text-on-primary-container/80 mb-8 leading-relaxed max-w-2xl mx-auto">
             Únete a nuestra red para recibir postulaciones y contactar directamente a los alumnos destacados.
           </p>
