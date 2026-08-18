@@ -6,6 +6,7 @@ import { OpportunityCard } from '@/components/shared/OpportunityCard'
 import { api } from '@/lib/api-client'
 import { useAuthStore } from '@/store/auth.store'
 import type { Application, Opportunity, OpportunityType } from '@/types'
+import { usePageTitle } from '@/lib/usePageTitle'
 
 const typeFilters: { label: string; value: OpportunityType | 'ALL' }[] = [
   { label: 'Todas',    value: 'ALL' },
@@ -320,6 +321,7 @@ function OportunidadesContent() {
 }
 
 export default function OportunidadesPage() {
+  usePageTitle('Oportunidades')
   return (
     <Suspense fallback={<div />}>
       <OportunidadesContent />

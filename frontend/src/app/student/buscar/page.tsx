@@ -6,6 +6,7 @@ import { api } from '@/lib/api-client'
 import { useAuthStore } from '@/store/auth.store'
 import { mediaUrl } from '@/lib/utils'
 import Link from 'next/link'
+import { usePageTitle } from '@/lib/usePageTitle'
 
 interface SearchResult {
   userId: string
@@ -28,6 +29,7 @@ const roleIcon: Record<string, string> = {
 }
 
 export default function BuscarPage() {
+  usePageTitle('Buscar usuarios')
   const { isAuthenticated, user } = useAuthStore()
   const [query,   setQuery]   = useState('')
   const [results, setResults] = useState<SearchResult[]>([])
@@ -89,8 +91,7 @@ export default function BuscarPage() {
           value={query}
           onChange={e => handleSearch(e.target.value)}
           placeholder="Buscar por nombre, especialidad..."
-          autoFocus
-          className="bg-transparent border-none outline-none text-sm w-full placeholder:text-outline font-body text-on-surface text-base"
+          className="bg-transparent border-none outline-none text-sm w-full placeholder:text-outline font-body text-on-surface text-base focus-visible:ring-2 focus-visible:ring-primary rounded"
         />
         {loading && (
           <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />

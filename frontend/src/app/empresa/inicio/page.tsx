@@ -7,8 +7,10 @@ import { FeedSection } from '@/components/shared/FeedSection'
 import { api } from '@/lib/api-client'
 import { useAuthStore } from '@/store/auth.store'
 import type { CompanyProfile, Opportunity } from '@/types'
+import { usePageTitle } from '@/lib/usePageTitle'
 
 export default function EmpresaInicioPage() {
+  usePageTitle('Inicio')
   const { isAuthenticated } = useAuthStore()
   const [company,       setCompany]       = useState<CompanyProfile | null>(null)
   const [opportunities, setOpportunities] = useState<Opportunity[]>([])

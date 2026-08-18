@@ -80,7 +80,7 @@ function GlobalSearchBar({ onSelectUser, mobile = false }: { onSelectUser: (user
           aria-haspopup="listbox"
           aria-controls={mobile ? 'empresa-nav-search-listbox-mobile' : 'empresa-nav-search-listbox'}
           aria-autocomplete="list"
-          className="bg-transparent border-none outline-none text-sm w-full placeholder:text-outline font-body text-on-surface"
+          className="bg-transparent border-none outline-none text-sm w-full placeholder:text-outline font-body text-on-surface focus-visible:ring-2 focus-visible:ring-primary rounded"
         />
         {loadingSugg && (
           <div className="w-3.5 h-3.5 border-2 border-primary border-t-transparent rounded-full animate-spin shrink-0" aria-hidden="true" />

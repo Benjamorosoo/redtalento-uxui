@@ -12,6 +12,7 @@ import { FollowListModal } from '@/components/ui/FollowListModal'
 import { api } from '@/lib/api-client'
 import { useAuthStore } from '@/store/auth.store'
 import { calculateReadinessScore, timeAgo, mediaUrl } from '@/lib/utils'
+import { usePageTitle } from '@/lib/usePageTitle'
 import type { StudentProfile, Publication, Application } from '@/types'
 
 function getTrafficLight(score: number) {
@@ -45,6 +46,7 @@ export default function StudentPerfilPage() {
   const { isAuthenticated, user, logout } = useAuthStore()
   const router = useRouter()
   const [student,      setStudent]      = useState<StudentProfile | null>(null)
+  usePageTitle(student ? `${student.firstName} ${student.lastName}` : 'Mi perfil')
   const [publications, setPublications] = useState<Publication[]>([])
   const [highlights,   setHighlights]   = useState<Publication[]>([])
   const [followerCount,  setFollowerCount]  = useState(0)

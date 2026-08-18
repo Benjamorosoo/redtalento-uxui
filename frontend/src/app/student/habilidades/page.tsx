@@ -8,6 +8,7 @@ import { api } from '@/lib/api-client'
 import { useAuthStore } from '@/store/auth.store'
 import { calculateReadinessScore } from '@/lib/utils'
 import type { Skill, SkillCategory, StudentProfile } from '@/types'
+import { usePageTitle } from '@/lib/usePageTitle'
 
 const categoryConfig: Record<SkillCategory, { label: string; icon: string; color: string }> = {
   TECNICA:       { label: 'Técnicas',        icon: 'code',              color: 'text-primary' },
@@ -29,6 +30,7 @@ const suggestedSkills: { name: string; category: SkillCategory }[] = [
 ]
 
 export default function HabilidadesPage() {
+  usePageTitle('Mis habilidades')
   const router = useRouter()
   const { isAuthenticated } = useAuthStore()
 

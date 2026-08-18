@@ -6,12 +6,14 @@ import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/Button'
 import { api } from '@/lib/api-client'
 import { useAuthStore } from '@/store/auth.store'
+import { usePageTitle } from '@/lib/usePageTitle'
 import type { CompanyProfile, Opportunity } from '@/types'
 
 export default function EmpresaPerfilPage() {
   const { isAuthenticated, logout } = useAuthStore()
   const router = useRouter()
   const [company, setCompany]           = useState<CompanyProfile | null>(null)
+  usePageTitle(company?.name ?? 'Perfil de la empresa')
   const [opportunities, setOpportunities] = useState<Opportunity[]>([])
   const [loading, setLoading]           = useState(true)
 

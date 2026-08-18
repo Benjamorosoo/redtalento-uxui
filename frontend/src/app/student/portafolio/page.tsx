@@ -8,6 +8,7 @@ import { api } from '@/lib/api-client'
 import { useAuthStore } from '@/store/auth.store'
 import { timeAgo } from '@/lib/utils'
 import type { PortfolioEvidence, EvidenceType } from '@/types'
+import { usePageTitle } from '@/lib/usePageTitle'
 
 const evidenceTypes: { value: EvidenceType; label: string; icon: string; desc: string }[] = [
   { value: 'PROYECTO',    label: 'Proyecto',      icon: 'code',              desc: 'Trabajo práctico o aplicación desarrollada' },
@@ -37,6 +38,7 @@ const emptyForm: NewEvidenceForm = {
 }
 
 export default function PortafolioPage() {
+  usePageTitle('Mi portafolio')
   const { isAuthenticated } = useAuthStore()
 
   const [evidences, setEvidences]     = useState<PortfolioEvidence[]>([])

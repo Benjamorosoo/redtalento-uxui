@@ -12,6 +12,7 @@ import { CeibboLogoMark } from '@/components/ui/CeibboLogoMark'
 import { useAuthStore } from '@/store/auth.store'
 import { api } from '@/lib/api-client'
 import { cn } from '@/lib/utils'
+import { usePageTitle } from '@/lib/usePageTitle'
 
 type Role = 'STUDENT' | 'EMPRESA' | 'COLEGIO'
 
@@ -58,6 +59,7 @@ const schema = z.object({
 type FormValues = z.infer<typeof schema>
 
 export default function RegisterPageWrapper() {
+  usePageTitle('Crear cuenta')
   return (
     <Suspense fallback={<div className="min-h-screen bg-surface flex items-center justify-center"><div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" /></div>}>
       <RegisterPage />

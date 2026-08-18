@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/Button'
 import apiClient, { api } from '@/lib/api-client'
 import { useAuthStore } from '@/store/auth.store'
 import { getApiErrorMessage } from '@/lib/utils'
+import { usePageTitle } from '@/lib/usePageTitle'
 
 interface IndiceStats {
   totalStudents: number
@@ -14,6 +15,7 @@ interface IndiceStats {
 }
 
 export default function IndiceEmpleabilidadPage() {
+  usePageTitle('Índice de empleabilidad')
   const { isAuthenticated } = useAuthStore()
   const [stats, setStats] = useState<IndiceStats | null>(null)
   const [loading, setLoading] = useState(true)

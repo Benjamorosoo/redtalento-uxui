@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/Button'
 import { Toast } from '@/components/ui/Toast'
 import { api } from '@/lib/api-client'
 import { useModalA11y } from '@/lib/useModalA11y'
+import { usePageTitle } from '@/lib/usePageTitle'
 
 const graduates = [
   { name: 'Camila Torres', specialty: 'Programación', status: 'working', label: 'Trabaja en su área', delay: '1 mes', company: 'InnoSoft' },
@@ -119,6 +120,7 @@ function SendSurveyModal({
 }
 
 export default function EgresadosPage() {
+  usePageTitle('Seguimiento de egresados')
   const [sending, setSending] = useState(false)
   const [confirming, setConfirming] = useState(false)
   const [editedQuestions, setEditedQuestions] = useState<string[]>(surveyQuestions)

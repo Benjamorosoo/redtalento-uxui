@@ -6,12 +6,14 @@ import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/Button'
 import { api } from '@/lib/api-client'
 import { useAuthStore } from '@/store/auth.store'
+import { usePageTitle } from '@/lib/usePageTitle'
 import type { SchoolProfile, StudentProfile } from '@/types'
 
 export default function ColegioPerfilPage() {
   const { isAuthenticated, logout } = useAuthStore()
   const router = useRouter()
   const [school, setSchool]         = useState<SchoolProfile | null>(null)
+  usePageTitle(school?.name ?? 'Perfil del colegio')
   const [students, setStudents]     = useState<StudentProfile[]>([])
   const [totalStudents, setTotal]   = useState(0)
   const [loading, setLoading]       = useState(true)

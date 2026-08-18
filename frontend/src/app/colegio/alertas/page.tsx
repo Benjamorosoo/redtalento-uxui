@@ -6,6 +6,7 @@ import { Avatar } from '@/components/ui/Avatar'
 import { Button } from '@/components/ui/Button'
 import { api } from '@/lib/api-client'
 import { useAuthStore } from '@/store/auth.store'
+import { usePageTitle } from '@/lib/usePageTitle'
 
 interface InactiveStudentEntry {
   userId: string
@@ -103,6 +104,7 @@ function AffectedStudentsList({ students }: { students: AffectedStudent[] }) {
 }
 
 export default function AlertasPage() {
+  usePageTitle('Alertas')
   const { isAuthenticated } = useAuthStore()
   const [stats, setStats] = useState<AlertsStats | null>(null)
   const [loading, setLoading] = useState(true)

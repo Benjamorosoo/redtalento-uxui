@@ -10,8 +10,10 @@ import { api } from '@/lib/api-client'
 import { useAuthStore } from '@/store/auth.store'
 import { calculateReadinessScore } from '@/lib/utils'
 import type { StudentProfile, Opportunity } from '@/types'
+import { usePageTitle } from '@/lib/usePageTitle'
 
 export default function StudentInicioPage() {
+  usePageTitle('Inicio')
   const { user, isAuthenticated } = useAuthStore()
   const [profile, setProfile]           = useState<StudentProfile | null>(null)
   const [opportunities, setOpportunities] = useState<Opportunity[]>([])

@@ -6,6 +6,7 @@ import { SkillPill } from '@/components/ui/SkillPill'
 import { api } from '@/lib/api-client'
 import { useAuthStore } from '@/store/auth.store'
 import type { Skill, StudentProfile } from '@/types'
+import { usePageTitle } from '@/lib/usePageTitle'
 
 type ValidationAction = 'VALIDADA' | 'RECHAZADA' | null
 
@@ -26,6 +27,7 @@ function groupByStudent(skills: PendingSkill[]): Map<string, { student: StudentP
 }
 
 export default function ValidacionesPage() {
+  usePageTitle('Validaciones y sugerencias')
   const { isAuthenticated } = useAuthStore()
   const [pendingSkills, setPendingSkills] = useState<PendingSkill[]>([])
   const [loading, setLoading] = useState(true)

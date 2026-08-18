@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/Button'
 import { CeibboLogoMark } from '@/components/ui/CeibboLogoMark'
 import { useAuthStore } from '@/store/auth.store'
 import { cn } from '@/lib/utils'
+import { usePageTitle } from '@/lib/usePageTitle'
 
 type Role = 'STUDENT' | 'EMPRESA' | 'COLEGIO'
 
@@ -54,6 +55,7 @@ const roles = [
 ]
 
 export default function LoginPage() {
+  usePageTitle('Iniciar sesión')
   const router = useRouter()
   const login  = useAuthStore(s => s.login)
 
