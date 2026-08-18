@@ -175,7 +175,7 @@ export default function BuscarEstudiantesPage() {
         {/* Sidebar */}
         <aside className="md:col-span-3 space-y-5">
           <div className="card p-5">
-            <h3 className="font-headline font-bold text-[11px] uppercase tracking-widest text-outline mb-4">Score mínimo</h3>
+            <h2 className="font-headline font-bold text-[11px] uppercase tracking-widest text-outline mb-4">Score mínimo</h2>
             <input
               type="range" min="0" max="100" step="5"
               value={minScore}
@@ -190,7 +190,7 @@ export default function BuscarEstudiantesPage() {
           </div>
 
           <div className="card p-5">
-            <h3 className="font-headline font-bold text-[11px] uppercase tracking-widest text-outline mb-4">Especialidad</h3>
+            <h2 className="font-headline font-bold text-[11px] uppercase tracking-widest text-outline mb-4">Especialidad</h2>
             <div className="space-y-2.5">
               {SPECIALTIES.map(s => (
                 <label key={s} className="flex items-center gap-2.5 cursor-pointer">
@@ -200,7 +200,7 @@ export default function BuscarEstudiantesPage() {
                     onChange={() => toggleSpecialty(s)}
                     className="sr-only peer"
                   />
-                  <div className={`w-4 h-4 rounded border-2 flex items-center justify-center transition-all peer-focus-visible:ring-2 peer-focus-visible:ring-primary peer-focus-visible:ring-offset-1 ${
+                  <span className={`w-4 h-4 rounded border-2 flex items-center justify-center transition-all peer-focus-visible:ring-2 peer-focus-visible:ring-primary peer-focus-visible:ring-offset-1 ${
                     specialties.includes(s)
                       ? 'bg-primary-container border-primary-container'
                       : 'border-outline-variant'
@@ -208,7 +208,7 @@ export default function BuscarEstudiantesPage() {
                     {specialties.includes(s) && (
                       <span className="material-symbols-outlined text-on-primary text-[11px]">check</span>
                     )}
-                  </div>
+                  </span>
                   <span className="text-sm text-on-surface-variant">{s}</span>
                 </label>
               ))}
@@ -216,7 +216,7 @@ export default function BuscarEstudiantesPage() {
           </div>
 
           <div className="card p-5">
-            <h3 className="font-headline font-bold text-[11px] uppercase tracking-widest text-outline mb-4">Año cursado</h3>
+            <h2 className="font-headline font-bold text-[11px] uppercase tracking-widest text-outline mb-4">Año cursado</h2>
             <div className="grid grid-cols-4 gap-1.5">
               {YEARS.map(y => (
                 <button
