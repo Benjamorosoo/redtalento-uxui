@@ -93,6 +93,7 @@ export default async function LandingPage() {
         </div>
       </nav>
 
+      <main>
       {/* ── Hero ───────────────────────────────────────────────────────── */}
       <section className="relative min-h-screen flex items-center pt-16 overflow-hidden">
         {/* Background */}
@@ -151,7 +152,7 @@ export default async function LandingPage() {
             {stats.map(({ value, label }) => (
               <div key={label} className="text-center">
                 <div className="text-4xl font-extrabold text-on-primary font-headline mb-1">{value}</div>
-                <div className="text-sm font-semibold uppercase tracking-wider text-on-primary/70">{label}</div>
+                <div className="text-sm font-semibold uppercase tracking-wider text-on-primary/80">{label}</div>
               </div>
             ))}
           </div>
@@ -188,7 +189,7 @@ export default async function LandingPage() {
                 { icon: 'person_pin', title: 'Perfil profesional', bg: 'editorial-gradient', text: 'text-on-primary' },
                 { icon: 'verified',   title: 'Validaciones',       bg: 'bg-surface-container-lowest', text: 'text-on-surface' },
                 { icon: 'work',       title: 'Oportunidades',      bg: 'bg-surface-container-lowest', text: 'text-on-surface' },
-                { icon: 'school',     title: 'Respaldo escolar',   bg: 'bg-primary-fixed',             text: 'text-primary' },
+                { icon: 'school',     title: 'Respaldo escolar',   bg: 'bg-primary-fixed',             text: 'text-primary-container' },
               ].map(({ icon, title, bg, text }) => (
                 <div key={title} className={`p-6 rounded-xl ${bg === 'editorial-gradient' ? 'editorial-gradient' : bg} shadow-editorial`}>
                   <span className={`material-symbols-outlined text-[32px] ${text} icon-filled`}>{icon}</span>
@@ -225,7 +226,7 @@ export default async function LandingPage() {
       <section id="empresas" className="py-32 bg-primary-container">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-20">
-            <span className="text-[11px] font-black uppercase tracking-widest text-on-primary/60 mb-3 block">Para empresas</span>
+            <span className="text-[11px] font-black uppercase tracking-widest text-on-primary/80 mb-3 block">Para empresas</span>
             <h2 className="font-headline text-4xl font-bold text-on-primary">Descubre talento antes que nadie</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -235,7 +236,7 @@ export default async function LandingPage() {
                   <span className="material-symbols-outlined text-on-primary icon-filled">{icon}</span>
                 </div>
                 <h3 className="font-headline font-bold text-on-primary mb-2">{title}</h3>
-                <p className="text-sm text-on-primary/70 leading-relaxed">{description}</p>
+                <p className="text-sm text-on-primary/90 leading-relaxed">{description}</p>
               </div>
             ))}
           </div>
@@ -285,6 +286,7 @@ export default async function LandingPage() {
           </div>
         </div>
       </section>
+      </main>
 
       {/* ── Footer ─────────────────────────────────────────────────────── */}
       <footer className="bg-on-surface py-12 border-t border-surface/10">
@@ -293,7 +295,7 @@ export default async function LandingPage() {
             <span className="text-2xl font-black text-inverse-on-surface tracking-tighter font-headline">
               Ceibbo
             </span>
-            <p className="text-sm text-inverse-on-surface/40">
+            <p className="text-sm text-inverse-on-surface/60">
               © {new Date().getFullYear()} Ceibbo. Todos los derechos reservados.
             </p>
           </div>

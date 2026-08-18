@@ -97,7 +97,7 @@ export default function LoginPage() {
   const selectedRoleData = roles.find(r => r.key === selectedRole)
 
   return (
-    <div className="min-h-screen bg-surface flex">
+    <main className="min-h-screen bg-surface flex">
 
       {/* ── Panel izquierdo ────────────────────────────────────────── */}
       <div className="hidden lg:flex w-[45%] editorial-gradient flex-col justify-between p-16 relative overflow-hidden">
@@ -275,6 +275,6 @@ export default function LoginPage() {
           )}
         </div>
       </div>
-    </div>
+    </main>
   )
 }
