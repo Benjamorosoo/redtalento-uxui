@@ -119,7 +119,7 @@ export function scoreColor(score: number): string {
 
 export function scoreBgColor(score: number): string {
   if (score >= 80) return 'bg-green-50 text-green-700'
-  if (score >= 60) return 'bg-primary-fixed text-primary'
+  if (score >= 60) return 'bg-primary-fixed text-primary-container'
   if (score >= 40) return 'bg-amber-50 text-amber-700'
   return 'bg-surface-container text-on-surface-variant'
 }
