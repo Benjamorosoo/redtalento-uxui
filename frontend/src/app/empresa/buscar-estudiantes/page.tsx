@@ -237,6 +237,7 @@ export default function BuscarEstudiantesPage() {
 
         {/* Results */}
         <section className="md:col-span-9">
+          <h2 className="sr-only">Resultados de búsqueda</h2>
           <div className="flex items-center justify-between mb-4">
             <p className="text-sm text-on-surface-variant font-semibold">
               {loading ? 'Buscando...' : `${total} estudiantes encontrados`}
