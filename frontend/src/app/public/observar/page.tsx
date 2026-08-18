@@ -133,6 +133,7 @@ export default function ObservarPage() {
         </div>
       </div>
 
+      <main>
       {/* ── Hero ─────────────────────────────────────────────────────────────── */}
       <div className="bg-surface-container-lowest px-6 py-16 text-center border-b border-outline-variant/20 shadow-subtle relative overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] bg-primary/5 rounded-full blur-[100px] -z-10 pointer-events-none" />
@@ -394,6 +395,7 @@ export default function ObservarPage() {
           </Link>
         </div>
       </div>
+      </main>
     </div>
   )
 }

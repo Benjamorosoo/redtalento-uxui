@@ -127,7 +127,7 @@ function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen bg-surface flex">
+    <main className="min-h-screen bg-surface flex">
 
       {/* ── Panel izquierdo ─────────────────────────────────────────── */}
       <div className="hidden lg:flex w-[45%] editorial-gradient flex-col justify-between p-16 relative overflow-hidden">
@@ -345,6 +345,6 @@ function RegisterPage() {
           )}
         </div>
       </div>
-    </div>
+    </main>
   )
 }
