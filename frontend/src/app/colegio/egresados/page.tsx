@@ -227,10 +227,10 @@ export default function EgresadosPage() {
             </ol>
           </section>
 
-          <section className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-4">
             <MetricCard value="78%" label="Respondieron" icon="fact_check" />
             <MetricCard value="64%" label="Trabaja en su área" icon="engineering" />
-          </section>
+          </div>
         </aside>
       </div>
 
