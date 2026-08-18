@@ -117,6 +117,59 @@ export class SchoolsService {
     }
   }
 
+  /** CSV export of students with score/validation evidence — respaldo para sostenedor/Mineduc */
+  async exportStudentsCsv(schoolUserId: string): Promise<string> {
+    const students = await this.studentsRepo.find({
+      where: { schoolUserId },
+      relations: ['user', 'applications'],
+      order: { firstName: 'ASC', lastName: 'ASC' },
+    })
+
+    const escapeCsv = (value: string | number) => {
+      const str = String(value ?? '')
+      return /[",\n]/.test(str) ? `"${str.replace(/"/g, '""')}"` : str
+    }
+
+    const header = [
+      'Nombre', 'Apellido', 'Correo', 'Especialidad', 'Año',
+      'Score de empleabilidad (%)', 'Habilidades validadas', 'Estado de validación', 'Postulaciones',
+    ]
+
+    const rows = students.map((s) => {
+      const totalSkills = s.skills?.length ?? 0
+      const validatedSkills = s.skills?.filter((sk) => sk.isValidated).length ?? 0
+      const validationState =
+        totalSkills === 0 ? 'Sin habilidades declaradas'
+        : validatedSkills === 0 ? 'Pendiente de validación'
+        : `${validatedSkills}/${totalSkills} validadas`
+
+      return [
+        s.firstName,
+        s.lastName,
+        s.user?.email ?? '',
+        s.specialty,
+        `${s.year}°`,
+        s.readinessScore,
+        validatedSkills,
+        validationState,
+        s.applications?.length ?? 0,
+      ].map(escapeCsv).join(',')
+    })
+
+    const generatedAt = new Date().toLocaleString('es-CL', { timeZone: 'America/Santiago' })
+    const lines = [
+      'Reporte de evidencia de empleabilidad',
+      `Generado el,${escapeCsv(generatedAt)}`,
+      `Total de estudiantes,${students.length}`,
+      '',
+      header.join(','),
+      ...rows,
+    ]
+
+    // BOM so Excel opens the UTF-8 accents correctly
+    return '﻿' + lines.join('\n')
+  }
+
   async getStats(schoolUserId: string) {
     // Resolve students belonging to this school
     const schoolStudents = await this.studentsRepo.find({
