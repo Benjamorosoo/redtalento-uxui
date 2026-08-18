@@ -67,7 +67,7 @@ const config: Config = {
         'on-background':            '#1B2E1C',
         'on-surface':               '#1B2E1C',
         'on-surface-variant':       '#41513F',
-        'outline':                  '#6B7D69',
+        'outline':                  '#556454',
         'outline-variant':          '#C3D6C2',
       },
       fontFamily: {
@@ -103,7 +103,7 @@ const config: Config = {
         'float':      '0 32px 64px -16px rgba(27, 46, 20, 0.22)',
       },
       backgroundImage: {
-        'editorial-gradient': 'linear-gradient(135deg, #C0392B 0%, #E05B47 100%)',
+        'editorial-gradient': 'linear-gradient(135deg, #C0392B 0%, #CD3923 100%)',
         'hero-gradient':      'linear-gradient(to right, #FAFAFA, rgba(250,250,250,0.9), transparent)',
         'card-shine':         'linear-gradient(135deg, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0) 60%)',
       },

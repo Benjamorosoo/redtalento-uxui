@@ -57,9 +57,9 @@
     -webkit-backdrop-filter: blur(20px);
   }
 
-  /* Editorial gradient hero */
+  /* Editorial gradient hero — end color kept dark enough for white text to hit 4.5:1 (WCAG 1.4.3) */
   .editorial-gradient {
-    background: linear-gradient(135deg, #C0392B 0%, #E05B47 100%);
+    background: linear-gradient(135deg, #C0392B 0%, #CD3923 100%);
   }
 
   /* Ambient shadow (tinted) */
@@ -162,7 +162,8 @@
     @apply inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-green-50 text-green-700;
   }
   .match-badge-mid {
-    @apply inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-primary-fixed text-primary;
+    /* text-primary-container (not text-primary) to hit 4.5:1 on bg-primary-fixed — WCAG 1.4.3 */
+    @apply inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-primary-fixed text-primary-container;
   }
   .match-badge-low {
     @apply inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-surface-container text-on-surface-variant;
