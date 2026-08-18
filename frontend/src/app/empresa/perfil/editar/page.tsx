@@ -5,8 +5,10 @@ import { useRouter } from 'next/navigation'
 import { api } from '@/lib/api-client'
 import { useAuthStore } from '@/store/auth.store'
 import type { CompanyProfile } from '@/types'
+import { usePageTitle } from '@/lib/usePageTitle'
 
 export default function EditarPerfilEmpresaPage() {
+  usePageTitle('Editar perfil de empresa')
   const router              = useRouter()
   const { isAuthenticated } = useAuthStore()
   const [loading, setLoading] = useState(true)

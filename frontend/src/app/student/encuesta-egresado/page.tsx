@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/Button'
 import { Toast } from '@/components/ui/Toast'
 import { api } from '@/lib/api-client'
+import { usePageTitle } from '@/lib/usePageTitle'
 
 interface GraduateSurveyResponse {
   isWorking: boolean
@@ -12,6 +13,7 @@ interface GraduateSurveyResponse {
 }
 
 export default function EncuestaEgresadoPage() {
+  usePageTitle('Encuesta de seguimiento')
   const [isWorking, setIsWorking] = useState<boolean | null>(null)
   const [worksInSpecialty, setWorksInSpecialty] = useState<boolean | null>(null)
   const [timeToFindJob, setTimeToFindJob] = useState('')

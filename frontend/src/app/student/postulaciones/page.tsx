@@ -6,6 +6,7 @@ import { applicationStatusLabel, timeAgo } from '@/lib/utils'
 import { api } from '@/lib/api-client'
 import { useAuthStore } from '@/store/auth.store'
 import type { Application } from '@/types'
+import { usePageTitle } from '@/lib/usePageTitle'
 
 const statusSteps = ['PENDIENTE', 'EN_REVISION', 'ENTREVISTA', 'ACEPTADO']
 
@@ -300,6 +301,7 @@ function PostulacionesContent() {
 }
 
 export default function PostulacionesPage() {
+  usePageTitle('Mis postulaciones')
   return (
     <Suspense fallback={<div />}>
       <PostulacionesContent />

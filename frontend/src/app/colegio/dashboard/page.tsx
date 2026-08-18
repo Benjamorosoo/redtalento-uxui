@@ -9,6 +9,7 @@ import { api } from '@/lib/api-client'
 import { useAuthStore } from '@/store/auth.store'
 import { cn, scoreBgColor } from '@/lib/utils'
 import type { StudentProfile } from '@/types'
+import { usePageTitle } from '@/lib/usePageTitle'
 
 interface DashboardStats {
   totalStudents: number
@@ -27,6 +28,7 @@ interface PendingSkillEntry {
 }
 
 export default function ColegioDashboardPage() {
+  usePageTitle('Dashboard institucional')
   const { isAuthenticated } = useAuthStore()
   const [activeTab, setActiveTab] = useState<'estudiantes' | 'empresas'>('estudiantes')
   const [stats, setStats]           = useState<DashboardStats | null>(null)

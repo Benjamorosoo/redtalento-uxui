@@ -8,11 +8,13 @@ import { api } from '@/lib/api-client'
 import { useAuthStore } from '@/store/auth.store'
 import { scoreBgColor } from '@/lib/utils'
 import type { StudentProfile } from '@/types'
+import { usePageTitle } from '@/lib/usePageTitle'
 
 const SPECIALTIES = ['Informática', 'Redes', 'Electrónica', 'Mecánica', 'Administración', 'Gastronomía', 'Logística']
 const YEARS = [1, 2, 3, 4, 5, 6, 7]
 
 export default function BuscarEstudiantesPage() {
+  usePageTitle('Buscar talento')
   const { isAuthenticated } = useAuthStore()
   const router = useRouter()
 
@@ -122,7 +124,7 @@ export default function BuscarEstudiantesPage() {
               value={query}
               onChange={e => setQuery(e.target.value)}
               placeholder="Buscar por nombre, habilidad o especialidad..."
-              className="bg-transparent outline-none text-sm w-full placeholder:text-outline"
+              className="bg-transparent outline-none text-sm w-full placeholder:text-outline focus-visible:ring-2 focus-visible:ring-primary rounded"
             />
             {query && (
               <button onClick={() => setQuery('')} className="text-outline hover:text-error">
@@ -138,7 +140,7 @@ export default function BuscarEstudiantesPage() {
                 onChange={e => setSkillInput(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && addSkillFilter()}
                 placeholder="Agregar habilidad..."
-                className="bg-transparent outline-none text-sm w-32 placeholder:text-outline"
+                className="bg-transparent outline-none text-sm w-32 placeholder:text-outline focus-visible:ring-2 focus-visible:ring-primary rounded"
               />
               <button onClick={addSkillFilter} className="text-primary hover:opacity-70">
                 <span className="material-symbols-outlined text-[18px]">add</span>

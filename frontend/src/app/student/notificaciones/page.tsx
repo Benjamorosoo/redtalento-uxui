@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { api } from '@/lib/api-client'
 import { useAuthStore } from '@/store/auth.store'
 import { timeAgo } from '@/lib/utils'
+import { usePageTitle } from '@/lib/usePageTitle'
 
 interface Notification {
   id: string
@@ -30,6 +31,7 @@ const typeIcon: Record<string, { icon: string; color: string }> = {
 }
 
 export default function NotificacionesPage() {
+  usePageTitle('Notificaciones')
   const { isAuthenticated } = useAuthStore()
   const router = useRouter()
   const [notifications, setNotifications] = useState<Notification[]>([])

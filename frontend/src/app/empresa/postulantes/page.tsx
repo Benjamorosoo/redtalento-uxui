@@ -10,6 +10,7 @@ import { api } from '@/lib/api-client'
 import { useAuthStore } from '@/store/auth.store'
 import { cn, scoreBgColor, mediaUrl, timeAgo } from '@/lib/utils'
 import type { Application, ApplicationStatus, Opportunity } from '@/types'
+import { usePageTitle } from '@/lib/usePageTitle'
 
 const STATUS_FILTERS: { label: string; value: ApplicationStatus | 'all' }[] = [
   { label: 'Todos',       value: 'all' },
@@ -390,6 +391,7 @@ function PostulantesContent() {
 }
 
 export default function PostulantesPage() {
+  usePageTitle('Postulantes')
   return (
     <Suspense fallback={
       <main className="max-w-[1440px] mx-auto px-8 py-10">

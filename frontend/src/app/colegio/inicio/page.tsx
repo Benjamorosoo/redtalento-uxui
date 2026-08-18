@@ -7,8 +7,10 @@ import { FeedSection } from '@/components/shared/FeedSection'
 import { api } from '@/lib/api-client'
 import { useAuthStore } from '@/store/auth.store'
 import type { SchoolProfile } from '@/types'
+import { usePageTitle } from '@/lib/usePageTitle'
 
 export default function ColegioInicioPage() {
+  usePageTitle('Inicio')
   const { isAuthenticated } = useAuthStore()
   const [school, setSchool]         = useState<SchoolProfile | null>(null)
   const [pendingCount, setPendingCount] = useState(0)

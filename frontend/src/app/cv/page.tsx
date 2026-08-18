@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { api } from '@/lib/api-client'
 import { useAuthStore } from '@/store/auth.store'
+import { usePageTitle } from '@/lib/usePageTitle'
 import type { StudentProfile } from '@/types'
 
 // ── Score badge ────────────────────────────────────────────────────────────────
@@ -57,6 +58,7 @@ export default function CVPage() {
   const { isAuthenticated } = useAuthStore()
   const [student, setStudent] = useState<StudentProfile | null>(null)
   const [loading, setLoading] = useState(true)
+  usePageTitle(student ? `CV — ${student.firstName} ${student.lastName}` : 'Mi CV')
 
   useEffect(() => {
     if (!isAuthenticated) { setLoading(false); return }

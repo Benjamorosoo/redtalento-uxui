@@ -5,8 +5,10 @@ import { useRouter } from 'next/navigation'
 import { api } from '@/lib/api-client'
 import { useAuthStore } from '@/store/auth.store'
 import type { SchoolProfile } from '@/types'
+import { usePageTitle } from '@/lib/usePageTitle'
 
 export default function EditarPerfilColegioPage() {
+  usePageTitle('Editar perfil del colegio')
   const router              = useRouter()
   const { isAuthenticated } = useAuthStore()
   const [loading, setLoading] = useState(true)

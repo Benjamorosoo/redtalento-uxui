@@ -7,6 +7,7 @@ import { useAuthStore } from '@/store/auth.store'
 import { Button } from '@/components/ui/Button'
 import { cn, timeAgo } from '@/lib/utils'
 import type { Opportunity, OpportunityType } from '@/types'
+import { usePageTitle } from '@/lib/usePageTitle'
 
 const typeLabel: Record<string, string> = {
   PASANTIA: 'Pasantía', PRACTICA: 'Práctica', TRABAJO: 'Trabajo', PROYECTO: 'Proyecto',
@@ -30,6 +31,7 @@ const emptyForm: OfferForm = {
 }
 
 export default function GestionOfertasPage() {
+  usePageTitle('Gestión de ofertas')
   const { isAuthenticated } = useAuthStore()
   const [offers, setOffers]     = useState<Opportunity[]>([])
   const [loading, setLoading]   = useState(true)

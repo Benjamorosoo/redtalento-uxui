@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/Input'
 import { BackButton } from '@/components/ui/BackButton'
 import { api } from '@/lib/api-client'
 import { getApiErrorMessage } from '@/lib/utils'
+import { usePageTitle } from '@/lib/usePageTitle'
 
 const CREATE_STUDENT_ERROR_MESSAGES = {
   400: 'Revisa que todos los campos estén completos y correctos.',
@@ -73,6 +74,7 @@ function parseCSV(text: string): CsvRow[] {
 
 // ── Main page ──────────────────────────────────────────────────────────────────
 export default function CargaMasivaPage() {
+  usePageTitle('Carga masiva de estudiantes')
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [dragOver, setDragOver] = useState(false)
 

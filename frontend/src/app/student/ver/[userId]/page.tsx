@@ -9,6 +9,7 @@ import { ReadinessScore } from '@/components/ui/ReadinessScore'
 import { api } from '@/lib/api-client'
 import { useAuthStore } from '@/store/auth.store'
 import { mediaUrl, calculateReadinessScore } from '@/lib/utils'
+import { usePageTitle } from '@/lib/usePageTitle'
 import type { StudentProfile, Skill } from '@/types'
 
 interface PublicProfile {
@@ -34,6 +35,7 @@ export default function VerPerfilPage() {
 
   const [profile,          setProfile]          = useState<PublicProfile | null>(null)
   const [student,          setStudent]          = useState<StudentProfile | null>(null)
+  usePageTitle(student ? `${student.firstName} ${student.lastName}` : profile?.name ?? 'Perfil')
   const [loading,          setLoading]          = useState(true)
   const [following,        setFollowing]        = useState(false)
   const [toggling,         setToggling]         = useState(false)

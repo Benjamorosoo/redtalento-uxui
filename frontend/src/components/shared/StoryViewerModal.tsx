@@ -1,10 +1,11 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { Avatar } from '@/components/ui/Avatar'
 import { api } from '@/lib/api-client'
 import { cn, mediaUrl, timeAgo } from '@/lib/utils'
 import { useAuthStore } from '@/store/auth.store'
+import { useModalA11y } from '@/lib/useModalA11y'
 
 export interface StoryItem {
   id: string
@@ -39,7 +40,8 @@ export function StoryViewerModal({
 
   const story   = stories[idx]
   const isOwner = user?.id === story?.authorId
-  const containerRef = useRef<HTMLDivElement>(null)
+  // Traps Tab/Shift+Tab inside the dialog, closes on Escape, restores focus to the trigger on unmount
+  const containerRef = useModalA11y<HTMLDivElement>(onClose)
 
   useEffect(() => {
     setIdx(initialIndex)
@@ -47,21 +49,12 @@ export function StoryViewerModal({
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape')     onClose()
       if (e.key === 'ArrowRight') setIdx(i => Math.min(i + 1, stories.length - 1))
       if (e.key === 'ArrowLeft')  setIdx(i => Math.max(i - 1, 0))
     }
     window.addEventListener('keydown', handler)
     return () => window.removeEventListener('keydown', handler)
-  }, [onClose, stories.length])
-
-  // Move focus into the dialog on mount, restore it to the trigger on unmount
-  useEffect(() => {
-    const triggerEl = document.activeElement as HTMLElement | null
-    containerRef.current?.focus()
-    return () => { triggerEl?.focus?.() }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [stories.length])
 
   const goNext = () => {
     if (idx < stories.length - 1) setIdx(i => i + 1)

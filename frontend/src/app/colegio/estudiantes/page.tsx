@@ -11,6 +11,7 @@ import { api } from '@/lib/api-client'
 import { useAuthStore } from '@/store/auth.store'
 import { scoreBgColor } from '@/lib/utils'
 import type { StudentProfile } from '@/types'
+import { usePageTitle } from '@/lib/usePageTitle'
 
 const QUICK_FILTERS = [
   { label: 'Todos',                    value: 'all' },
@@ -140,7 +141,7 @@ function EstudiantesContent() {
             value={query}
             onChange={e => setQuery(e.target.value)}
             placeholder="Buscar estudiante..."
-            className="bg-transparent outline-none text-sm w-full placeholder:text-outline"
+            className="bg-transparent outline-none text-sm w-full placeholder:text-outline focus-visible:ring-2 focus-visible:ring-primary rounded"
           />
         </div>
         {QUICK_FILTERS.map(f => (
@@ -278,6 +279,7 @@ function EstudiantesContent() {
 }
 
 export default function EstudiantesPage() {
+  usePageTitle('Gestión de estudiantes')
   return (
     <Suspense fallback={
       <main className="max-w-[1440px] mx-auto px-8 py-10">

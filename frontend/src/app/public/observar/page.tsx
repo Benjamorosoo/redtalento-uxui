@@ -7,6 +7,7 @@ import { CeibboLogoMark } from '@/components/ui/CeibboLogoMark'
 import { api } from '@/lib/api-client'
 import { scoreBgColor, mediaUrl } from '@/lib/utils'
 import type { StudentProfile } from '@/types'
+import { usePageTitle } from '@/lib/usePageTitle'
 
 // ── Count-up animation hook ────────────────────────────────────────────────────
 function useCountUp(target: number, duration = 1000, active = false): number {
@@ -29,6 +30,7 @@ function useCountUp(target: number, duration = 1000, active = false): number {
 }
 
 export default function ObservarPage() {
+  usePageTitle('Directorio de talento técnico')
   const [students, setStudents]           = useState<StudentProfile[]>([])
   const [loading, setLoading]             = useState(true)
   const [filtroActivo, setFiltroActivo]   = useState('Todos')
@@ -284,7 +286,7 @@ export default function ObservarPage() {
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Buscar por nombre, habilidad..."
-            className="bg-transparent outline-none text-sm w-full placeholder:text-outline"
+            className="bg-transparent outline-none text-sm w-full placeholder:text-outline focus-visible:ring-2 focus-visible:ring-primary rounded"
           />
         </div>
 
