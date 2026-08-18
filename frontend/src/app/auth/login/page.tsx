@@ -157,17 +157,17 @@ export default function LoginPage() {
                     onClick={() => selectRole(role)}
                     className="w-full flex items-center gap-5 p-5 rounded-2xl border-2 border-outline-variant/20 hover:border-primary/40 bg-surface-container-lowest hover:bg-surface-container-low transition-all group text-left"
                   >
-                    <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${role.color} flex items-center justify-center shrink-0 shadow-md group-hover:scale-105 transition-transform`}>
+                    <span className={`w-14 h-14 rounded-xl bg-gradient-to-br ${role.color} flex items-center justify-center shrink-0 shadow-md group-hover:scale-105 transition-transform`}>
                       <span className="material-symbols-outlined text-white text-[28px] icon-filled">
                         {role.icon}
                       </span>
-                    </div>
-                    <div className="flex-1">
-                      <p className="font-headline font-bold text-on-surface text-lg group-hover:text-primary transition-colors">
+                    </span>
+                    <span className="flex-1 block">
+                      <span className="font-headline font-bold text-on-surface text-lg group-hover:text-primary transition-colors block">
                         {role.label}
-                      </p>
-                      <p className="text-sm text-on-surface-variant mt-0.5">{role.description}</p>
-                    </div>
+                      </span>
+                      <span className="text-sm text-on-surface-variant mt-0.5 block">{role.description}</span>
+                    </span>
                     <span className="material-symbols-outlined text-outline group-hover:text-primary transition-colors">
                       chevron_right
                     </span>
@@ -219,10 +219,10 @@ export default function LoginPage() {
                 className="w-full mb-6 flex items-center gap-3 px-4 py-3 rounded-xl border border-outline-variant/30 bg-surface-container-low hover:bg-surface-container transition-all text-left group"
               >
                 <span className="material-symbols-outlined text-primary text-[20px]">bolt</span>
-                <div className="flex-1">
-                  <p className="text-sm font-bold text-on-surface">Usar cuenta demo de {selectedRoleData!.label}</p>
-                  <p className="text-xs text-on-surface-variant">{selectedRoleData!.demo.email}</p>
-                </div>
+                <span className="flex-1 block">
+                  <span className="text-sm font-bold text-on-surface block">Usar cuenta demo de {selectedRoleData!.label}</span>
+                  <span className="text-xs text-on-surface-variant block">{selectedRoleData!.demo.email}</span>
+                </span>
                 <span className="text-xs font-bold text-primary-container px-2 py-1 bg-primary-fixed rounded-lg">
                   Demo
                 </span>
