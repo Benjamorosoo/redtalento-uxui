@@ -6,6 +6,13 @@ import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { BackButton } from '@/components/ui/BackButton'
 import { api } from '@/lib/api-client'
+import { getApiErrorMessage } from '@/lib/utils'
+
+const CREATE_STUDENT_ERROR_MESSAGES = {
+  400: 'Revisa que todos los campos estén completos y correctos.',
+  409: 'Ya existe un estudiante registrado con este correo electrónico.',
+  500: 'Ocurrió un error en el servidor. Intenta nuevamente.',
+}
 
 // ── Types ──────────────────────────────────────────────────────────────────────
 interface CsvRow {
@@ -99,6 +106,15 @@ export default function CargaMasivaPage() {
     const applyRows = (rows: CsvRow[]) => {
       if (rows.length === 0) { setParseError('El archivo no contiene datos válidos.'); return }
       if (rows.length > 500) { setParseError('El archivo supera el límite de 500 estudiantes.'); return }
+      // Flag emails duplicated within the same file so they aren't sent twice (would 409 one by one)
+      const seenAt = new Map<string, number>()
+      rows.forEach((row, idx) => {
+        if (row.error || !row.email) return
+        const key = row.email.toLowerCase()
+        const firstIdx = seenAt.get(key)
+        if (firstIdx !== undefined) row.error = `Correo duplicado en el archivo (ya aparece en la fila ${firstIdx + 2})`
+        else seenAt.set(key, idx)
+      })
       setCsvRows(rows)
     }
 
@@ -155,8 +171,9 @@ export default function CargaMasivaPage() {
           year: row.year,
         })
         res.push({ row, success: true, tempPassword: created.tempPassword })
-      } catch (err: any) {
-        res.push({ row, success: false, error: err?.message ?? 'Error al crear' })
+      } catch (err) {
+        const message = await getApiErrorMessage(err, CREATE_STUDENT_ERROR_MESSAGES)
+        res.push({ row, success: false, error: message })
       }
     }
     setResults(res)
@@ -166,7 +183,15 @@ export default function CargaMasivaPage() {
 
   // ── Individual create ────────────────────────────────────────────────────────
   const handleCreateStudent = async (e: React.FormEvent) => {
-    e.preventDefault(); setCreating(true); setCreateError(null)
+    e.preventDefault(); setCreateError(null)
+
+    const emailLower = form.email.trim().toLowerCase()
+    if (createdStudents.some(s => s.email.toLowerCase() === emailLower)) {
+      setCreateError('Ya creaste un estudiante con este correo en esta sesión.')
+      return
+    }
+
+    setCreating(true)
     try {
       const result = await api.post<CreatedStudent>('/schools/me/students', {
         email: form.email, firstName: form.firstName,
@@ -175,8 +200,8 @@ export default function CargaMasivaPage() {
       })
       setCreatedStudents(prev => [result, ...prev])
       setForm({ firstName: '', lastName: '', email: '', specialty: '', year: '1' })
-    } catch (err: any) {
-      setCreateError(err?.message ?? 'Error al crear el estudiante')
+    } catch (err) {
+      setCreateError(await getApiErrorMessage(err, CREATE_STUDENT_ERROR_MESSAGES))
     } finally { setCreating(false) }
   }
 
@@ -221,7 +246,12 @@ export default function CargaMasivaPage() {
             <Button type="submit" icon="person_add" loading={creating} className="w-full">Crear estudiante</Button>
           </div>
         </form>
-        {createError && <p className="mt-3 text-sm text-error font-semibold">{createError}</p>}
+        {createError && (
+          <div role="alert" className="mt-4 flex items-start gap-2 p-4 bg-red-50 border border-red-200 rounded-xl">
+            <span className="material-symbols-outlined text-error text-[18px] shrink-0 mt-0.5" aria-hidden="true">error</span>
+            <p className="text-sm text-error font-semibold">{createError}</p>
+          </div>
+        )}
       </div>
 
       {/* Created this session */}
@@ -399,7 +429,7 @@ export default function CargaMasivaPage() {
               <table className="w-full">
                 <thead className="bg-surface-container-low">
                   <tr>
-                    {['Estudiante', 'Email', 'Estado', 'Contraseña temporal'].map(h => (
+                    {['Fila', 'Estudiante', 'Email', 'Estado', 'Contraseña temporal'].map(h => (
                       <th key={h} scope="col" className="px-4 py-3 text-left text-[11px] font-black uppercase tracking-widest text-outline">{h}</th>
                     ))}
                   </tr>
@@ -407,6 +437,7 @@ export default function CargaMasivaPage() {
                 <tbody className="divide-y divide-outline-variant/10">
                   {results.map((r, i) => (
                     <tr key={i} className={r.success ? '' : 'bg-red-50/50'}>
+                      <td className="px-4 py-3 text-sm text-outline">{i + 2}</td>
                       <td className="px-4 py-3 text-sm font-semibold text-on-surface">{r.row.firstName} {r.row.lastName}</td>
                       <td className="px-4 py-3 text-sm text-on-surface-variant">{r.row.email}</td>
                       <td className="px-4 py-3">

@@ -142,6 +142,37 @@ export function truncate(text: string, maxLength: number): string {
   return text.slice(0, maxLength).trim() + '…'
 }
 
+// ─── API error messages ───────────────────────────────────────────────────────
+// Turns a raw axios/NestJS error into a message safe to show end users.
+// `statusMessages` lets a call site override the copy for specific status codes
+// (e.g. a 409 means something different on "create student" than elsewhere).
+export async function getApiErrorMessage(
+  err: unknown,
+  statusMessages?: Partial<Record<number, string>>,
+): Promise<string> {
+  const anyErr = err as any
+  let data = anyErr?.response?.data
+
+  // When a request used responseType: 'blob' (file downloads), error bodies
+  // arrive as a Blob instead of parsed JSON — decode it back to JSON.
+  if (typeof Blob !== 'undefined' && data instanceof Blob) {
+    try { data = JSON.parse(await data.text()) } catch { data = undefined }
+  }
+
+  const status: number | undefined = anyErr?.response?.status
+  if (status && statusMessages?.[status]) return statusMessages[status] as string
+
+  const rawMessage = data?.message
+  const backendMessage = Array.isArray(rawMessage) ? rawMessage[0] : rawMessage
+  if (typeof backendMessage === 'string' && backendMessage.trim()) return backendMessage
+
+  if (status === 400) return 'Revisa que todos los campos estén completos y correctos.'
+  if (status === 409) return 'Ya existe un registro en conflicto con estos datos.'
+  if (status === 500) return 'Ocurrió un error en el servidor. Intenta nuevamente.'
+  if (!anyErr?.response) return 'No se pudo conectar con el servidor. Verifica tu conexión e intenta nuevamente.'
+  return 'Ocurrió un error inesperado. Intenta nuevamente.'
+}
+
 // ─── Initials ─────────────────────────────────────────────────────────────────
 export function getInitials(name: string): string {
   return name

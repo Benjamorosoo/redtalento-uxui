@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/Button'
-import { api } from '@/lib/api-client'
+import apiClient, { api } from '@/lib/api-client'
 import { useAuthStore } from '@/store/auth.store'
+import { getApiErrorMessage } from '@/lib/utils'
 
 interface IndiceStats {
   totalStudents: number
@@ -16,6 +17,8 @@ export default function IndiceEmpleabilidadPage() {
   const { isAuthenticated } = useAuthStore()
   const [stats, setStats] = useState<IndiceStats | null>(null)
   const [loading, setLoading] = useState(true)
+  const [exporting, setExporting] = useState(false)
+  const [exportError, setExportError] = useState<string | null>(null)
 
   useEffect(() => {
     if (!isAuthenticated) { setLoading(false); return }
@@ -24,6 +27,26 @@ export default function IndiceEmpleabilidadPage() {
       .catch(() => setStats(null))
       .finally(() => setLoading(false))
   }, [isAuthenticated])
+
+  const handleExport = async () => {
+    setExporting(true); setExportError(null)
+    try {
+      const response = await apiClient.get('/schools/me/students/export', { responseType: 'blob' })
+      const blob = new Blob([response.data], { type: 'text/csv;charset=utf-8;' })
+      const url = URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.download = `reporte-empleabilidad-${new Date().toISOString().slice(0, 10)}.csv`
+      document.body.appendChild(link); link.click()
+      document.body.removeChild(link); URL.revokeObjectURL(url)
+    } catch (err) {
+      setExportError(await getApiErrorMessage(err, {
+        500: 'Ocurrió un error en el servidor al generar el reporte. Intenta nuevamente.',
+      }))
+    } finally {
+      setExporting(false)
+    }
+  }
 
   if (loading) {
     return (
@@ -90,7 +113,15 @@ export default function IndiceEmpleabilidadPage() {
             </div>
           </section>
 
-          <Button variant="secondary" icon="ios_share" fullWidth>Exportar evidencia</Button>
+          <Button variant="secondary" icon="ios_share" fullWidth loading={exporting} onClick={handleExport}>
+            {exporting ? 'Generando…' : 'Exportar evidencia'}
+          </Button>
+          {exportError && (
+            <div role="alert" className="flex items-start gap-2 p-4 bg-red-50 border border-red-200 rounded-xl">
+              <span className="material-symbols-outlined text-error text-[18px] shrink-0 mt-0.5" aria-hidden="true">error</span>
+              <p className="text-sm text-error font-semibold">{exportError}</p>
+            </div>
+          )}
         </aside>
       </div>
     </main>

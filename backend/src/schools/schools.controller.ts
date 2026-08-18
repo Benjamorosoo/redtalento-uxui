@@ -1,4 +1,5 @@
-import { Controller, Get, Post, Patch, Param, Body, UseGuards } from '@nestjs/common'
+import { Controller, Get, Post, Patch, Param, Body, Res, UseGuards } from '@nestjs/common'
+import { Response } from 'express'
 import { ApiTags, ApiBearerAuth, ApiOperation } from '@nestjs/swagger'
 import { SchoolsService, UpdateSchoolDto, CreateStudentDto } from './schools.service'
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard'
@@ -59,6 +60,18 @@ export class SchoolsController {
   @ApiOperation({ summary: 'Crear cuenta de estudiante vinculada al colegio' })
   createStudent(@CurrentUser() user: any, @Body() dto: CreateStudentDto) {
     return this.schoolsService.createStudent(user.id, dto)
+  }
+
+  @Get('me/students/export')
+  @UseGuards(RolesGuard)
+  @Roles(UserRole.COLEGIO)
+  @ApiOperation({ summary: 'Exportar reporte CSV de evidencia de empleabilidad de los estudiantes' })
+  async exportStudents(@CurrentUser() user: any, @Res() res: Response) {
+    const csv = await this.schoolsService.exportStudentsCsv(user.id)
+    const date = new Date().toISOString().slice(0, 10)
+    res.setHeader('Content-Type', 'text/csv; charset=utf-8')
+    res.setHeader('Content-Disposition', `attachment; filename="reporte-empleabilidad-${date}.csv"`)
+    res.send(csv)
   }
 
   @Get(':id')
